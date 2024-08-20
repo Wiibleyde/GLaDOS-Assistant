@@ -13,28 +13,28 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model LogLevel {
+model logLevel {
     id   Int    @id @default(autoincrement())
     name String @unique
 
-    Logs Logs[]
+    logs logs[]
 }
 
-model Logs {
+model logs {
     id        Int      @id @default(autoincrement())
     message   String   @db.MediumText
-    level     LogLevel @relation(fields: [levelId], references: [id])
+    level     logLevel @relation(fields: [levelId], references: [id])
     levelId   Int
     createdAt DateTime @default(now())
 }
 
-model Birthdays {
+model birthdays {
     id     Int      @id @default(autoincrement())
     userId Int      @unique
     date   DateTime
 }
 
-model Config {
+model config {
     id      Int    @id @default(autoincrement())
     key     String
     value   String
