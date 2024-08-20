@@ -24,27 +24,27 @@ export async function execute(interaction: CommandInteraction) {
         status = "Pas normal !"
         color = 0xFF0000
     } else if (ping < PING_THRESHOLD.VERY_GOOD) {
-        status = "Très bon"
+        status = "très bon"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.GOOD) {
-        status = "Bon"
+        status = "bon"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.CORRECT) {
-        status = "Correct"
+        status = "correct"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.WEAK) {
-        status = "Faible"
+        status = "faible"
         color = 0xFFA500
     } else if (ping < PING_THRESHOLD.BAD) {
-        status = "Mauvais"
+        status = "mauvais"
         color = 0xFF0000
     } else {
-        status = "Très mauvais"
+        status = "très mauvais"
         color = 0xFF0000
     }
 
     const pingEmbed: EmbedBuilder = new EmbedBuilder()
-        .setTitle("🏓 Pong !")
+        .setTitle("Ping")
         .setDescription(`Le ping est de ${interaction.client.ws.ping}ms, ce qui est ${status}`)
         .addFields(
             { name: "Mémoire utilisée", value: `${Math.round(memoryData.heapUsed / 1024 / 1024)}MB`, inline: true },
