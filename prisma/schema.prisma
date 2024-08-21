@@ -30,7 +30,7 @@ model logs {
 
 model birthdays {
     id     Int      @id @default(autoincrement())
-    userId Int      @unique
+    userId BigInt   @unique
     date   DateTime
 }
 
