@@ -1,24 +1,31 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+
+const packageJson = require("../../../package.json");
 
 export const data = new SlashCommandBuilder()
     .setName("info")
-    .setDescription("Informations sur le bot")
+    .setDescription("Informations sur le bot");
 
 export async function execute(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    const firstResponse = await interaction.deferReply({ ephemeral: true,fetchReply: true });
+
+    const version = packageJson.version;
+    const libs = Object.keys(packageJson.dependencies).join("\n");
+    const author = packageJson.author.name;
 
     const infoEmbed: EmbedBuilder = new EmbedBuilder()
         .setTitle("GLaDOS Assistant")
-        .setDescription(`Je suis un bot Discord créé par [Wiibleyde](https://github.com/Wiibleyde) pour vous aider dans votre quotidien.`)
+        .setDescription(`GLaDOS Assistant est un bot Discord pour vous servir !`)
         .addFields(
-            { name: "Version", value: "1.0.0", inline: true },
+            { name: "Version", value: version, inline: true },
             { name: "Langage", value: "TypeScript", inline: true },
-            { name: "Bibliothèque", value: "discord.js", inline: true },
-            { name: "Dépôt GitHub", value: "[Cliquez ici](https://github.com/Wiibleyde/GLaDOS-Assistant)", inline: true },
+            { name: "Auteur", value: author, inline: true },
+            { name: "Bibliothèques", value: libs, inline: false },
+            { name: "Dépôt GitHub", value: "[Cliquez ici](https://github.com/Wiibleyde/GLaDOS-Assistant)", inline: true }
         )
         .setTimestamp()
-        .setColor(0xFFFFFF)
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+        .setColor(0xffffff)
+        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     await interaction.editReply({ embeds: [infoEmbed] });
 }
