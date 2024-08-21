@@ -38,7 +38,6 @@ export async function deployDevCommands(guildId: string) {
         );
 
         const guild = client.guilds.cache.get(guildId)
-        logger.debug("Guilds cache", JSON.stringify(client.guilds.cache))
         if (!guild) {
             logger.error(`Impossible de trouver la guilde ${guildId}`)
             return
