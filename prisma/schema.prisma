@@ -38,5 +38,5 @@ model config {
     id      Int    @id @default(autoincrement())
     key     String
     value   String
-    guildId Int
+    guildId BigInt
 }
