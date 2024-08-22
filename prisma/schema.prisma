@@ -32,6 +32,8 @@ model birthdays {
     id     Int      @id @default(autoincrement())
     userId BigInt   @unique
     date   DateTime
+
+    @@index([date])
 }
 
 model config {
@@ -39,4 +41,7 @@ model config {
     key     String
     value   String
     guildId BigInt
+
+    @@unique([key, guildId], name: "unique_key_guildId")
+    @@index([guildId])
 }
