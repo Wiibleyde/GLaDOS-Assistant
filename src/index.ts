@@ -1,19 +1,38 @@
-import { ActivityType, Client, EmbedBuilder } from "discord.js"
+import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials } from "discord.js"
 import { deployCommands, deployDevCommands } from "./deploy-commands"
 import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
 import { commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
+import { initRenameCache, renameCache } from "./commands/config/rename"
 import { CronJob } from 'cron';
 import { prisma } from "./utils/database"
 
 export const client = new Client({
-    intents: ["Guilds", "GuildMessages", "DirectMessages"],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildMessageTyping,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.DirectMessageReactions,
+        GatewayIntentBits.DirectMessageTyping,
+        GatewayIntentBits.MessageContent,
+    ],
+    partials: [
+        Partials.User,
+        Partials.Channel,
+        Partials.Message,
+        Partials.GuildMember
+    ]
 })
 
 logger.initLevels()
+initRenameCache()
 
-client.once("ready", async () => {
+client.once(Events.ClientReady, async () => {
     client.user?.setPresence({
         activities: [
             {
@@ -28,7 +47,7 @@ client.once("ready", async () => {
     logger.info(`Connecté en tant que ${client.user?.tag}!`)
 })
 
-client.on("interactionCreate", async (interaction) => {
+client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         try {
             const { commandName } = interaction;
@@ -46,6 +65,36 @@ client.on("interactionCreate", async (interaction) => {
         if (modals[interaction.customId as keyof typeof modals]) {
             modals[interaction.customId as keyof typeof modals](interaction)
         }
+    }
+})
+
+client.on(Events.MessageCreate, async (message) => {
+    if (message.author.bot) return
+    const guildId = message.guild?.id
+    if (!guildId) return
+    let rename = renameCache.get(parseInt(guildId))
+    if (!rename || rename.length === 0) {
+        rename = client.user?.username
+    } else {
+        const guild = await prisma.config.findFirst({
+            where: {
+                guildId: parseInt(guildId),
+                key: "botName"
+            }
+        })
+        if (guild) {
+            rename = guild.value
+            renameCache.set(parseInt(guildId), rename)
+        }
+    }
+    if (message.content.startsWith(`<@!${client.user?.id}>`) || message.content.startsWith(rename as string)) {
+        const embed = new EmbedBuilder()
+            .setTitle("GLaDOS intelligence 🧠")
+            .setDescription(`Feature non implémentée... WIP`)
+            .setColor(0xffffff)
+            .setTimestamp()
+            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });
+        await message.channel.send({ embeds: [embed] })
     }
 })
 
