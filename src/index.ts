@@ -1,5 +1,6 @@
 import { ActivityType, Client, EmbedBuilder } from "discord.js"
 import { deployCommands, deployDevCommands } from "./deploy-commands"
+import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
 import { commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
@@ -29,12 +30,17 @@ client.once("ready", async () => {
 
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isCommand()) {
-        const { commandName } = interaction;
-        if (commands[commandName as keyof typeof commands]) {
-            commands[commandName as keyof typeof commands].execute(interaction)
-        }
-        if (devCommands[commandName as keyof typeof devCommands]) {
-            devCommands[commandName as keyof typeof devCommands].execute(interaction)
+        try {
+            const { commandName } = interaction;
+            if (commands[commandName as keyof typeof commands]) {
+                commands[commandName as keyof typeof commands].execute(interaction)
+            }
+            if (devCommands[commandName as keyof typeof devCommands]) {
+                devCommands[commandName as keyof typeof devCommands].execute(interaction)
+            }
+        } catch (error: Error | any) {
+            logger.error(`Error while executing command: ${error.message}`)
+            await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
         }
     } else if (interaction.isModalSubmit()) {
         if (modals[interaction.customId as keyof typeof modals]) {
