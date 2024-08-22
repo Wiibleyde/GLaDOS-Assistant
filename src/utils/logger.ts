@@ -1,5 +1,15 @@
 import { prisma } from "@/utils/database"
 
+const resetColor = "\x1b[0m"
+
+enum LogLevelColors {
+    ERROR = "\x1b[31m",
+    INFO = "\x1b[36m",
+    WARN = "\x1b[33m",
+    DEBUG = "\x1b[32m",
+    TRACE = "\x1b[35m"
+}
+
 class Logger {
     public async initLevels() {
         await prisma.logLevel.createMany({
@@ -30,7 +40,7 @@ class Logger {
 
     public async info(...messageList: any[]) {
         const message = messageList.join(" ")
-        console.log(`[INFO] ${this.getNowDate()} ${message}`)
+        console.log(LogLevelColors.INFO + `[INFO] ${this.getNowDate()} ${message}` + resetColor)
         await prisma.logs.create({
             data: {
                 message,
@@ -45,7 +55,7 @@ class Logger {
 
     public async error(...messageList: any[]) {
         const message = messageList.join(" ")
-        console.error(`[ERROR] ${this.getNowDate()} ${message}`)
+        console.error(LogLevelColors.ERROR + `[ERROR] ${this.getNowDate()} ${message}` + resetColor)
         await prisma.logs.create({
             data: {
                 message,
@@ -60,7 +70,7 @@ class Logger {
 
     public async warn(...messageList: any[]) {
         const message = messageList.join(" ")
-        console.warn(`[WARN] ${this.getNowDate()} ${message}`)
+        console.warn(LogLevelColors.WARN + `[WARN] ${this.getNowDate()} ${message}` + resetColor)
         await prisma.logs.create({
             data: {
                 message,
@@ -75,7 +85,7 @@ class Logger {
 
     public async debug(...messageList: any[]) {
         const message = messageList.join(" ")
-        console.debug(`[DEBUG] ${this.getNowDate()} ${message}`)
+        console.log(LogLevelColors.DEBUG + `[DEBUG] ${this.getNowDate()} ${message}` + resetColor)
         await prisma.logs.create({
             data: {
                 message,
