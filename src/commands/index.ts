@@ -1,7 +1,8 @@
 import * as ping from "./general/ping"
 import * as info from "./general/info"
 import * as talk from "./general/talk"
-import * as channels from "./general/channels"
+import * as channels from "./config/channels"
+import * as rename from "./config/rename"
 
 import * as birthday from "./birthday/birthday"
 import { addBirthdayModal } from "./birthday/birthday"
@@ -14,6 +15,7 @@ export const commands = {
     talk,
     birthday,
     channels,
+    rename,
 }
 
 export const devCommands = {

@@ -1,4 +1,4 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
 import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 
@@ -34,6 +34,8 @@ export const data = new SlashCommandBuilder()
             .setDescription("Salon")
             .setRequired(false)
     )
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
 
 export async function execute(interaction: CommandInteraction) {
     const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true });
