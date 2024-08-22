@@ -26,6 +26,9 @@ export const data = new SlashCommandBuilder()
             .addChoices({
                 name: "Salon des anniversaires",
                 value: "birthdayChannel"
+            }, {
+                name: "Salon des citations",
+                value: "quoteChannel"
             })
     )
     .addChannelOption(option =>
