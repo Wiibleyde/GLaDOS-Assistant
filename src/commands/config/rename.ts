@@ -2,6 +2,8 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsB
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { prisma } from "@/utils/database"
 
+export const renameCache = new Map<number, string>()
+
 export const data = new SlashCommandBuilder()
     .setName("rename")
     .setDescription("Renommer le bot")
@@ -25,6 +27,7 @@ export async function execute(interaction: CommandInteraction) {
                 key: "botName"
             }
         })
+        renameCache.delete(parseInt(interaction.guildId?.toString() as string))
         await interaction.editReply({ embeds: [successEmbed(interaction, `Le nom du bot a été réinitialisé`)] })
     } else if (newName.length > 32) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Le nom du bot ne doit pas dépasser 32 caractères"))] })
@@ -56,7 +59,19 @@ export async function execute(interaction: CommandInteraction) {
                     }
                 })
             }
+            renameCache.set(parseInt(interaction.guildId?.toString() as string), newName)
         })
         await interaction.editReply({ embeds: [successEmbed(interaction, `Le nom du bot a été changé en ${newName}`)] })
     }
+}
+
+export async function initRenameCache() {
+    const guilds = await prisma.config.findMany({
+        where: {
+            key: "botName"
+        }
+    })
+    guilds.forEach(guild => {
+        renameCache.set(Number(guild.guildId), guild.value)
+    })
 }
