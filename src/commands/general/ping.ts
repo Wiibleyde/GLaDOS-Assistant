@@ -21,35 +21,31 @@ export async function execute(interaction: CommandInteraction) {
     const ping: number = interaction.client.ws.ping
 
     if (!firstResponse || ping <= 0) {
-        status = "Pas normal !"
-        color = 0xFF0000
+        status = "surprenant ! ⚫"
+        color = 0xFFFFFF
     } else if (ping < PING_THRESHOLD.VERY_GOOD) {
-        status = "très bon"
+        status = "très bon 🟢"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.GOOD) {
-        status = "bon"
+        status = "bon 🟢"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.CORRECT) {
-        status = "correct"
+        status = "correct 🟡"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.WEAK) {
-        status = "faible"
+        status = "faible 🟠"
         color = 0xFFA500
     } else if (ping < PING_THRESHOLD.BAD) {
-        status = "mauvais"
+        status = "mauvais 🔴"
         color = 0xFF0000
     } else {
-        status = "très mauvais"
+        status = "très mauvais 🔴"
         color = 0xFF0000
     }
 
     const pingEmbed: EmbedBuilder = new EmbedBuilder()
         .setTitle("Ping")
         .setDescription(`Le ping est de ${interaction.client.ws.ping}ms, ce qui est ${status}`)
-        .addFields(
-            { name: "Mémoire utilisée", value: `${Math.round(memoryData.heapUsed / 1024 / 1024)}MB`, inline: true },
-            { name: "Mémoire totale", value: `${Math.round(memoryData.heapTotal / 1024 / 1024)}MB`, inline: true },
-        )
         .setTimestamp()
         .setColor(color)
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
