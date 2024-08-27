@@ -3,10 +3,10 @@ import * as info from "./general/info"
 import * as talk from "./general/talk"
 import * as channels from "./config/channels"
 import * as rename from "./config/rename"
-import * as quote from "./quote/quote"
+import * as quote from "./general/quote"
 
-import * as birthday from "./birthday/birthday"
-import { addBirthdayModal } from "./birthday/birthday"
+import * as birthday from "./general/birthday"
+import { addBirthdayModal } from "./general/birthday"
 
 import * as logs from "./dev/logs"
 
