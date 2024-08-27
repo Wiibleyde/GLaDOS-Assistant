@@ -7,7 +7,6 @@ enum LogLevelColors {
     INFO = "\x1b[36m",
     WARN = "\x1b[33m",
     DEBUG = "\x1b[32m",
-    TRACE = "\x1b[35m"
 }
 
 class Logger {
@@ -25,9 +24,6 @@ class Logger {
                 },
                 {
                     name: "DEBUG"
-                },
-                {
-                    name: "TRACE"
                 }
             ],
             skipDuplicates: true
