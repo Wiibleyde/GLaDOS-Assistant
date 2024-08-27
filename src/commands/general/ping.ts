@@ -12,6 +12,8 @@ const PING_THRESHOLD = {
     BAD: 500,
 }
 
+const pingImage = "./assets/img/ping.png"
+
 export async function execute(interaction: CommandInteraction) {
     const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
     let status: string
@@ -48,7 +50,8 @@ export async function execute(interaction: CommandInteraction) {
         .setDescription(`Le ping est de ${interaction.client.ws.ping}ms, ce qui est ${status}`)
         .setTimestamp()
         .setColor(color)
+        .setThumbnail("attachment://ping.png")
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
 
-    await interaction.editReply({ embeds: [pingEmbed] });
+    await interaction.editReply({ embeds: [pingEmbed], files: [{ attachment: pingImage, name: "ping.png" }] })
 }

@@ -2,6 +2,8 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.j
 
 const packageJson = require("../../../package.json");
 
+const infoImage = "./assets/img/info.png";
+
 export const data = new SlashCommandBuilder()
     .setName("info")
     .setDescription("Informations sur le bot");
@@ -23,9 +25,10 @@ export async function execute(interaction: CommandInteraction) {
             { name: "Bibliothèques", value: libs, inline: false },
             { name: "Dépôt GitHub", value: "[Cliquez ici](https://github.com/Wiibleyde/GLaDOS-Assistant)", inline: true }
         )
+        .setThumbnail("attachment://info.png")
         .setTimestamp()
         .setColor(0xffffff)
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
 
-    await interaction.editReply({ embeds: [infoEmbed] });
+    await interaction.editReply({ embeds: [infoEmbed], files: [{ attachment: infoImage, name: "info.png" }] });
 }
