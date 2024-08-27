@@ -36,7 +36,7 @@ export const data = new SlashCommandBuilder()
     )
 
 export async function execute(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const quote = interaction.options.get("citation")?.value as string
     const author = interaction.options.get("auteur")?.user
     const context = interaction.options.get("contexte")?.value as string

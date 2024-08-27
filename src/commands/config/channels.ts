@@ -41,7 +41,7 @@ export const data = new SlashCommandBuilder()
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
 
 export async function execute(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true });
+    await interaction.deferReply({ ephemeral: true, fetchReply: true });
     switch (interaction.options.get("action")?.value) {
         case "view":
             const serverConfig = await prisma.config.findMany({

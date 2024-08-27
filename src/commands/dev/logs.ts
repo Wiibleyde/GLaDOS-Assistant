@@ -6,8 +6,7 @@ export const data = new SlashCommandBuilder()
     .setDescription("Afficher les derniers logs du bot")
 
 export async function execute(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
-    const number = interaction.options.get("nombre")?.value as number
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const logs = await prisma.logs.findMany({
         take: 5,
         orderBy: {

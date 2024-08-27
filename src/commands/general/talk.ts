@@ -18,7 +18,7 @@ export const data = new SlashCommandBuilder()
     )
 
 export async function execute(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const message = interaction.options.get("message")?.value as string
     const member = interaction.options.get("mp")?.value as string
 

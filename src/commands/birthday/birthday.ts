@@ -111,7 +111,7 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
 }
 
 async function removeBirthday(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.user
     const birthday = await prisma.birthdays.findFirst({
         where: {
@@ -131,7 +131,7 @@ async function removeBirthday(interaction: CommandInteraction) {
 }
 
 async function viewBirthday(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.user
     const birthday = await prisma.birthdays.findFirst({
         where: {
@@ -154,7 +154,7 @@ async function viewBirthday(interaction: CommandInteraction) {
 
 async function listBirthday(interaction: CommandInteraction) {
     logger.debug("listBirthday")
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if (!interaction.guildId) {
         await interaction.editReply({ content: "Impossible de récupérer les anniversaires" })
         return

@@ -9,7 +9,7 @@ export const data = new SlashCommandBuilder()
     .setDescription("Informations sur le bot");
 
 export async function execute(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true,fetchReply: true });
+    await interaction.deferReply({ ephemeral: true,fetchReply: true });
 
     const version = packageJson.version;
     const libs = Object.keys(packageJson.dependencies).join("\n");

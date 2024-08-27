@@ -17,7 +17,7 @@ export const data = new SlashCommandBuilder()
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
 export async function execute(interaction: CommandInteraction) {
-    const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const newName = interaction.options.get("nom")?.value as string
     if (!newName || newName.length === 0) {
         interaction.guild?.members.cache.get(interaction.client.user.id)?.setNickname("")
