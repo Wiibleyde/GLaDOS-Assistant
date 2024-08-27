@@ -89,7 +89,7 @@ export async function execute(interaction: CommandInteraction) {
     image.print(jimpQuoteFont, 350, quoteYPosition, '"' + quote + '"', maxQuoteWidth)
     if(context) {
         const maxContextWidth = image.bitmap.width - 550
-        const contextYPosition = quoteYPosition + Jimp.measureTextHeight(jimpQuoteFont, quote, maxQuoteWidth) + 10
+        const contextYPosition = quoteYPosition + Jimp.measureTextHeight(jimpQuoteFont, '"' + quote + '"', maxQuoteWidth) + 20
         image.print(contextFont, 350, contextYPosition, context, maxContextWidth)
     }
     const authorXPosition = image.bitmap.width - 40 - Jimp.measureText(otherThingsFont, "@"+author?.displayName + " - " + date || "Anonyme - " + date)
