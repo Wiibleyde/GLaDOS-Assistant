@@ -13,6 +13,17 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model GlobalUserData {
+    uuid            String   @id @default(uuid())
+    userId          BigInt   @unique
+    birthDate       DateTime
+    quizGoodAnswers Int      @default(0)
+    quizBadAnswers  Int      @default(0)
+    Quote           Quote[]
+
+    @@index([userId])
+}
+
 model LogLevel {
     id   Int    @id @default(autoincrement())
     name String @unique
@@ -28,16 +39,8 @@ model Logs {
     createdAt DateTime @default(now())
 }
 
-model Birthdays {
-    id     Int      @id @default(autoincrement())
-    userId BigInt   @unique
-    date   DateTime
-
-    @@index([date])
-}
-
 model Config {
-    id      Int    @id @default(autoincrement())
+    uuid    String @id @default(uuid())
     key     String
     value   String
     guildId BigInt
@@ -47,10 +50,11 @@ model Config {
 }
 
 model Quote {
-    id        Int      @id @default(autoincrement())
-    guildId   BigInt
-    authorId  BigInt
-    quote     String
-    context   String   @default("")
-    createdAt DateTime @default(now())
+    uuid       String         @id @default(uuid())
+    guildId    BigInt
+    author     GlobalUserData @relation(fields: [authorUuid], references: [uuid])
+    authorUuid String
+    quote      String
+    context    String         @default("")
+    createdAt  DateTime       @default(now())
 }

@@ -1,6 +1,6 @@
-import { EmbedBuilder, CommandInteraction } from "discord.js"
+import { EmbedBuilder, CommandInteraction, ButtonInteraction, ModalSubmitInteraction, CacheType } from "discord.js"
 
-export function errorEmbed(interaction: CommandInteraction, error: Error): EmbedBuilder {
+export function errorEmbed(interaction: CommandInteraction|ButtonInteraction<CacheType>|ModalSubmitInteraction, error: Error): EmbedBuilder {
     return new EmbedBuilder()
         .setTitle("Erreur :warning:")
         .setDescription(error.message)
@@ -8,7 +8,7 @@ export function errorEmbed(interaction: CommandInteraction, error: Error): Embed
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
 }
 
-export function successEmbed(interaction: CommandInteraction, message: string): EmbedBuilder {
+export function successEmbed(interaction: CommandInteraction|ButtonInteraction<CacheType>|ModalSubmitInteraction, message: string): EmbedBuilder {
     return new EmbedBuilder()
         .setTitle("Succès !")
         .setDescription(message)

@@ -2,11 +2,12 @@ import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials
 import { deployCommands, deployDevCommands } from "./deploy-commands"
 import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
-import { commands, devCommands, modals } from "./commands"
+import { buttons, commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
 import { initRenameCache, renameCache } from "./commands/config/rename"
 import { CronJob } from 'cron';
 import { prisma } from "./utils/database"
+import { checkOutdatedQuiz } from "./commands/fun/quiz"
 
 export const client = new Client({
     intents: [
@@ -64,6 +65,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else if (interaction.isModalSubmit()) {
         if (modals[interaction.customId as keyof typeof modals]) {
             modals[interaction.customId as keyof typeof modals](interaction)
+        }
+    } else if (interaction.isButton()) {
+        const customId = interaction.customId.split("--")[0]
+        if (buttons[customId as keyof typeof buttons]) {
+            buttons[customId as keyof typeof buttons](interaction)
         }
     }
 })
@@ -165,5 +171,11 @@ const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
     }
 })
 statusCron.start()
+
+// Cron job to checkOutdatedQuiz every 2 minutes
+const quizCron = new CronJob('0 */2 * * * *', async () => {
+    checkOutdatedQuiz()
+})
+quizCron.start()
 
 client.login(config.DISCORD_TOKEN)

@@ -2,6 +2,7 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, ActionRowBuilder
 import { prisma } from "@/utils/database"
 import { logger } from "@/utils/logger"
 import { client } from "@/index"
+import { errorEmbed, successEmbed } from "@/utils/embeds"
 
 const color = 0xB58D47
 
@@ -69,20 +70,20 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
     // date is valid (format: DD/MM/YYYY)
     const dateParts = birthdayDateText.split("/")
     if (dateParts.length !== 3) {
-        await interaction.editReply({ content: "Date invalide" })
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
         return
     }
     const day = parseInt(dateParts[0])
     const month = parseInt(dateParts[1])
     const year = parseInt(dateParts[2])
     if (isNaN(day) || isNaN(month) || isNaN(year)) {
-        await interaction.editReply({ content: "Date invalide" })
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
         return
     }
     const birthdayDate = new Date(year, month - 1, day)
     birthdayDate.setHours(0, 0, 0, 0)
     if (isNaN(birthdayDate.getTime())) {
-        await interaction.editReply({ content: "Date invalide" })
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
         return
     }
     const birthday = await prisma.birthdays.findFirst({
@@ -107,7 +108,7 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
             }
         })
     }
-    await interaction.reply({ content: "Anniversaire ajouté", ephemeral: true })
+    await interaction.reply({ embeds: [successEmbed(interaction, "Anniversaire ajouté")], ephemeral: true })
 }
 
 async function removeBirthday(interaction: CommandInteraction) {
@@ -153,7 +154,6 @@ async function viewBirthday(interaction: CommandInteraction) {
 }
 
 async function listBirthday(interaction: CommandInteraction) {
-    logger.debug("listBirthday")
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if (!interaction.guildId) {
         await interaction.editReply({ content: "Impossible de récupérer les anniversaires" })
@@ -172,7 +172,6 @@ async function listBirthday(interaction: CommandInteraction) {
             }
         }
     })
-    logger.debug(birthdays)
     if (birthdays.length === 0) {
         await interaction.editReply({ content: "Aucun anniversaire enregistré" })
         return
