@@ -44,7 +44,7 @@ export async function execute(interaction: CommandInteraction) {
             if (config) {
                 await prisma.config.update({
                     where: {
-                        id: config.id
+                        uuid: config.uuid
                     },
                     data: {
                         value: newName

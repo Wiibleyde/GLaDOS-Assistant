@@ -78,7 +78,7 @@ export async function execute(interaction: CommandInteraction) {
             if (existingConfig) {
                 await prisma.config.update({
                     where: {
-                        id: existingConfig.id
+                        uuid: existingConfig.uuid
                     },
                     data: {
                         value: channel

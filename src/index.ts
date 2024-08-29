@@ -106,9 +106,9 @@ client.on(Events.MessageCreate, async (message) => {
 
 // Cron job to wish happy birthday to users at 00:00
 const birthdayCron = new CronJob('0 0 0 * * *', async () => {
-    const todayBirthdays = await prisma.birthdays.findMany({
+    const todayBirthdays = await prisma.globalUserData.findMany({
         where: {
-            date: new Date()
+            birthDate: new Date()
         }
     })
     const botGuilds = client.guilds.cache
@@ -129,7 +129,7 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
                     if (channel && channel.isTextBased()) {
                         const embed = new EmbedBuilder()
                             .setTitle("Joyeux anniversaire !")
-                            .setDescription(`Joyeux anniversaire <@${birthday.userId}> (${new Date().getFullYear() - new Date(birthday.date).getFullYear()} ans) ! 🎉🎂`)
+                            .setDescription(`Joyeux anniversaire <@${birthday.userId}> (${birthday.birthDate ? new Date().getFullYear() - new Date(birthday.birthDate).getFullYear() : ''} ans) ! 🎉🎂`)
                             .setColor(0xffffff)
                             .setTimestamp()
                             .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });

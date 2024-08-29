@@ -16,7 +16,7 @@ datasource db {
 model GlobalUserData {
     uuid            String   @id @default(uuid())
     userId          BigInt   @unique
-    birthDate       DateTime
+    birthDate       DateTime?
     quizGoodAnswers Int      @default(0)
     quizBadAnswers  Int      @default(0)
     Quote           Quote[]

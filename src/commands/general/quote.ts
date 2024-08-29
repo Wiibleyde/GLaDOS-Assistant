@@ -1,7 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder, TextBasedChannel } from "discord.js"
 import Jimp from "jimp"
 import { prisma } from "@/utils/database"
-import { successEmbed } from "@/utils/embeds"
+import { successEmbed, errorEmbed } from "@/utils/embeds"
 
 const background = "assets/img/quote.png"
 const smoke = "assets/img/smoke.png"
@@ -71,10 +71,25 @@ export async function execute(interaction: CommandInteraction) {
         image.composite(profilePicture.resize(Jimp.AUTO, maxPictureHeight), 11, 9)
     }
 
+    if(!author) {
+        await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("L'auteur de la citation n'a pas été trouvé"))] })
+        return
+    }
+
     await prisma.quote.create({
         data: {
             quote: quote,
-            authorId: parseInt(author?.id ?? "0"),
+            author: {
+                connectOrCreate: {
+                    where: {
+                        userId: parseInt(author?.id)
+                    },
+                    create: {
+                        userId: parseInt(author?.id,),
+                        
+                    }
+                }
+            },
             context: context,
             guildId: parseInt(interaction.guildId ?? "0"),
             createdAt: interaction.options.get("date")?.value as string || new Date().toISOString()

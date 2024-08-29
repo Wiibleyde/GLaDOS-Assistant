@@ -86,24 +86,24 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
         return
     }
-    const birthday = await prisma.birthdays.findFirst({
+    const birthday = await prisma.globalUserData.findFirst({
         where: {
             userId: parseInt(user.id)
         }
     })
     if (birthday) {
-        await prisma.birthdays.update({
+        await prisma.globalUserData.update({
             where: {
-                id: birthday.id
+                uuid: birthday.uuid
             },
             data: {
-                date: birthdayDate
+                birthDate: birthdayDate
             }
         })
     } else {
-        await prisma.birthdays.create({
+        await prisma.globalUserData.create({
             data: {
-                date: birthdayDate,
+                birthDate: birthdayDate,
                 userId: parseInt(user.id)
             }
         })
@@ -114,7 +114,7 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
 async function removeBirthday(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.user
-    const birthday = await prisma.birthdays.findFirst({
+    const birthday = await prisma.globalUserData.findFirst({
         where: {
             userId: parseInt(user.id)
         }
@@ -123,9 +123,9 @@ async function removeBirthday(interaction: CommandInteraction) {
         await interaction.editReply({ content: "Vous n'avez pas d'anniversaire enregistré" })
         return
     }
-    await prisma.birthdays.delete({
+    await prisma.globalUserData.delete({
         where: {
-            id: birthday.id
+            uuid: birthday.uuid
         }
     })
     await interaction.editReply({ content: "Anniversaire supprimé" })
@@ -134,16 +134,23 @@ async function removeBirthday(interaction: CommandInteraction) {
 async function viewBirthday(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.user
-    const birthday = await prisma.birthdays.findFirst({
+    const birthday = await prisma.globalUserData.findFirst({
         where: {
-            userId: parseInt(user.id)
+            userId: parseInt(user.id),
+            birthDate: {
+                not: null
+            }
         }
     })
     if (!birthday) {
         await interaction.reply({ content: "Vous n'avez pas d'anniversaire enregistré", ephemeral: true })
         return
     }
-    const birthdayDate = birthday.date
+    const birthdayDate = birthday.birthDate
+    if (!birthdayDate) {
+        await interaction.editReply({ content: "Aucune date d'anniversaire enregistrée" })
+        return
+    }
     const embed = new EmbedBuilder()
         .setTitle("Votre anniversaire")
         .setDescription(`Votre anniversaire est le ${birthdayDate.toLocaleDateString()}`)
@@ -165,10 +172,13 @@ async function listBirthday(interaction: CommandInteraction) {
         await interaction.editReply({ content: "Impossible de récupérer les anniversaires" })
         return
     }
-    const birthdays = await prisma.birthdays.findMany({
+    const birthdays = await prisma.globalUserData.findMany({
         where: {
             userId: {
                 in: userIds
+            },
+            birthDate: {
+                not: null
             }
         }
     })
@@ -176,9 +186,22 @@ async function listBirthday(interaction: CommandInteraction) {
         await interaction.editReply({ content: "Aucun anniversaire enregistré" })
         return
     }
-    birthdays.sort((a, b) => a.date.getMonth() - b.date.getMonth())
+    birthdays.sort((a, b) => {
+        if (a.birthDate && b.birthDate) {
+            return a.birthDate.getMonth() - b.birthDate.getMonth();
+        }
+        return 0;
+    });
     const embeds = birthdays.map(birthday => {
-        const birthdayDate = birthday.date
+        const birthdayDate = birthday.birthDate
+        if (!birthdayDate) {
+            return new EmbedBuilder()
+                .setTitle("Anniversaires")
+                .setDescription(`<@${birthday.userId}> - Date inconnue`)
+                .setColor(color)
+                .setTimestamp()
+                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+        }
         return new EmbedBuilder()
             .setTitle("Anniversaires")
             .setDescription(`<@${birthday.userId}> - ${birthdayDate.toLocaleDateString()}`)
