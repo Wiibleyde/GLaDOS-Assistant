@@ -35,11 +35,14 @@ export async function execute(interaction: CommandInteraction) {
     const shuffledAnswers = [quiz.answer, ...quiz.badAnswers].sort(() => Math.random() - 0.5)
     quiz.shuffleAnswers = shuffledAnswers
 
+    // Capitalize first letter and replace underscores with spaces
+    const formattedCategory = quiz.category.charAt(0).toUpperCase() + quiz.category.slice(1).replace(/_/g, " ")
+
     const embed = new EmbedBuilder()
         .setTitle("Question de quiz")
         .setDescription(`**${quiz.question}**\n\n1) ${shuffledAnswers[0]}\n2) ${shuffledAnswers[1]}\n3) ${shuffledAnswers[2]}\n4) ${shuffledAnswers[3]}`)
         .addFields(
-            { name: "Catégorie / difficulté", value: `${quiz.category} / ${quiz.difficulty}`, inline: true },
+            { name: "Catégorie / difficulté", value: `${formattedCategory} / ${quiz.difficulty}`, inline: true },
             { name: "Invalide", value: `<t:${Math.floor(invalidQuizTimestamp / 1000)}:R>`, inline: true },
             { name: "Demandé par", value: `<@${interaction.user.id}>`, inline: true }
         )
