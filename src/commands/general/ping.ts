@@ -23,31 +23,36 @@ export async function execute(interaction: CommandInteraction) {
     const ping: number = interaction.client.ws.ping
 
     if (!firstResponse || ping <= 0) {
-        status = "surprenant ! ⚫"
+        status = "Surprenant ! ⚫"
         color = 0xFFFFFF
     } else if (ping < PING_THRESHOLD.VERY_GOOD) {
-        status = "très bon 🟢"
+        status = "Très bon 🟢"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.GOOD) {
-        status = "bon 🟢"
+        status = "Bon 🟢"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.CORRECT) {
-        status = "correct 🟡"
+        status = "Correct 🟡"
         color = 0x00FF00
     } else if (ping < PING_THRESHOLD.WEAK) {
-        status = "faible 🟠"
+        status = "Faible 🟠"
         color = 0xFFA500
     } else if (ping < PING_THRESHOLD.BAD) {
-        status = "mauvais 🔴"
+        status = "Mauvais 🔴"
         color = 0xFF0000
     } else {
-        status = "très mauvais 🔴"
+        status = "Très mauvais 🔴"
         color = 0xFF0000
     }
 
     const pingEmbed: EmbedBuilder = new EmbedBuilder()
         .setTitle("Ping")
-        .setDescription(`Le ping est de ${interaction.client.ws.ping}ms, ce qui est ${status}`)
+        .setDescription("Status du bot")
+        .addFields(
+            { name: "Ping", value: `${ping}ms / ${status}`, inline: true },
+            { name: "Mémoire", value: `${(memoryData.heapUsed / 1024 / 1024).toFixed(2)} MB`, inline: true },
+            { name: "Uptime", value: `${(process.uptime() / 60).toFixed(2)} minutes`, inline: true }
+        )
         .setTimestamp()
         .setColor(color)
         .setThumbnail("attachment://ping.png")
