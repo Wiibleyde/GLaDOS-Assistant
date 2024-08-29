@@ -1,7 +1,6 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { commands } from "@/commands/index";
 
-// Définir une interface pour les commandes
 interface Command {
     data: {
         description: string;
@@ -14,7 +13,6 @@ export const data = new SlashCommandBuilder()
     .setDescription("Affiche la liste des commandes");
 
 export async function execute(interaction: CommandInteraction) {
-    // Typage explicite de l'objet commands
     const typedCommands: { [key: string]: Command } = commands;
     const commandsList = Object.keys(typedCommands).map((key: string) => {return `**/${key}** : ${typedCommands[key].data.description}`;}).join("\n");
 

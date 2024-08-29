@@ -24,7 +24,6 @@ export async function execute(interaction: CommandInteraction) {
         createdAt: Date.now()
     }
 
-    // One hour after creation
     const invalidQuizTimestamp = quiz.createdAt + 3600000
 
     if(!quiz) {
@@ -35,7 +34,6 @@ export async function execute(interaction: CommandInteraction) {
     const shuffledAnswers = [quiz.answer, ...quiz.badAnswers].sort(() => Math.random() - 0.5)
     quiz.shuffleAnswers = shuffledAnswers
 
-    // Capitalize first letter and replace underscores with spaces
     const formattedCategory = quiz.category.charAt(0).toUpperCase() + quiz.category.slice(1).replace(/_/g, " ")
 
     const embed = new EmbedBuilder()

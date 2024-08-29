@@ -67,7 +67,6 @@ async function addBirthday(interaction: CommandInteraction) {
 export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
     const user = interaction.user
     const birthdayDateText = interaction.fields.getTextInputValue("birthday")
-    // date is valid (format: DD/MM/YYYY)
     const dateParts = birthdayDateText.split("/")
     if (dateParts.length !== 3) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
