@@ -96,7 +96,7 @@ client.on(Events.MessageCreate, async (message) => {
     if (message.content.startsWith(`<@!${client.user?.id}>`) || message.content.startsWith(rename as string)) {
         const embed = new EmbedBuilder()
             .setTitle("GLaDOS intelligence 🧠")
-            .setDescription(`Feature non implémentée... WIP`)
+            .setDescription(`<a:glados_intelligence:1279206420557987872> Bonjour, je suis GLaDOS, votre assistante personnelle. Comment puis-je vous aider ? (C'est faux, c'est pas encore dev)`)
             .setColor(0xffffff)
             .setTimestamp()
             .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });

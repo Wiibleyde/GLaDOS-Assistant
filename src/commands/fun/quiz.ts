@@ -1,6 +1,5 @@
 import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
-import { logger } from "@/utils/logger"
 import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType } from "discord.js"
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
