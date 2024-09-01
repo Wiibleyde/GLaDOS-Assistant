@@ -120,16 +120,31 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         if (!found) {
             messageFields.push({ name: "Bonne(s) réponse(s)", value: `<@${interaction.user.id}>`, inline: true });
         }
-        await prisma.globalUserData.update({
+        const user = await prisma.globalUserData.findUnique({
             where: {
                 userId: interaction.user.id
-            },
-            data: {
-                quizGoodAnswers: {
-                    increment: 1
-                }
             }
         })
+        if (!user) {
+            await prisma.globalUserData.create({
+                data: {
+                    userId: interaction.user.id,
+                    quizBadAnswers: 0,
+                    quizGoodAnswers: 1
+                }
+            })
+        } else {
+            await prisma.globalUserData.update({
+                where: {
+                    userId: interaction.user.id
+                },
+                data: {
+                    quizGoodAnswers: {
+                        increment: 1
+                    }
+                }
+            })
+        }
         await message.edit({ embeds: [message.embeds[0]], components: [actionRow] });
     } else {
         await interaction.reply({ content: "Mauvaise réponse ! (La bonne réponse était: ||" + answer + "||)", ephemeral: true });
@@ -145,16 +160,31 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         if (!found) {
             messageFields.push({ name: "Mauvaise(s) réponse(s)", value: `<@${interaction.user.id}>`, inline: true });
         }
-        await prisma.globalUserData.update({
+        const user = await prisma.globalUserData.findUnique({
             where: {
                 userId: interaction.user.id
-            },
-            data: {
-                quizBadAnswers: {
-                    increment: 1
-                }
             }
         })
+        if (!user) {
+            await prisma.globalUserData.create({
+                data: {
+                    userId: interaction.user.id,
+                    quizBadAnswers: 1,
+                    quizGoodAnswers: 0
+                }
+            })
+        } else {
+            await prisma.globalUserData.update({
+                where: {
+                    userId: interaction.user.id
+                },
+                data: {
+                    quizBadAnswers: {
+                        increment: 1
+                    }
+                }
+            })
+        }
         await message.edit({ embeds: [message.embeds[0]], components: [actionRow] });
     }
     quiz.alreadyAnswered = quiz.alreadyAnswered ? [...quiz.alreadyAnswered, parseInt(interaction.user.id)] : [parseInt(interaction.user.id)]
