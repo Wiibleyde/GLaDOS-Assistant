@@ -15,8 +15,8 @@ datasource db {
 
 model GlobalUserData {
     uuid            String   @id @default(uuid())
-    userId          BigInt   @unique
-    birthDate       DateTime?
+    userId          String   @unique
+    birthDate       DateTime? @db.Date
     quizGoodAnswers Int      @default(0)
     quizBadAnswers  Int      @default(0)
     Quote           Quote[]
@@ -52,7 +52,7 @@ model Config {
 model Quote {
     uuid       String         @id @default(uuid())
     guildId    BigInt
-    author     GlobalUserData @relation(fields: [authorUuid], references: [uuid])
+    author     GlobalUserData @relation(fields: [authorUuid], references: [uuid], onDelete: Cascade)
     authorUuid String
     quote      String
     context    String         @default("")
