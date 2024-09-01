@@ -82,11 +82,10 @@ export async function execute(interaction: CommandInteraction) {
             author: {
                 connectOrCreate: {
                     where: {
-                        userId: parseInt(author?.id)
+                        userId: author?.id
                     },
                     create: {
-                        userId: parseInt(author?.id,),
-                        
+                        userId: author?.id,
                     }
                 }
             },
