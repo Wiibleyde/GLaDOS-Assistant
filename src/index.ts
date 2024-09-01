@@ -182,4 +182,12 @@ const quizCron = new CronJob('0 */2 * * * *', async () => {
 })
 quizCron.start()
 
+process.on('SIGINT', async () => {
+    logger.info('Ctrl-C détécté, déconnexion...')
+    await prisma.$disconnect()
+    await client.destroy()
+    logger.info('Déconnecté, arrêt du bot...')
+    process.exit(0)
+})
+
 client.login(config.DISCORD_TOKEN)
