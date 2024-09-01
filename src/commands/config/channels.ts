@@ -1,6 +1,7 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
 import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
+import { config } from "@/config"
 
 export const data = new SlashCommandBuilder()
     .setName("channels")
@@ -38,10 +39,14 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
     )
     .setDMPermission(false)
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
 
 export async function execute(interaction: CommandInteraction) {
-    await interaction.deferReply({ ephemeral: true, fetchReply: true });
+    await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    const user = interaction.guild?.members.cache.get(interaction.client.user.id)
+    if (!user?.permissions.has(PermissionFlagsBits.ManageChannels) || !user?.permissions.has(PermissionFlagsBits.Administrator) || config.OWNER_ID !== interaction.user.id) {
+        await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer le nom du bot"))] })
+        return
+    }
     switch (interaction.options.get("action")?.value) {
         case "view":
             const serverConfig = await prisma.config.findMany({

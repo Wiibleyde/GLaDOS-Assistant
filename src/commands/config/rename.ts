@@ -1,6 +1,7 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { prisma } from "@/utils/database"
+import { config } from "@/config"
 
 export const renameCache = new Map<number, string>()
 
@@ -14,10 +15,14 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
     )
     .setDMPermission(false)
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    const user = interaction.guild?.members.cache.get(interaction.client.user.id)
+    if (!user?.permissions.has(PermissionFlagsBits.ChangeNickname) || !user?.permissions.has(PermissionFlagsBits.Administrator) || config.OWNER_ID !== interaction.user.id) {
+        await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer le nom du bot"))] })
+        return
+    }
     const newName = interaction.options.get("nom")?.value as string
     if (!newName || newName.length === 0) {
         interaction.guild?.members.cache.get(interaction.client.user.id)?.setNickname("")
