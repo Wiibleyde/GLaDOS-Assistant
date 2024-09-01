@@ -122,7 +122,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         }
         await prisma.globalUserData.update({
             where: {
-                userId: parseInt(interaction.user.id)
+                userId: interaction.user.id
             },
             data: {
                 quizGoodAnswers: {
@@ -147,7 +147,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         }
         await prisma.globalUserData.update({
             where: {
-                userId: parseInt(interaction.user.id)
+                userId: interaction.user.id
             },
             data: {
                 quizBadAnswers: {

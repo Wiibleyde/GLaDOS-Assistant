@@ -31,7 +31,8 @@ class Logger {
     }
 
     private getNowDate() {
-        return new Date().toISOString()
+        const now = new Date()
+        return now.toLocaleString()
     }
 
     public async info(...messageList: any[]) {

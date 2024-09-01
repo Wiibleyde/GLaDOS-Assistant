@@ -104,19 +104,21 @@ client.on(Events.MessageCreate, async (message) => {
     }
 })
 
-// Cron job to wish happy birthday to users at 00:00
+// Cron job to wish happy birthday to users at 00:00 : 0 0 0 * * *, for the dev use every 10 seconds : '0,10,20,30,40,50 * * * * *'
 const birthdayCron = new CronJob('0 0 0 * * *', async () => {
-    const todayBirthdays = await prisma.globalUserData.findMany({
-        where: {
-            birthDate: new Date()
-        }
-    })
+    const today = new Date();
+    const todayDay = today.getDate();
+    const todayMonth = today.getMonth() + 1;
+
+    const todayBirthdays: { uuid: string, userId: string, birthDate: Date | null, quizGoodAnswers: number, quizBadAnswers: number}[] = await prisma.$queryRaw`SELECT uuid, userId, birthDate, quizGoodAnswers, quizBadAnswers FROM GlobalUserData WHERE EXTRACT(DAY FROM birthDate) = ${todayDay} AND EXTRACT(MONTH FROM birthDate) = ${todayMonth}`
+
     const botGuilds = client.guilds.cache
     for (const birthday of todayBirthdays) {
         for (const guild of botGuilds) {
             const guildId = guild[0]
             const guildObj = guild[1]
-            const member = await guildObj.members.fetch(birthday.userId.toString()).catch(() => null)
+            const guildToTest = await client.guilds.fetch(guildId);
+            const member = await guildToTest.members.fetch(birthday.userId);
             if (member) {
                 const channelId = await prisma.config.findFirst({
                     where: {
@@ -140,6 +142,8 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
                 } else {
                     logger.error(`Channel not found in guild ${guildId}`)
                 }
+            } else {
+                logger.error(`Member ${birthday.userId} not found in guild ${guildId}`)
             }
         }
     }

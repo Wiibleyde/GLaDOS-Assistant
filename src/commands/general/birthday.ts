@@ -72,14 +72,14 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
         return
     }
-    const day = parseInt(dateParts[0])
-    const month = parseInt(dateParts[1])
+    const day = parseInt(dateParts[0]) + 1
+    const month = parseInt(dateParts[1]) - 1
     const year = parseInt(dateParts[2])
     if (isNaN(day) || isNaN(month) || isNaN(year)) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
         return
     }
-    const birthdayDate = new Date(year, month - 1, day)
+    const birthdayDate = new Date(year, month, day)
     birthdayDate.setHours(0, 0, 0, 0)
     if (isNaN(birthdayDate.getTime())) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Date invalide"))], ephemeral: true })
@@ -87,7 +87,7 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
     }
     const birthday = await prisma.globalUserData.findFirst({
         where: {
-            userId: parseInt(user.id)
+            userId: user.id
         }
     })
     if (birthday) {
@@ -100,10 +100,11 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
             }
         })
     } else {
+        console.log("🚀 ~ addBirthdayModal ~ user.id:", user.id, parseInt(user.id))
         await prisma.globalUserData.create({
             data: {
                 birthDate: birthdayDate,
-                userId: parseInt(user.id)
+                userId: user.id
             }
         })
     }
@@ -115,7 +116,7 @@ async function removeBirthday(interaction: CommandInteraction) {
     const user = interaction.user
     const birthday = await prisma.globalUserData.findFirst({
         where: {
-            userId: parseInt(user.id)
+            userId: user.id
         }
     })
     if (!birthday) {
@@ -135,7 +136,7 @@ async function viewBirthday(interaction: CommandInteraction) {
     const user = interaction.user
     const birthday = await prisma.globalUserData.findFirst({
         where: {
-            userId: parseInt(user.id),
+            userId: user.id,
             birthDate: {
                 not: null
             }
@@ -166,7 +167,7 @@ async function listBirthday(interaction: CommandInteraction) {
         return
     }
     const usersOnGuild = await client.guilds.cache.get(interaction.guildId)
-    const userIds = usersOnGuild?.members.cache.map(member => parseInt(member.id))
+    const userIds = usersOnGuild?.members.cache.map(member => member.id)
     if (!userIds) {
         await interaction.editReply({ content: "Impossible de récupérer les anniversaires" })
         return
