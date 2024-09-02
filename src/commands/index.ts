@@ -16,6 +16,7 @@ import { addBirthdayModal } from "./general/birthday"
 import { handleQuizButton } from "./fun/quiz"
 
 import * as logs from "./dev/logs"
+import * as debug from "./dev/debug"
 
 export const commands = {
     ping,
@@ -32,6 +33,7 @@ export const commands = {
 
 export const devCommands = {
     logs,
+    debug,
 }
 
 export const modals = {
