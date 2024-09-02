@@ -51,7 +51,7 @@ model Config {
 
 model Quote {
     uuid       String         @id @default(uuid())
-    guildId    BigInt
+    guildId    String
     author     GlobalUserData @relation(fields: [authorUuid], references: [uuid], onDelete: Cascade)
     authorUuid String
     quote      String

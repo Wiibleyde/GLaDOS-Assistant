@@ -100,7 +100,6 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
             }
         })
     } else {
-        console.log("🚀 ~ addBirthdayModal ~ user.id:", user.id, parseInt(user.id))
         await prisma.globalUserData.create({
             data: {
                 birthDate: birthdayDate,
