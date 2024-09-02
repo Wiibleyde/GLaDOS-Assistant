@@ -52,7 +52,7 @@ export async function execute(interaction: CommandInteraction) {
             const user = interaction.user
             const dbUser = await prisma.globalUserData.findFirst({
                 where: {
-                    userId: parseInt(user.id)
+                    userId: user.id
                 }
             })
             if (!dbUser) {

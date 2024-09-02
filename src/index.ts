@@ -84,7 +84,7 @@ client.on(Events.MessageCreate, async (message) => {
     } else {
         const guild = await prisma.config.findFirst({
             where: {
-                guildId: parseInt(guildId),
+                guildId: guildId,
                 key: "botName"
             }
         })
@@ -122,7 +122,7 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
             if (member) {
                 const channelId = await prisma.config.findFirst({
                     where: {
-                        guildId: parseInt(guildId),
+                        guildId: guildId,
                         key: 'birthdayChannel'
                     }
                 })

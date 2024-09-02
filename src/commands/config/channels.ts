@@ -51,7 +51,7 @@ export async function execute(interaction: CommandInteraction) {
         case "view":
             const serverConfig = await prisma.config.findMany({
                 where: {
-                    guildId: parseInt(interaction.guildId?.toString() as string)
+                    guildId: interaction.guildId?.toString() as string
                 }
             })
             if (serverConfig.length === 0) {
@@ -76,7 +76,7 @@ export async function execute(interaction: CommandInteraction) {
             }
             const existingConfig = await prisma.config.findFirst({
                 where: {
-                    guildId: parseInt(interaction.guildId?.toString() as string),
+                    guildId: interaction.guildId?.toString() as string,
                     key
                 }
             })
@@ -92,7 +92,7 @@ export async function execute(interaction: CommandInteraction) {
             } else {
                 await prisma.config.create({
                     data: {
-                        guildId: parseInt(interaction.guildId?.toString() as string),
+                        guildId: interaction.guildId?.toString() as string,
                         key,
                         value: channel
                     }

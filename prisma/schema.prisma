@@ -43,7 +43,7 @@ model Config {
     uuid    String @id @default(uuid())
     key     String
     value   String
-    guildId BigInt
+    guildId String
 
     @@unique([key, guildId], name: "unique_key_guildId")
     @@index([guildId])

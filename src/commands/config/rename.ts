@@ -28,7 +28,7 @@ export async function execute(interaction: CommandInteraction) {
         interaction.guild?.members.cache.get(interaction.client.user.id)?.setNickname("")
         await prisma.config.deleteMany({
             where: {
-                guildId: parseInt(interaction.guildId?.toString() as string),
+                guildId: interaction.guildId?.toString() as string,
                 key: "botName"
             }
         })
@@ -42,7 +42,7 @@ export async function execute(interaction: CommandInteraction) {
         interaction.guild?.members.cache.get(interaction.client.user.id)?.setNickname(newName)
         await prisma.config.findFirst({
             where: {
-                guildId: parseInt(interaction.guildId?.toString() as string),
+                guildId: interaction.guildId?.toString() as string,
                 key: "botName"
             }
         }).then(async config => {
@@ -58,7 +58,7 @@ export async function execute(interaction: CommandInteraction) {
             } else {
                 await prisma.config.create({
                     data: {
-                        guildId: parseInt(interaction.guildId?.toString() as string),
+                        guildId: interaction.guildId?.toString() as string,
                         key: "botName",
                         value: newName
                     }

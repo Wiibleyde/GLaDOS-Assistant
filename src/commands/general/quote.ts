@@ -45,7 +45,7 @@ export async function execute(interaction: CommandInteraction) {
     if (interaction.guildId != null) {
         channelWhereToPost = await prisma.config.findFirst({
             where: {
-                guildId: parseInt(interaction.guildId),
+                guildId: interaction.guildId,
                 key: "quoteChannel"
             }
         })
@@ -90,7 +90,7 @@ export async function execute(interaction: CommandInteraction) {
                 }
             },
             context: context,
-            guildId: parseInt(interaction.guildId ?? "0"),
+            guildId: interaction.guildId ?? "0",
             createdAt: interaction.options.get("date")?.value as string || new Date().toISOString()
         }
     })
