@@ -4,7 +4,6 @@ import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
 import { buttons, commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
-import { initRenameCache, renameCache } from "./commands/config/rename"
 import { CronJob } from 'cron';
 import { prisma } from "./utils/database"
 import { checkOutdatedQuiz } from "./commands/fun/quiz"
@@ -31,7 +30,6 @@ export const client = new Client({
 })
 
 logger.initLevels()
-initRenameCache()
 
 client.once(Events.ClientReady, async () => {
     client.user?.setPresence({
@@ -78,22 +76,8 @@ client.on(Events.MessageCreate, async (message) => {
     if (message.author.bot) return
     const guildId = message.guild?.id
     if (!guildId) return
-    let rename = renameCache.get(parseInt(guildId))
-    if (!rename || rename.length === 0) {
-        rename = client.user?.username
-    } else {
-        const guild = await prisma.config.findFirst({
-            where: {
-                guildId: guildId,
-                key: "botName"
-            }
-        })
-        if (guild) {
-            rename = guild.value
-            renameCache.set(parseInt(guildId), rename)
-        }
-    }
-    if (message.content.startsWith(`<@!${client.user?.id}>`) || message.content.startsWith(rename as string)) {
+    const botPseudo = client.user?.username
+    if (message.content.startsWith(`<@!${client.user?.id}>`) || message.content.startsWith(botPseudo as string)) {
         const embed = new EmbedBuilder()
             .setTitle("GLaDOS intelligence 🧠")
             .setDescription(`<a:glados_intelligence:1279206420557987872> Bonjour, je suis GLaDOS, votre assistante personnelle. Comment puis-je vous aider ? (C'est faux, c'est pas encore dev)`)
