@@ -14,11 +14,11 @@ datasource db {
 }
 
 model GlobalUserData {
-    uuid            String   @id @default(uuid())
-    userId          String   @unique
+    uuid            String    @id @default(uuid())
+    userId          String    @unique
     birthDate       DateTime? @db.Date
-    quizGoodAnswers Int      @default(0)
-    quizBadAnswers  Int      @default(0)
+    quizGoodAnswers Int       @default(0)
+    quizBadAnswers  Int       @default(0)
     Quote           Quote[]
 
     @@index([userId])
@@ -46,6 +46,14 @@ model Config {
     guildId String
 
     @@unique([key, guildId], name: "unique_key_guildId")
+    @@index([guildId])
+}
+
+model GuildData {
+    uuid        String  @id @default(uuid())
+    guildId     String  @unique
+    debugRoleId String?
+
     @@index([guildId])
 }
 
