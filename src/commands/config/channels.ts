@@ -59,10 +59,9 @@ export async function execute(interaction: CommandInteraction) {
                 return
             }
             const embed = new EmbedBuilder()
-                .setTitle("Configuration")
-                .setDescription(serverConfig.map(config => `${config.key}: <#${config.value}>`).join("\n"))
+                .setTitle("Configuration des salons")
                 .setColor(0x00FF00)
-                .setTimestamp()
+                .setDescription(serverConfig.map(config => `**${config.key}**: <#${config.value}>`).join("\n"))
                 .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
 
             await interaction.editReply({ embeds: [embed] })
