@@ -3,8 +3,23 @@ import { prisma } from "@/utils/database"
 import { logger } from "@/utils/logger"
 import { client } from "@/index"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
+import { log } from "console"
 
 const color = 0xB58D47
+const months = {
+    1: "Janvier",
+    2: "Février",
+    3: "Mars",
+    4: "Avril",
+    5: "Mai",
+    6: "Juin",
+    7: "Juillet",
+    8: "Août",
+    9: "Septembre",
+    10: "Octobre",
+    11: "Novembre",
+    12: "Décembre"
+}
 
 export const data = new SlashCommandBuilder()
     .setName("birthday")
@@ -191,23 +206,28 @@ async function listBirthday(interaction: CommandInteraction) {
         }
         return 0;
     });
-    const embeds = birthdays.map(birthday => {
-        const birthdayDate = birthday.birthDate
-        if (!birthdayDate) {
-            return new EmbedBuilder()
-                .setTitle("Anniversaires")
-                .setDescription(`<@${birthday.userId}> - Date inconnue`)
-                .setColor(color)
-                .setTimestamp()
-                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+    const monthsBirthdays: { [key: string]: string[] } = {}
+    for(const month in months) {
+        for(const birthday of birthdays) {
+            if(birthday.birthDate?.getMonth() === parseInt(month as string) - 1) {
+                if(!monthsBirthdays[month]) {
+                    monthsBirthdays[month] = []
+                }
+                monthsBirthdays[month].push(`<@${birthday.userId}> - ${birthday.birthDate.toLocaleDateString()}`)
+            }
         }
-        return new EmbedBuilder()
-            .setTitle("Anniversaires")
-            .setDescription(`<@${birthday.userId}> - ${birthdayDate.toLocaleDateString()}`)
-            .setColor(color)
-            .setTimestamp()
-            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
-    })
+    }
 
-    await interaction.editReply({ embeds })
+    const embed = new EmbedBuilder()
+        .setTitle("Anniversaires")
+        .setColor(color)
+        .setTimestamp()
+        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+    for(const month in monthsBirthdays) {
+        embed.addFields({
+            name: months[parseInt(month) as keyof typeof months],
+            value: monthsBirthdays[month].join("\n") || "Aucun anniversaire"
+        })
+    }
+    await interaction.editReply({ embeds: [embed] })
 }
