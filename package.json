@@ -21,7 +21,7 @@
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "jimp": "^0.22.12",
-    "prisma": "^5.18.0",
+    "prisma": "^5.19.1",
     "rotating-file-stream": "^3.2.3"
   },
   "devDependencies": {
