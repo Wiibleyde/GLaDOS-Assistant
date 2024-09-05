@@ -1,5 +1,6 @@
 import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
+import { logger } from "@/utils/logger"
 import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType } from "discord.js"
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
@@ -85,8 +86,12 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         return
     }
 
-    if(quiz.alreadyAnswered && quiz.alreadyAnswered.includes(parseInt(interaction.user.id))) {
-        await interaction.reply({ content: "Vous avez déjà répondu à cette question !", ephemeral: true });
+    if(quiz.rightUsers && quiz.rightUsers.includes(interaction.user.id)) {
+        await interaction.reply({ content: "Vous avez déjà répondu correctement à cette question !", ephemeral: true });
+        return
+    }
+    if(quiz.wrongUsers && quiz.wrongUsers.includes(interaction.user.id)) {
+        await interaction.reply({ content: "Vous avez déjà répondu incorrectement à cette question !", ephemeral: true });
         return
     }
 
@@ -107,18 +112,23 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
 
     if (userAnswer === answer) {
+        quiz.rightUsers = quiz.rightUsers ? [...quiz.rightUsers, interaction.user.id] : [interaction.user.id]
         await interaction.reply({ content: "Bonne réponse !", ephemeral: true });
         const messageFields = message.embeds[0].fields;
         let found = false;
         for (const field of messageFields) {
             if (field.name === "Bonne(s) réponse(s)") {
-                field.value = field.value + `\n<@${interaction.user.id}>`;
+                let finalField = "";
+                for (const user of quiz.rightUsers) {
+                    finalField = finalField + `\n<@${user}>`;
+                }
+                field.value = finalField;
                 found = true;
                 break;
             }
         }
         if (!found) {
-            messageFields.push({ name: "Bonne(s) réponse(s)", value: `<@${interaction.user.id}>`, inline: true });
+            messageFields.push({ name: "Bonne(s) réponse(s)", value: quiz.rightUsers.map(user => `<@${user}>`).join("\n"), inline: true });
         }
         const user = await prisma.globalUserData.findUnique({
             where: {
@@ -145,20 +155,25 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
                 }
             })
         }
-        await message.edit({ embeds: [message.embeds[0]], components: [actionRow] });
+        await message.edit({ embeds: [message.embeds[0]], components: [actionRow] })
     } else {
+        quiz.wrongUsers = quiz.wrongUsers ? [...quiz.wrongUsers, interaction.user.id] : [interaction.user.id]
         await interaction.reply({ content: "Mauvaise réponse ! (La bonne réponse était: ||" + answer + "||)", ephemeral: true });
         const messageFields = message.embeds[0].fields;
         let found = false;
         for (const field of messageFields) {
             if (field.name === "Mauvaise(s) réponse(s)") {
-                field.value = field.value + `\n<@${interaction.user.id}>`;
+                let finalField = "";
+                for (const user of quiz.wrongUsers) {
+                    finalField = finalField + `\n<@${user}>`;
+                }
+                field.value = finalField;
                 found = true;
                 break;
             }
         }
         if (!found) {
-            messageFields.push({ name: "Mauvaise(s) réponse(s)", value: `<@${interaction.user.id}>`, inline: true });
+            messageFields.push({ name: "Mauvaise(s) réponse(s)", value: quiz.wrongUsers.map(user => `<@${user}>`).join("\n"), inline: true });
         }
         const user = await prisma.globalUserData.findUnique({
             where: {
@@ -187,7 +202,6 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         }
         await message.edit({ embeds: [message.embeds[0]], components: [actionRow] });
     }
-    quiz.alreadyAnswered = quiz.alreadyAnswered ? [...quiz.alreadyAnswered, parseInt(interaction.user.id)] : [parseInt(interaction.user.id)]
 }
 
 export function checkOutdatedQuiz() {
