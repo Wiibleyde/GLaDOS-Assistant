@@ -1,4 +1,7 @@
+import { EmbedBuilder, WebhookClient } from "discord.js"
 import { prisma } from "@/utils/database"
+import { config } from "@/config"
+
 
 const resetColor = "\x1b[0m"
 
@@ -8,6 +11,10 @@ enum LogLevelColors {
     WARN = "\x1b[33m",
     DEBUG = "\x1b[32m",
 }
+
+const webhookClient = new WebhookClient({
+    url: config.LOGS_WEBHOOK_URL
+})
 
 class Logger {
     public async initLevels() {
@@ -38,6 +45,17 @@ class Logger {
     public async info(...messageList: any[]) {
         const message = messageList.join(" ")
         console.log(LogLevelColors.INFO + `[INFO] ${this.getNowDate()} ${message}` + resetColor)
+        const embed: EmbedBuilder = new EmbedBuilder()
+            .setTitle("INFO")
+            .setDescription(message)
+            .setTimestamp()
+            .setColor(0x00FF00)
+        webhookClient.send({
+            options: {
+                username: "GLaDOS INFO",
+            },
+            embeds: [embed]
+        })
         await prisma.logs.create({
             data: {
                 message,
@@ -53,6 +71,17 @@ class Logger {
     public async error(...messageList: any[]) {
         const message = messageList.join(" ")
         console.error(LogLevelColors.ERROR + `[ERROR] ${this.getNowDate()} ${message}` + resetColor)
+        const embed: EmbedBuilder = new EmbedBuilder()
+            .setTitle("ERROR")
+            .setDescription(message)
+            .setTimestamp()
+            .setColor(0xFF0000)
+        webhookClient.send({
+            options: {
+                username: "GLaDOS ERROR",
+            },
+            embeds: [embed]
+        })
         await prisma.logs.create({
             data: {
                 message,
@@ -68,6 +97,17 @@ class Logger {
     public async warn(...messageList: any[]) {
         const message = messageList.join(" ")
         console.warn(LogLevelColors.WARN + `[WARN] ${this.getNowDate()} ${message}` + resetColor)
+        const embed: EmbedBuilder = new EmbedBuilder()
+            .setTitle("WARN")
+            .setDescription(message)
+            .setTimestamp()
+            .setColor(0xFFA500)
+        webhookClient.send({
+            options: {
+                username: "GLaDOS WARN",
+            },
+            embeds: [embed]
+        })
         await prisma.logs.create({
             data: {
                 message,
@@ -83,6 +123,17 @@ class Logger {
     public async debug(...messageList: any[]) {
         const message = messageList.join(" ")
         console.log(LogLevelColors.DEBUG + `[DEBUG] ${this.getNowDate()} ${message}` + resetColor)
+        const embed: EmbedBuilder = new EmbedBuilder()
+            .setTitle("DEBUG")
+            .setDescription(message)
+            .setTimestamp()
+            .setColor(0x0000FF)
+        webhookClient.send({
+            options: {
+                username: "GLaDOS DEBUG",
+            },
+            embeds: [embed]
+        })
         await prisma.logs.create({
             data: {
                 message,

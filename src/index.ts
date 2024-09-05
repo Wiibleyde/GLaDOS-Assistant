@@ -56,19 +56,22 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (devCommands[commandName as keyof typeof devCommands]) {
                 devCommands[commandName as keyof typeof devCommands].execute(interaction)
             }
+            logger.info(`Commande </${commandName}:${interaction.commandId}> invoqué par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}>`)
         } catch (error: Error | any) {
-            logger.error(`Error while executing command: ${error.message}`)
+            logger.error(`Erreur avec la commande </${interaction.commandName}:${interaction.commandId}> invoqué par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}> : ${error.message}`)
             await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
         }
     } else if (interaction.isModalSubmit()) {
         if (modals[interaction.customId as keyof typeof modals]) {
             modals[interaction.customId as keyof typeof modals](interaction)
         }
+        logger.info(`Modal <${interaction.customId}> posté par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}>`)
     } else if (interaction.isButton()) {
         const customId = interaction.customId.split("--")[0]
         if (buttons[customId as keyof typeof buttons]) {
             buttons[customId as keyof typeof buttons](interaction)
         }
+        logger.info(`Bouton <${interaction.customId}> cliqué par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}>`)
     }
 })
 
