@@ -6,5 +6,6 @@ type QuizType = {
     difficulty: string
     createdAt: number
     shuffleAnswers?: Array<string>
-    alreadyAnswered?: Array<number>
+    rightUsers?: Array<string>
+    wrongUsers?: Array<string>
 }
