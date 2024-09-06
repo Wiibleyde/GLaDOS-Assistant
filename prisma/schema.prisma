@@ -22,6 +22,7 @@ model GlobalUserData {
     Quote           Quote[]
 
     @@index([userId])
+    QuizQuestions QuizQuestions[]
 }
 
 model LogLevel {
@@ -65,4 +66,22 @@ model Quote {
     quote      String
     context    String         @default("")
     createdAt  DateTime       @default(now())
+}
+
+model QuizQuestions {
+    uuid        String  @id @default(uuid())
+    question    String
+    answer      String
+    badAnswer1  String
+    badAnswer2  String
+    badAnswer3  String
+    category    String
+    difficulty  String
+    createdAt   DateTime @default(now())
+    author      GlobalUserData? @relation(fields: [authorUuid], references: [uuid], onDelete: Cascade)
+    authorUuid  String?
+    guildId     String
+    lastTimeUsed DateTime?
+
+    @@index([guildId])
 }

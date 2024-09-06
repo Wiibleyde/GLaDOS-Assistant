@@ -1,6 +1,5 @@
 import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
-import { logger } from "@/utils/logger"
 import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType } from "discord.js"
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
@@ -45,6 +44,7 @@ export async function execute(interaction: CommandInteraction) {
             { name: "Demandé par", value: `<@${interaction.user.id}>`, inline: true }
         )
         .setColor(0x4B0082)
+        .setTimestamp()
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     const buttons = [

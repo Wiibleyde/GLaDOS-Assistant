@@ -20,6 +20,7 @@ export async function execute(interaction: CommandInteraction) {
         .setTitle("Liste des commandes")
         .setDescription(commandsList)
         .setColor(0x4B0082)
+        .setTimestamp()
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
