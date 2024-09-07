@@ -6,7 +6,7 @@ import { buttons, commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
 import { CronJob } from 'cron';
 import { prisma } from "./utils/database"
-import { checkOutdatedQuiz } from "./commands/fun/quiz"
+import { checkOutdatedQuiz } from "./commands/fun/quiz/quiz"
 
 export const client = new Client({
     intents: [
@@ -65,13 +65,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (modals[interaction.customId as keyof typeof modals]) {
             modals[interaction.customId as keyof typeof modals](interaction)
         }
-        logger.info(`Modal <${interaction.customId}> posté par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}>`)
     } else if (interaction.isButton()) {
         const customId = interaction.customId.split("--")[0]
         if (buttons[customId as keyof typeof buttons]) {
             buttons[customId as keyof typeof buttons](interaction)
         }
-        logger.info(`Bouton <${interaction.customId}> cliqué par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}>`)
     }
 })
 

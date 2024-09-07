@@ -70,7 +70,7 @@ model Quote {
 
 model QuizQuestions {
     uuid        String  @id @default(uuid())
-    question    String
+    question    String  @unique
     answer      String
     badAnswer1  String
     badAnswer2  String
