@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 import { successEmbed, errorEmbed } from "@/utils/embeds"
+import { logger } from "@/utils/logger"
 
 export const data = new SlashCommandBuilder()
     .setName("addquestion")
@@ -107,6 +108,7 @@ export async function execute(interaction: CommandInteraction) {
         if ((error as any).code === "P2002") {
             return await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Cette question existe déjà *(Si vous souhaitez la supprimer, contactez un administrateur de GLaDOS)*."))] })
         }
+        logger.error(`Erreur lors de l'ajout de la question : ${error}`)
         return await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de l'ajout de la question."))] })
     }
 
