@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -14,30 +8,31 @@ datasource db {
 }
 
 model GlobalUserData {
-    uuid            String    @id @default(uuid())
-    userId          String    @unique
-    birthDate       DateTime? @db.Date
-    quizGoodAnswers Int       @default(0)
-    quizBadAnswers  Int       @default(0)
+    uuid            String          @id @default(uuid())
+    userId          String          @unique
+    birthDate       DateTime?       @db.Date
+    quizGoodAnswers Int             @default(0)
+    quizBadAnswers  Int             @default(0)
+    QuizQuestions   QuizQuestions[]
     Quote           Quote[]
 
     @@index([userId])
-    QuizQuestions QuizQuestions[]
 }
 
 model LogLevel {
     id   Int    @id @default(autoincrement())
     name String @unique
-
     logs Logs[]
 }
 
 model Logs {
     id        Int      @id @default(autoincrement())
     message   String   @db.MediumText
-    level     LogLevel @relation(fields: [levelId], references: [id])
     levelId   Int
     createdAt DateTime @default(now())
+    level     LogLevel @relation(fields: [levelId], references: [id])
+
+    @@index([levelId], map: "Logs_levelId_fkey")
 }
 
 model Config {
@@ -61,27 +56,30 @@ model GuildData {
 model Quote {
     uuid       String         @id @default(uuid())
     guildId    String
-    author     GlobalUserData @relation(fields: [authorUuid], references: [uuid], onDelete: Cascade)
     authorUuid String
     quote      String
     context    String         @default("")
     createdAt  DateTime       @default(now())
+    author     GlobalUserData @relation(fields: [authorUuid], references: [uuid], onDelete: Cascade)
+
+    @@index([authorUuid], map: "Quote_authorUuid_fkey")
 }
 
 model QuizQuestions {
-    uuid        String  @id @default(uuid())
-    question    String  @unique
-    answer      String
-    badAnswer1  String
-    badAnswer2  String
-    badAnswer3  String
-    category    String
-    difficulty  String
-    createdAt   DateTime @default(now())
-    author      GlobalUserData? @relation(fields: [authorUuid], references: [uuid], onDelete: Cascade)
-    authorUuid  String?
-    guildId     String
+    uuid         String          @id @default(uuid())
+    question     String          @unique
+    answer       String
+    badAnswer1   String
+    badAnswer2   String
+    badAnswer3   String
+    createdAt    DateTime        @default(now())
+    authorUuid   String?
+    guildId      String
     lastTimeUsed DateTime?
+    category     String
+    difficulty   String
+    author       GlobalUserData? @relation(fields: [authorUuid], references: [uuid], onDelete: Cascade)
 
     @@index([guildId])
+    @@index([authorUuid], map: "QuizQuestions_authorUuid_fkey")
 }
