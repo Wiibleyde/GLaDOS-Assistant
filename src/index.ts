@@ -6,7 +6,7 @@ import { buttons, commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
 import { CronJob } from 'cron';
 import { prisma } from "./utils/database"
-import { checkOutdatedQuiz } from "./commands/fun/quiz/quiz"
+import { insertQuestionInDB } from "./commands/fun/quiz/quiz"
 
 export const client = new Client({
     intents: [
@@ -161,11 +161,11 @@ const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
 })
 statusCron.start()
 
-// Cron job to checkOutdatedQuiz every 2 minutes
-const quizCron = new CronJob('0 */2 * * * *', async () => {
-    checkOutdatedQuiz()
+// Fetch questions every 2 minutes
+const fetchQuestionsCron = new CronJob('* */2 * * * *', async () => {
+    insertQuestionInDB()
 })
-quizCron.start()
+fetchQuestionsCron.start()
 
 process.on('SIGINT', async () => {
     logger.info('Ctrl-C détécté, déconnexion...')
