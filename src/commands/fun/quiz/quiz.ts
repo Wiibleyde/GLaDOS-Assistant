@@ -5,7 +5,7 @@ import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, B
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
-const quizes: Map<number, QuizType> = new Map()
+const quizes: Map<string, QuizType> = new Map()
 
 export const data = new SlashCommandBuilder()
     .setName("quiz")
@@ -45,6 +45,7 @@ export async function execute(interaction: CommandInteraction) {
             { name: "Demandé par", value: `<@${interaction.user.id}>`, inline: true }
         )
         .setColor(0x4B0082)
+        .setTimestamp()
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     const buttons = [
@@ -64,9 +65,23 @@ export async function execute(interaction: CommandInteraction) {
 
     const messageResponse = await channel.send({ embeds: [embed], components: [actionRow] })
 
-    quizes.set(parseInt(messageResponse.id), quiz)
+    quizes.set(messageResponse.id, quiz)
 
     await interaction.reply({ content: "Question de quiz envoyée !", ephemeral: true })
+
+    await prisma.quizQuestions.create({
+        data: {
+            question: quiz.question,
+            answer: quiz.answer,
+            badAnswer1: quiz.badAnswers[0],
+            badAnswer2: quiz.badAnswers[1],
+            badAnswer3: quiz.badAnswers[2],
+            category: quiz.category,
+            difficulty: quiz.difficulty,
+            guildId: "0",
+            lastTimeUsed: new Date(),
+        }
+    })
 }
 
 export async function handleQuizButton(interaction: ButtonInteraction<CacheType>) {
@@ -75,14 +90,28 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (message introuvable)."))], ephemeral: true })
         return
     }
-    const quiz = quizes.get(parseInt(message.id))
+    const quiz = quizes.get(message.id)
     if(!quiz) {
-        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Quiz expiré (les quiz sont valide pendant 1h après leur création)."))], ephemeral: true })
+        const questionTxt = message.embeds[0].description?.split("**")[1]
+        if(!questionTxt) {
+            await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (description introuvable)."))], ephemeral: true })
+            return
+        }
+        const question = await prisma.quizQuestions.findFirst({
+            where: {
+                question: questionTxt
+            }
+        })
+        if(!question) {
+            await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (question introuvable)."))], ephemeral: true })
+            return
+        }
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Quiz expiré (la réponse était: ||" + question.answer + "||)"))], ephemeral: true })
         return
     }
 
     if(quiz.createdAt + 3600000 < Date.now()) {
-        await interaction.reply({ content: "Le quiz est expiré !", ephemeral: true });
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Quiz expiré (la réponse était: ||" + quiz.answer + "||)"))], ephemeral: true })
         return
     }
 
@@ -204,11 +233,37 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
     }
 }
 
-export function checkOutdatedQuiz() {
-    const now = Date.now()
-    quizes.forEach((quiz, key) => {
-        if(now - quiz.createdAt > 3600000) {
-            quizes.delete(key)
+export async function insertQuestionInDB() {
+    const response = await fetch(quizApiUrl)
+    const data = await response.json()
+    const quizJson = data.quizzes[0]
+    const quiz: QuizType = {
+        question: quizJson.question,
+        answer: quizJson.answer,
+        badAnswers: quizJson.badAnswers,
+        category: quizJson.category,
+        difficulty: quizJson.difficulty,
+        createdAt: Date.now()
+    }
+
+    try {
+        await prisma.quizQuestions.create({
+            data: {
+                question: quiz.question,
+                answer: quiz.answer,
+                badAnswer1: quiz.badAnswers[0],
+                badAnswer2: quiz.badAnswers[1],
+                badAnswer3: quiz.badAnswers[2],
+                category: quiz.category,
+                difficulty: quiz.difficulty,
+                guildId: "0",
+            }
+        })
+    } catch (error: Error | any) {
+        if (error.code === "P2002") {
+            return
+        } else {
+            logger.error(error)
         }
-    })
+    }
 }
