@@ -6,6 +6,7 @@ export function errorEmbed(interaction: CommandInteraction|ButtonInteraction<Cac
         .setDescription(error.message)
         .setColor(0xFF0000)
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+        .setTimestamp()
 }
 
 export function successEmbed(interaction: CommandInteraction|ButtonInteraction<CacheType>|ModalSubmitInteraction, message: string): EmbedBuilder {
@@ -14,4 +15,5 @@ export function successEmbed(interaction: CommandInteraction|ButtonInteraction<C
         .setDescription(message)
         .setColor(0x00FF00)
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+        .setTimestamp()
 }
