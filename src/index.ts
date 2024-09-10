@@ -7,6 +7,7 @@ import { logger } from "./utils/logger"
 import { CronJob } from 'cron';
 import { prisma } from "./utils/database"
 import { insertQuestionInDB } from "./commands/fun/quiz/quiz"
+import { generateWithGoogle } from "./utils/intelligence"
 
 export const client = new Client({
     intents: [
@@ -77,15 +78,15 @@ client.on(Events.MessageCreate, async (message) => {
     if (message.author.bot) return
     const guildId = message.guild?.id
     if (!guildId) return
-    const botPseudo = client.user?.username
-    if (message.content.startsWith(`<@!${client.user?.id}>`) || message.content.startsWith(botPseudo as string)) {
+    if (message.content.startsWith(`<@${client.user?.id}>`)) {
+        const aiReponse = await generateWithGoogle(message.content.replace(`<@${client.user?.id}> `, ''), message.author.id)
         const embed = new EmbedBuilder()
-            .setTitle("GLaDOS intelligence 🧠")
-            .setDescription(`<a:glados_intelligence:1279206420557987872> Bonjour, je suis GLaDOS, votre assistante personnelle. Comment puis-je vous aider ? (C'est faux, c'est pas encore dev)`)
+            .setTitle("GLaDOS intelligence <a:glados_intelligence:1279206420557987872>")
+            .setDescription(aiReponse)
             .setColor(0xffffff)
             .setTimestamp()
             .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });
-        await message.channel.send({ embeds: [embed] })
+        await message.channel.send({ content: `<@${message.author.id}>`, embeds: [embed] })
     }
 })
 
