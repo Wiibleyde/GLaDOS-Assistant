@@ -16,6 +16,7 @@
     "lint": "eslint . --ext ts --fix"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.17.1",
     "@prisma/client": "^5.19.0",
     "cron": "^3.1.7",
     "discord.js": "^14.7.1",
