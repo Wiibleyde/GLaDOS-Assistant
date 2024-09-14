@@ -95,6 +95,7 @@ client.on(Events.MessageCreate, async (message) => {
             .setTimestamp()
             .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });
         await message.channel.send({ content: `<@${message.author.id}>`, embeds: [embed] })
+        logger.info(`Réponse de l'IA à <@${message.author.id}> dans <#${channelId}> : ${aiReponse}`)
     }
 })
 
