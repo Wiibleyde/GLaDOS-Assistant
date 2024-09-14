@@ -77,9 +77,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.MessageCreate, async (message) => {
     if (message.author.bot) return
     const guildId = message.guild?.id
-    if (!guildId) return
+    if (!guildId) {
+        logger.debug(`Message reçu en DM de <@${message.author.id}> : ${message.content}`)
+        return
+    }
+    const channelId = message?.channel?.id
+    if(!channelId) {
+        logger.error(`Channel non trouvé pour le message de <@${message.author.id}> dans le serveur ${guildId}`)
+        return
+    }
     if (message.content.startsWith(`<@${client.user?.id}>`)) {
-        const aiReponse = await generateWithGoogle(message.content.replace(`<@${client.user?.id}> `, ''), message.author.id)
+        const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id)
         const embed = new EmbedBuilder()
             .setTitle("GLaDOS intelligence <a:glados_intelligence:1279206420557987872>")
             .setDescription(aiReponse)
@@ -87,6 +95,7 @@ client.on(Events.MessageCreate, async (message) => {
             .setTimestamp()
             .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });
         await message.channel.send({ content: `<@${message.author.id}>`, embeds: [embed] })
+        logger.info(`Réponse de l'IA à <@${message.author.id}> dans <#${channelId}> : ${aiReponse}`)
     }
 })
 
