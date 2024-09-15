@@ -1,4 +1,4 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { logger } from "@/utils/logger"
 

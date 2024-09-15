@@ -1,6 +1,5 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { prisma } from "@/utils/database"
 import { config } from "@/config"
 
 export const data = new SlashCommandBuilder()
