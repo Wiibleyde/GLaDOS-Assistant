@@ -26,7 +26,7 @@ export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true,fetchReply: true })
 
     switch (interaction.options.get("section")?.value) {
-        case "bot":
+        case "bot": {
             const version = packageJson.version
             const libs = Object.keys(packageJson.dependencies).join("\n")
             const author = packageJson.author.name
@@ -48,7 +48,8 @@ export async function execute(interaction: CommandInteraction) {
 
             await interaction.editReply({ embeds: [infoEmbed], files: [{ attachment: infoImage, name: "info.png" }] })
             break
-        case "user":
+        }
+        case "user": {
             const user = interaction.user
             const dbUser = await prisma.globalUserData.findFirst({
                 where: {
@@ -76,8 +77,10 @@ export async function execute(interaction: CommandInteraction) {
 
             await interaction.editReply({ embeds: [embed] })
             break
-        default:
+        }
+        default: {
             await interaction.editReply({ content: "Section inconnue" })
             break
+        }
     }
 }

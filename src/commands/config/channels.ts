@@ -48,7 +48,7 @@ export async function execute(interaction: CommandInteraction) {
         return
     }
     switch (interaction.options.get("action")?.value) {
-        case "view":
+        case "view": {
             const serverConfig = await prisma.config.findMany({
                 where: {
                     guildId: interaction.guildId?.toString() as string
@@ -67,7 +67,8 @@ export async function execute(interaction: CommandInteraction) {
 
             await interaction.editReply({ embeds: [responseEmbed] })
             break
-        case "edit":
+        }
+        case "edit": {
             const key = interaction.options.get("key")?.value as string
             const channel = interaction.options.get("channel")?.value as string
             if (!key || !channel) {
@@ -100,5 +101,6 @@ export async function execute(interaction: CommandInteraction) {
             }
             await interaction.editReply({ embeds: [successEmbed(interaction, "Configuration mise à jour.")] })
             break
+        }
     }
 }
