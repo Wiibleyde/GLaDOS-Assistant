@@ -24,7 +24,7 @@ export function initAi() {
     }
 }
 
-export function generateWithGoogle(channelId:string, prompt: string, userAsking: string, userPseudonyme: string): Promise<string> {
+export function generateWithGoogle(channelId:string, prompt: string, userAsking: string): Promise<string> {
     let currentChatSession: ChatSession
     if(chats.has(channelId)) {
         currentChatSession = chats.get(channelId) as ChatSession

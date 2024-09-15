@@ -90,8 +90,7 @@ client.on(Events.MessageCreate, async (message) => {
     }
 
     if (message.mentions.has(client.user?.id as string)) {
-        const userPseudo = message.author.username
-        const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id, userPseudo).catch(async (error) => {
+        const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
             await message.channel.send(`Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||`)
         }).then(async (response) => {
             return response

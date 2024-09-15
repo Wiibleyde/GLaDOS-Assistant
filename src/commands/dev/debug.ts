@@ -1,6 +1,5 @@
-import { CommandInteraction, EmbedBuilder, Role, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, Role, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
-import { logger } from "@/utils/logger"
 
 export const data = new SlashCommandBuilder()
     .setName("debug")

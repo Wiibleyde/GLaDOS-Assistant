@@ -1,4 +1,4 @@
-import { Guild, REST, Routes } from "discord.js"
+import { REST, Routes } from "discord.js"
 import { config } from "./config"
 import { commands, devCommands } from "./commands"
 import { logger } from "@/utils/logger"

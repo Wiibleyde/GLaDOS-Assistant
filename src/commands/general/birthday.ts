@@ -1,9 +1,7 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, Events, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder, ModalSubmitInteraction } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder, ModalSubmitInteraction } from "discord.js"
 import { prisma } from "@/utils/database"
-import { logger } from "@/utils/logger"
 import { client } from "@/index"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { log } from "console"
 
 const color = 0xB58D47
 const months = {

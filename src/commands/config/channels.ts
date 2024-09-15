@@ -58,14 +58,14 @@ export async function execute(interaction: CommandInteraction) {
                 await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Aucune configuration trouvée."))] })
                 return
             }
-            const embed = new EmbedBuilder()
+            const responseEmbed = new EmbedBuilder()
                 .setTitle("Configuration des salons")
                 .setColor(0x00FF00)
                 .setDescription(serverConfig.map(config => `**${config.key}**: <#${config.value}>`).join("\n"))
                 .setTimestamp()
                 .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
 
-            await interaction.editReply({ embeds: [embed] })
+            await interaction.editReply({ embeds: [responseEmbed] })
             break
         case "edit":
             const key = interaction.options.get("key")?.value as string
