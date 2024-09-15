@@ -4,10 +4,10 @@ import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
 import { buttons, commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
-import { CronJob } from 'cron';
+import { CronJob } from 'cron'
 import { prisma } from "./utils/database"
 import { insertQuestionInDB } from "./commands/fun/quiz/quiz"
-import { generateWithGoogle } from "./utils/intelligence"
+import { initAi, generateWithGoogle } from "./utils/intelligence"
 
 export const client = new Client({
     intents: [
@@ -50,16 +50,16 @@ client.once(Events.ClientReady, async () => {
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         try {
-            const { commandName } = interaction;
+            const { commandName } = interaction
             if (commands[commandName as keyof typeof commands]) {
                 commands[commandName as keyof typeof commands].execute(interaction)
             }
             if (devCommands[commandName as keyof typeof devCommands]) {
                 devCommands[commandName as keyof typeof devCommands].execute(interaction)
             }
-            logger.info(`Commande </${commandName}:${interaction.commandId}> invoqué par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}>`)
+            logger.info(`Commande </${commandName}:${interaction.commandId}>\n<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
         } catch (error: Error | any) {
-            logger.error(`Erreur avec la commande </${interaction.commandName}:${interaction.commandId}> invoqué par <@${interaction.user.id}>/${interaction.user.username} dans <#${interaction.channelId}> : ${error.message}`)
+            logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>\n<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
             await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
         }
     } else if (interaction.isModalSubmit()) {
@@ -76,34 +76,40 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.MessageCreate, async (message) => {
     if (message.author.bot) return
+
     const guildId = message.guild?.id
     if (!guildId) {
         logger.debug(`Message reçu en DM de <@${message.author.id}> : ${message.content}`)
         return
     }
+
     const channelId = message?.channel?.id
     if(!channelId) {
         logger.error(`Channel non trouvé pour le message de <@${message.author.id}> dans le serveur ${guildId}`)
         return
     }
-    if (message.content.startsWith(`<@${client.user?.id}>`)) {
-        const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id)
-        const embed = new EmbedBuilder()
-            .setTitle("GLaDOS intelligence <a:glados_intelligence:1279206420557987872>")
-            .setDescription(aiReponse)
-            .setColor(0xffffff)
-            .setTimestamp()
-            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });
-        await message.channel.send({ content: `<@${message.author.id}>`, embeds: [embed] })
+
+    if (message.mentions.has(client.user?.id as string)) {
+        const userPseudo = message.author.username
+        const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id, userPseudo).catch(async (error) => {
+            await message.channel.send(`Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||`)
+        }).then(async (response) => {
+            return response
+        })
+
+        if (!aiReponse) return
+
+        await message.channel.send(`${aiReponse}`)
+
         logger.info(`Réponse de l'IA à <@${message.author.id}> dans <#${channelId}> : ${aiReponse}`)
     }
 })
 
 // Cron job to wish happy birthday to users at 00:00 : 0 0 0 * * *, for the dev use every 10 seconds : '0,10,20,30,40,50 * * * * *'
 const birthdayCron = new CronJob('0 0 0 * * *', async () => {
-    const today = new Date();
-    const todayDay = today.getDate();
-    const todayMonth = today.getMonth() + 1;
+    const today = new Date()
+    const todayDay = today.getDate()
+    const todayMonth = today.getMonth() + 1
 
     const todayBirthdays: { uuid: string, userId: string, birthDate: Date | null, quizGoodAnswers: number, quizBadAnswers: number}[] = await prisma.$queryRaw`SELECT uuid, userId, birthDate, quizGoodAnswers, quizBadAnswers FROM GlobalUserData WHERE EXTRACT(DAY FROM birthDate) = ${todayDay} AND EXTRACT(MONTH FROM birthDate) = ${todayMonth}`
 
@@ -112,8 +118,8 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
         for (const guild of botGuilds) {
             const guildId = guild[0]
             const guildObj = guild[1]
-            const guildToTest = await client.guilds.fetch(guildId);
-            const member = await guildToTest.members.fetch(birthday.userId);
+            const guildToTest = await client.guilds.fetch(guildId)
+            const member = await guildToTest.members.fetch(birthday.userId)
             if (member) {
                 const channelId = await prisma.config.findFirst({
                     where: {
@@ -129,7 +135,7 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
                             .setDescription(`Joyeux anniversaire <@${birthday.userId}> (${birthday.birthDate ? new Date().getFullYear() - new Date(birthday.birthDate).getFullYear() : ''} ans) ! 🎉🎂`)
                             .setColor(0xffffff)
                             .setTimestamp()
-                            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() });
+                            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() })
                         await channel.send({ embeds: [embed] })
                     } else {
                         logger.error(`Channel ${channelId.value} not found in guild ${guildId}`)
@@ -184,5 +190,7 @@ process.on('SIGINT', async () => {
     logger.info('Déconnecté, arrêt du bot...')
     process.exit(0)
 })
+
+initAi()
 
 client.login(config.DISCORD_TOKEN)
