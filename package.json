@@ -13,7 +13,7 @@
     "start": "node .",
     "build": "tsup src/index.ts --minify",
     "format": "prettier --write \"**/*.{json,ts}\"",
-    "lint": "eslint . --fix"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@google/generative-ai": "^0.17.1",
