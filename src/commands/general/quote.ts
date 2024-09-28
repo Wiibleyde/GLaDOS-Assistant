@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder, TextBasedChannel } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, TextBasedChannel, TextChannel } from "discord.js"
 import Jimp from "jimp"
 import { prisma } from "@/utils/database"
 import { successEmbed, errorEmbed } from "@/utils/embeds"
@@ -50,11 +50,11 @@ export async function execute(interaction: CommandInteraction) {
             }
         })
     }
-    let channel: TextBasedChannel
+    let channel: TextChannel
     if (channelWhereToPost) {
-        channel = interaction.guild?.channels.cache.get(channelWhereToPost.value) as TextBasedChannel
+        channel = interaction.guild?.channels.cache.get(channelWhereToPost.value) as TextChannel
     } else {
-        channel = interaction.channel as TextBasedChannel
+        channel = interaction.channel as TextChannel
     }
 
     const userProfilePicture = author?.displayAvatarURL({ extension: "png", size: 1024 })

@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, TextChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { logger } from "@/utils/logger"
 
@@ -37,7 +37,7 @@ export async function execute(interaction: CommandInteraction) {
             return
         }
     } else {
-        const channel = interaction.channel
+        const channel = interaction.channel as TextChannel
         if (!channel) {
             await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Impossible de trouver le salon de discussion"))] })
             return

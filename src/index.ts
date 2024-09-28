@@ -91,8 +91,8 @@ client.on(Events.MessageCreate, async (message) => {
 
     if (message.mentions.has(client.user?.id as string)) {
         // if(message.type === MessageType.Reply) {
-        //     const messageOfReply = await message.channel.messages.fetch(message.reference?.messageId as string)
-        //     message.content = message.content + ' ' + message.reference?.messageId
+        //     const contentOfReply = message.reference?.messageId ? await message.channel.messages.fetch(message.reference.messageId).then(msg => msg.content) : ''
+        //     message.content = contentOfReply + message.content
         // }
         const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
             await message.channel.send(`Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||`)
