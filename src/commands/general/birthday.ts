@@ -155,7 +155,7 @@ async function viewBirthday(interaction: CommandInteraction) {
         }
     })
     if (!birthday) {
-        await interaction.reply({ content: "Vous n'avez pas d'anniversaire enregistré", ephemeral: true })
+        await interaction.editReply({ content: "Aucune date d'anniversaire enregistrée" })
         return
     }
     const birthdayDate = birthday.birthDate
@@ -178,8 +178,8 @@ async function listBirthday(interaction: CommandInteraction) {
         await interaction.editReply({ content: "Impossible de récupérer les anniversaires" })
         return
     }
-    const usersOnGuild = await client.guilds.cache.get(interaction.guildId)
-    const userIds = usersOnGuild?.members.cache.map(member => member.id)
+    const usersOnGuild = await client.guilds.fetch(interaction.guildId).then(guild => guild.members.fetch())
+    const userIds = usersOnGuild.map(user => user.id)
     if (!userIds) {
         await interaction.editReply({ content: "Impossible de récupérer les anniversaires" })
         return

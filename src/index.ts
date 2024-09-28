@@ -1,4 +1,4 @@
-import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials } from "discord.js"
+import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials, MessageType } from "discord.js"
 import { deployCommands, deployDevCommands } from "./deploy-commands"
 import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
@@ -90,8 +90,14 @@ client.on(Events.MessageCreate, async (message) => {
     }
 
     if (message.mentions.has(client.user?.id as string)) {
+        if(message.type === MessageType.Reply) {
+            const messageOfReply = await message.channel.messages.fetch(message.reference?.messageId as string)
+            message.content = message.content + ' ' + message.reference?.messageId
+            logger.debug(`Message de <@${message.author.id}> dans <#${channelId}> : ${message.content}`)
+        }
         const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
             await message.channel.send(`Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||`)
+            return
         }).then(async (response) => {
             return response
         })
@@ -112,22 +118,21 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
 
     const todayBirthdays: { uuid: string, userId: string, birthDate: Date | null, quizGoodAnswers: number, quizBadAnswers: number}[] = await prisma.$queryRaw`SELECT uuid, userId, birthDate, quizGoodAnswers, quizBadAnswers FROM GlobalUserData WHERE EXTRACT(DAY FROM birthDate) = ${todayDay} AND EXTRACT(MONTH FROM birthDate) = ${todayMonth}`
 
-    const botGuilds = client.guilds.cache
+    const botGuilds = await client.guilds.fetch().then(guilds => guilds.map(guild => guild))
     for (const birthday of todayBirthdays) {
         for (const guild of botGuilds) {
-            const guildId = guild[0]
-            const guildObj = guild[1]
-            const guildToTest = await client.guilds.fetch(guildId)
-            const member = await guildToTest.members.fetch(birthday.userId)
+            const usersOnGuild = await client.guilds.fetch(guild.id).then(guild => guild.members.fetch())
+            const member = usersOnGuild.get(birthday.userId)
             if (member) {
-                const channelId = await prisma.config.findFirst({
+                const guildConfig = await prisma.config.findFirst({
                     where: {
-                        guildId: guildId,
+                        guildId: guild.id,
                         key: 'birthdayChannel'
                     }
                 })
-                if (channelId) {
-                    const channel = guildObj.channels.cache.get(channelId.value)
+                if (guildConfig) {
+                    const fullGuild = await client.guilds.fetch(guild.id)
+                    const channel = fullGuild.channels.cache.get(guildConfig.value)
                     if (channel && channel.isTextBased()) {
                         const embed = new EmbedBuilder()
                             .setTitle("Joyeux anniversaire !")
@@ -137,13 +142,13 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
                             .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() })
                         await channel.send({ embeds: [embed] })
                     } else {
-                        logger.error(`Channel ${channelId.value} not found in guild ${guildId}`)
+                        logger.error(`Channel ${guildConfig.value} not found in guild ${guild.id}`)
                     }
                 } else {
-                    logger.error(`Channel not found in guild ${guildId}`)
+                    logger.error(`Channel not found in guild ${guild.id}`)
                 }
             } else {
-                logger.error(`Member ${birthday.userId} not found in guild ${guildId}`)
+                logger.error(`Member ${birthday.userId} not found in guild ${guild.id}`)
             }
         }
     }
@@ -175,12 +180,6 @@ const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
     }
 })
 statusCron.start()
-
-// Fetch questions every 2 minutes
-const fetchQuestionsCron = new CronJob('* */2 * * * *', async () => {
-    insertQuestionInDB()
-})
-fetchQuestionsCron.start()
 
 process.on('SIGINT', async () => {
     logger.info('Ctrl-C détécté, déconnexion...')
