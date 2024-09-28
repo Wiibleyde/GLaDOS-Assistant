@@ -1,7 +1,7 @@
 import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { logger } from "@/utils/logger"
-import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType, TextChannel } from "discord.js"
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
@@ -12,13 +12,18 @@ export const data = new SlashCommandBuilder()
     .setDescription("Affiche une question de quiz aléatoire")
 
 export async function execute(interaction: CommandInteraction) {
-    const response = await fetch(quizApiUrl)
-    const data = await response.json()
-    const quizJson = data.quizzes[0]
+    // const response = await fetch(quizApiUrl)
+    // const data = await response.json()
+    const questionCount = await prisma.quizQuestions.count()
+    const randomQuiz = await prisma.quizQuestions.findMany({
+        take: 1,
+        skip: Math.floor(Math.random() * questionCount)
+    })
+    const quizJson = randomQuiz[0]
     const quiz: QuizType = {
         question: quizJson.question,
         answer: quizJson.answer,
-        badAnswers: quizJson.badAnswers,
+        badAnswers: [quizJson.badAnswer1, quizJson.badAnswer2, quizJson.badAnswer3],
         category: quizJson.category,
         difficulty: quizJson.difficulty,
         createdAt: Date.now()
@@ -57,7 +62,7 @@ export async function execute(interaction: CommandInteraction) {
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
 
-    const channel = interaction.channel
+    const channel = interaction.channel as TextChannel
     if(!channel) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de l'envoi de la question de quiz."))], ephemeral: true })
         return
@@ -69,19 +74,19 @@ export async function execute(interaction: CommandInteraction) {
 
     await interaction.reply({ content: "Question de quiz envoyée !", ephemeral: true })
 
-    await prisma.quizQuestions.create({
-        data: {
-            question: quiz.question,
-            answer: quiz.answer,
-            badAnswer1: quiz.badAnswers[0],
-            badAnswer2: quiz.badAnswers[1],
-            badAnswer3: quiz.badAnswers[2],
-            category: quiz.category,
-            difficulty: quiz.difficulty,
-            guildId: "0",
-            lastTimeUsed: new Date(),
-        }
-    })
+    // await prisma.quizQuestions.create({
+    //     data: {
+    //         question: quiz.question,
+    //         answer: quiz.answer,
+    //         badAnswer1: quiz.badAnswers[0],
+    //         badAnswer2: quiz.badAnswers[1],
+    //         badAnswer3: quiz.badAnswers[2],
+    //         category: quiz.category,
+    //         difficulty: quiz.difficulty,
+    //         guildId: "0",
+    //         lastTimeUsed: new Date(),
+    //     }
+    // })
 }
 
 export async function handleQuizButton(interaction: ButtonInteraction<CacheType>) {
