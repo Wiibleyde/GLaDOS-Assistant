@@ -67,7 +67,7 @@ model Quote {
 
 model QuizQuestions {
     uuid         String          @id @default(uuid())
-    question     String          @unique
+    question     String          @unique @db.VarChar(2048)
     answer       String
     badAnswer1   String
     badAnswer2   String
