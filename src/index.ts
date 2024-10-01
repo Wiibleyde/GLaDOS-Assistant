@@ -1,4 +1,4 @@
-import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials, MessageType } from "discord.js"
+import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials, PermissionFlagsBits } from "discord.js"
 import { deployCommands, deployDevCommands } from "./deploy-commands"
 import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
@@ -6,8 +6,8 @@ import { buttons, commands, devCommands, modals } from "./commands"
 import { logger } from "./utils/logger"
 import { CronJob } from 'cron'
 import { prisma } from "./utils/database"
-import { insertQuestionInDB } from "./commands/fun/quiz/quiz"
 import { initAi, generateWithGoogle } from "./utils/intelligence"
+import { maintenance } from "./commands/dev/maintenance"
 
 export const client = new Client({
     intents: [
@@ -50,6 +50,13 @@ client.once(Events.ClientReady, async () => {
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         try {
+            if(maintenance) {
+                const user = await interaction.guild?.members.fetch(interaction.user.id)
+                if ((!user?.permissions.has(PermissionFlagsBits.Administrator) && config.OWNER_ID !== interaction.user.id) && maintenance) {
+                    await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Le bot est en maintenance, veuillez réessayer plus tard."))], ephemeral: true })
+                    return
+                }
+            }
             const { commandName } = interaction
             if (commands[commandName as keyof typeof commands]) {
                 commands[commandName as keyof typeof commands].execute(interaction)
@@ -57,7 +64,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (devCommands[commandName as keyof typeof devCommands]) {
                 devCommands[commandName as keyof typeof devCommands].execute(interaction)
             }
-            logger.info(`Commande </${commandName}:${interaction.commandId}>\n<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
+            logger.info(`Commande </${commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
         } catch (error: Error | any) {
             logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>\n<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
             await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
@@ -95,13 +102,10 @@ client.on(Events.MessageCreate, async (message) => {
         //     message.content = contentOfReply + message.content
         // }
         const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
-            await message.channel.send(`Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||`)
-            return
+            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})|| (si c'est encore Eliott je pète un câble)`
         }).then(async (response) => {
             return response
         })
-
-        if (!aiReponse) return
 
         await message.channel.send(`${aiReponse}`)
 
@@ -164,6 +168,17 @@ let statusIndex = 0
 
 // Cron job to update bot status 10 seconds
 const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
+    if(maintenance) {
+        await client.user?.setPresence({
+            activities: [
+                {
+                    name: `la maintenance...`,
+                    type: ActivityType.Competing
+                }
+            ]
+        })
+        return
+    }
     const status = possibleStatus[statusIndex]
     await client.user?.setPresence({
         activities: [
