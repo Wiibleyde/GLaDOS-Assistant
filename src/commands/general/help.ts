@@ -13,8 +13,9 @@ export const data = new SlashCommandBuilder()
     .setDescription("Affiche la liste des commandes");
 
 export async function execute(interaction: CommandInteraction) {
-    const typedCommands: { [key: string]: Command } = commands;
-    const commandsList = Object.keys(typedCommands).map((key: string) => {return `**/${key}** : ${typedCommands[key].data.description}`;}).join("\n");
+    //@ts-expect-error
+    const typedCommands: { [key: string]: Command } = commands
+    const commandsList = Object.keys(typedCommands).map((key: string) => {return `**/${key}** : ${typedCommands[key].data.description}`;}).join("\n")
 
     const helpEmbed = new EmbedBuilder()
         .setTitle("Liste des commandes")

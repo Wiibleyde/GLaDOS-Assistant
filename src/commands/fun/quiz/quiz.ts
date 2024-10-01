@@ -17,7 +17,10 @@ export async function execute(interaction: CommandInteraction) {
     const questionCount = await prisma.quizQuestions.count()
     const randomQuiz = await prisma.quizQuestions.findMany({
         take: 1,
-        skip: Math.floor(Math.random() * questionCount)
+        skip: Math.floor(Math.random() * questionCount),
+        include: {
+            author: true
+        }
     })
     const quizJson = randomQuiz[0]
     const quiz: QuizType = {
@@ -47,11 +50,20 @@ export async function execute(interaction: CommandInteraction) {
         .addFields(
             { name: "Catégorie / difficulté", value: `${formattedCategory} / ${quiz.difficulty}`, inline: true },
             { name: "Invalide", value: `<t:${Math.floor(invalidQuizTimestamp / 1000)}:R>`, inline: true },
-            { name: "Demandé par", value: `<@${interaction.user.id}>`, inline: true }
         )
         .setColor(0x4B0082)
         .setTimestamp()
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+
+    if(quizJson.author) {
+        embed.addFields(
+            { name: "Auteur", value: `<@${quizJson.author.userId}>`, inline: true }
+        )
+    } else {
+        embed.addFields(
+            { name: "Demandé par", value: `<@${interaction.user.id}>`, inline: true }
+        )
+    }
 
     const buttons = [
         new ButtonBuilder().setCustomId("handleQuizButton--1").setLabel("1").setStyle(ButtonStyle.Primary),
