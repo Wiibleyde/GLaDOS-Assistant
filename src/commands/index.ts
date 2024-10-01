@@ -20,6 +20,7 @@ import { handleQuizButton } from "./fun/quiz/quiz"
 
 import * as logs from "./dev/logs"
 import * as debug from "./dev/debug"
+import * as maintenance from "./dev/maintenance"
 
 export const commands = {
     ping,
@@ -39,6 +40,7 @@ export const commands = {
 export const devCommands = {
     logs,
     debug,
+    maintenance
 }
 
 export const modals = {
