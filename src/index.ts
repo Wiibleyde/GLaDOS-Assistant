@@ -66,7 +66,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
             logger.info(`Commande </${commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
         } catch (error: Error | any) {
-            logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>\n<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
+            logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>backSpace<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
             await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
         }
     } else if (interaction.isModalSubmit()) {
@@ -102,7 +102,7 @@ client.on(Events.MessageCreate, async (message) => {
         //     message.content = contentOfReply + message.content
         // }
         const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
-            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})|| (si c'est encore Eliott je pète un câble)`
+            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||  (Conversation réinitialisée) (si c'est encore Eliott je pète un câble)`
         }).then(async (response) => {
             return response
         })

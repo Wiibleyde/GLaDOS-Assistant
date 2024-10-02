@@ -1,5 +1,6 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { commands } from "@/commands/index";
+import { backSpace } from "@/utils/textUtils";
 
 interface Command {
     data: {
@@ -15,7 +16,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction) {
     //@ts-expect-error
     const typedCommands: { [key: string]: Command } = commands
-    const commandsList = Object.keys(typedCommands).map((key: string) => {return `**/${key}** : ${typedCommands[key].data.description}`;}).join("\n")
+    const commandsList = Object.keys(typedCommands).map((key: string) => {return `**/${key}** : ${typedCommands[key].data.description}`;}).join(backSpace)
 
     const helpEmbed = new EmbedBuilder()
         .setTitle("Liste des commandes")

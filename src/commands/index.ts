@@ -13,6 +13,7 @@ import * as cat from "./fun/cat"
 import * as quiz from "./fun/quiz/quiz"
 import * as addquestion from "./fun/quiz/addquestion"
 import * as quizstats from "./fun/quiz/quizstats"
+import * as leaderboard from "./fun/quiz/leaderboard"
 
 import { addBirthdayModal } from "./general/birthday"
 
@@ -35,6 +36,7 @@ export const commands = {
     help,
     addquestion,
     quizstats,
+    leaderboard,
 }
 
 export const devCommands = {

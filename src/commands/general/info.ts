@@ -1,5 +1,6 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { prisma } from "@/utils/database";
+import { backSpace } from "@/utils/textUtils";
 
 import packageJson from "../../../package.json";
 
@@ -28,7 +29,7 @@ export async function execute(interaction: CommandInteraction) {
     switch (interaction.options.get("section")?.value) {
         case "bot": {
             const version = packageJson.version
-            const libs = Object.keys(packageJson.dependencies).join("\n")
+            const libs = Object.keys(packageJson.dependencies).join(backSpace)
             const author = packageJson.author.name
 
             const infoEmbed: EmbedBuilder = new EmbedBuilder()

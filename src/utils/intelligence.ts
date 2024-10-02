@@ -1,5 +1,5 @@
 import { config } from "@/config"
-import { ChatSession, GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai"
+import { ChatSession, GenerativeModel, GoogleGenerativeAI, GenerateContentResult } from "@google/generative-ai"
 import { logger } from "./logger"
 import { client } from "@/index"
 
@@ -32,22 +32,22 @@ export function generateWithGoogle(channelId:string, prompt: string, userAsking:
         currentChatSession = model.startChat()
         chats.set(channelId, currentChatSession)
     }
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         if(!isAiActive) {
             reject("L'IA est désactivée")
             return
         }
+        let response: GenerateContentResult | undefined
         try {
-            currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`).then((response) => {
-                try {
-                    resolve(response.response.text())
-                } catch (error) {
-                    reject(error)
-                }
-            })
+            response = await currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`)
+            resolve(response.response.text())
         } catch (error) {
+            if (response && response.response && response.response.candidates) {
+                logger.error(response.response.candidates[0].safetyRatings)
+            }
             if(error instanceof Error && error.message) {
-                reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")||")
+                chats.delete(channelId)
+                reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
             }
         }
     });
