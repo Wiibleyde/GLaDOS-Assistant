@@ -167,7 +167,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
             if (field.name === "Bonne(s) réponse(s)") {
                 let finalField = "";
                 for (const user of quiz.rightUsers) {
-                    finalField = finalField + `backSpace<@${user}>`;
+                    finalField = finalField + `${backSpace}<@${user}>`;
                 }
                 field.value = finalField;
                 found = true;
@@ -212,7 +212,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
             if (field.name === "Mauvaise(s) réponse(s)") {
                 let finalField = "";
                 for (const user of quiz.wrongUsers) {
-                    finalField = finalField + `backSpace<@${user}>`;
+                    finalField = finalField + `${backSpace}<@${user}>`;
                 }
                 field.value = finalField;
                 found = true;
