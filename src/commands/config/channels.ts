@@ -43,7 +43,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.guild?.members.cache.get(interaction.client.user.id)
-    if ((!user?.permissions.has(PermissionFlagsBits.ManageChannels) || !user?.permissions.has(PermissionFlagsBits.Administrator)) && config.OWNER_ID !== interaction.user.id) {
+    if (!(user?.permissions.has(PermissionFlagsBits.ManageChannels) || user?.permissions.has(PermissionFlagsBits.Administrator)) && config.OWNER_ID !== interaction.user.id) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })
         return
     }
