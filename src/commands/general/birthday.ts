@@ -224,7 +224,7 @@ async function listBirthday(interaction: CommandInteraction) {
     for(const month in monthsBirthdays) {
         embed.addFields({
             name: months[parseInt(month) as keyof typeof months],
-            value: monthsBirthdays[month].join("\n") || "Aucun anniversaire"
+            value: monthsBirthdays[month].join(backSpace) || "Aucun anniversaire"
         })
     }
     await interaction.editReply({ embeds: [embed] })

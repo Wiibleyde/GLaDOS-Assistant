@@ -111,6 +111,6 @@ export async function execute(interaction: CommandInteraction) {
 
     const buffer = await image.getBufferAsync(Jimp.MIME_PNG)
 
-    const messageSent = await channel.send({ files: [buffer], content: `"${quote}" - ${author?.toString() ?? "Anonyme"} - ${date} ${context ? `\n${context}` : ""}` })
+    const messageSent = await channel.send({ files: [buffer], content: `"${quote}" - ${author?.toString() ?? "Anonyme"} - ${date} ${context ? `backSpace${context}` : ""}` })
     await interaction.editReply({ embeds: [successEmbed(interaction, `Citation créée et envoyée ${messageSent.url}`)] })
 }

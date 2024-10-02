@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { config } from "@/config"
 
@@ -11,12 +11,15 @@ export const data = new SlashCommandBuilder()
             .setDescription("Le nouveau nom du bot")
             .setRequired(false)
     )
-    .setDMPermission(false)
+    .setContexts([
+        InteractionContextType.Guild,
+        InteractionContextType.PrivateChannel,
+    ])
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.guild?.members.cache.get(interaction.client.user.id)
-    if (!user?.permissions.has(PermissionFlagsBits.ChangeNickname) || !user?.permissions.has(PermissionFlagsBits.Administrator) || config.OWNER_ID !== interaction.user.id) {
+    if (!(user?.permissions.has(PermissionFlagsBits.ChangeNickname) || user?.permissions.has(PermissionFlagsBits.Administrator)) && config.OWNER_ID !== interaction.user.id) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer le nom du bot"))] })
         return
     }

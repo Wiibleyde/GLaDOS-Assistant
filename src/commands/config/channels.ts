@@ -1,7 +1,8 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } from "discord.js"
 import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { config } from "@/config"
+import { backSpace } from "@/utils/textUtils"
 
 export const data = new SlashCommandBuilder()
     .setName("channels")
@@ -38,12 +39,15 @@ export const data = new SlashCommandBuilder()
             .setDescription("Salon")
             .setRequired(false)
     )
-    .setDMPermission(false)
+    .setContexts([
+        InteractionContextType.Guild,
+        InteractionContextType.PrivateChannel,
+    ])
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.guild?.members.cache.get(interaction.client.user.id)
-    if (!user?.permissions.has(PermissionFlagsBits.ManageChannels) || !user?.permissions.has(PermissionFlagsBits.Administrator) || config.OWNER_ID !== interaction.user.id) {
+    if (!(user?.permissions.has(PermissionFlagsBits.ManageChannels) || user?.permissions.has(PermissionFlagsBits.Administrator)) && config.OWNER_ID !== interaction.user.id) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })
         return
     }
@@ -61,7 +65,7 @@ export async function execute(interaction: CommandInteraction) {
             const responseEmbed = new EmbedBuilder()
                 .setTitle("Configuration des salons")
                 .setColor(0x00FF00)
-                .setDescription(serverConfig.map(config => `**${config.key}**: <#${config.value}>`).join("\n"))
+                .setDescription(serverConfig.map(config => `**${config.key}**: <#${config.value}>`).join(backSpace))
                 .setTimestamp()
                 .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
 

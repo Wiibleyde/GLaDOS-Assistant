@@ -1,6 +1,7 @@
 import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { logger } from "@/utils/logger"
+import { backSpace } from "@/utils/textUtils"
 import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType, TextChannel } from "discord.js"
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
@@ -17,7 +18,10 @@ export async function execute(interaction: CommandInteraction) {
     const questionCount = await prisma.quizQuestions.count()
     const randomQuiz = await prisma.quizQuestions.findMany({
         take: 1,
-        skip: Math.floor(Math.random() * questionCount)
+        skip: Math.floor(Math.random() * questionCount),
+        include: {
+            author: true
+        }
     })
     const quizJson = randomQuiz[0]
     const quiz: QuizType = {
@@ -43,15 +47,24 @@ export async function execute(interaction: CommandInteraction) {
 
     const embed = new EmbedBuilder()
         .setTitle("Question de quiz")
-        .setDescription(`**${quiz.question}**\n\n1) ${shuffledAnswers[0]}\n2) ${shuffledAnswers[1]}\n3) ${shuffledAnswers[2]}\n4) ${shuffledAnswers[3]}`)
+        .setDescription(`**${quiz.question}**${backSpace}1) ${shuffledAnswers[0]}${backSpace}2) ${shuffledAnswers[1]}${backSpace}3) ${shuffledAnswers[2]}${backSpace}4) ${shuffledAnswers[3]}`)
         .addFields(
             { name: "Catégorie / difficulté", value: `${formattedCategory} / ${quiz.difficulty}`, inline: true },
             { name: "Invalide", value: `<t:${Math.floor(invalidQuizTimestamp / 1000)}:R>`, inline: true },
-            { name: "Demandé par", value: `<@${interaction.user.id}>`, inline: true }
         )
         .setColor(0x4B0082)
         .setTimestamp()
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+
+    if(quizJson.author) {
+        embed.addFields(
+            { name: "Auteur", value: `<@${quizJson.author.userId}>`, inline: true }
+        )
+    } else {
+        embed.addFields(
+            { name: "Demandé par", value: `<@${interaction.user.id}>`, inline: true }
+        )
+    }
 
     const buttons = [
         new ButtonBuilder().setCustomId("handleQuizButton--1").setLabel("1").setStyle(ButtonStyle.Primary),
@@ -154,7 +167,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
             if (field.name === "Bonne(s) réponse(s)") {
                 let finalField = "";
                 for (const user of quiz.rightUsers) {
-                    finalField = finalField + `\n<@${user}>`;
+                    finalField = finalField + `backSpace<@${user}>`;
                 }
                 field.value = finalField;
                 found = true;
@@ -162,7 +175,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
             }
         }
         if (!found) {
-            messageFields.push({ name: "Bonne(s) réponse(s)", value: quiz.rightUsers.map(user => `<@${user}>`).join("\n"), inline: true });
+            messageFields.push({ name: "Bonne(s) réponse(s)", value: quiz.rightUsers.map(user => `<@${user}>`).join(backSpace), inline: true });
         }
         const user = await prisma.globalUserData.findUnique({
             where: {
@@ -199,7 +212,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
             if (field.name === "Mauvaise(s) réponse(s)") {
                 let finalField = "";
                 for (const user of quiz.wrongUsers) {
-                    finalField = finalField + `\n<@${user}>`;
+                    finalField = finalField + `backSpace<@${user}>`;
                 }
                 field.value = finalField;
                 found = true;
@@ -207,7 +220,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
             }
         }
         if (!found) {
-            messageFields.push({ name: "Mauvaise(s) réponse(s)", value: quiz.wrongUsers.map(user => `<@${user}>`).join("\n"), inline: true });
+            messageFields.push({ name: "Mauvaise(s) réponse(s)", value: quiz.wrongUsers.map(user => `<@${user}>`).join(backSpace), inline: true });
         }
         const user = await prisma.globalUserData.findUnique({
             where: {

@@ -1,6 +1,7 @@
 import { EmbedBuilder, WebhookClient } from "discord.js"
 import { prisma } from "@/utils/database"
 import { config } from "@/config"
+import { client } from ".."
 
 
 const resetColor = "\x1b[0m"
@@ -50,6 +51,7 @@ class Logger {
             .setDescription(message)
             .setTimestamp()
             .setColor(0x00FF00)
+            .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
         webhookClient.send({
             options: {
                 username: "GLaDOS INFO",
@@ -76,6 +78,7 @@ class Logger {
             .setDescription(message)
             .setTimestamp()
             .setColor(0xFF0000)
+            .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
         webhookClient.send({
             options: {
                 username: "GLaDOS ERROR",
@@ -102,6 +105,7 @@ class Logger {
             .setDescription(message)
             .setTimestamp()
             .setColor(0xFFA500)
+            .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
         webhookClient.send({
             options: {
                 username: "GLaDOS WARN",
@@ -128,6 +132,7 @@ class Logger {
             .setDescription(message)
             .setTimestamp()
             .setColor(0x0000FF)
+            .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
         webhookClient.send({
             options: {
                 username: "GLaDOS DEBUG",
