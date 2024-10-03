@@ -8,6 +8,7 @@ import { CronJob } from 'cron'
 import { prisma } from "./utils/database"
 import { initAi, generateWithGoogle } from "./utils/intelligence"
 import { maintenance } from "./commands/dev/maintenance"
+import { PermissionUtils } from "./utils/permissionTester"
 
 export const client = new Client({
     intents: [
@@ -51,8 +52,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         try {
             if(maintenance) {
-                const user = await interaction.guild?.members.fetch(interaction.user.id)
-                if ((!user?.permissions.has(PermissionFlagsBits.Administrator) && config.OWNER_ID !== interaction.user.id) && maintenance) {
+                if(!await PermissionUtils.hasPermission(interaction, [], false)) {
                     await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Le bot est en maintenance, veuillez réessayer plus tard."))], ephemeral: true })
                     return
                 }

@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { config } from "@/config"
+import { PermissionUtils } from "@/utils/permissionTester"
+import { logger } from "@/utils/logger"
 
 export const data = new SlashCommandBuilder()
     .setName("rename")
@@ -18,8 +19,8 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
-    const user = interaction.guild?.members.cache.get(interaction.client.user.id)
-    if (!(user?.permissions.has(PermissionFlagsBits.ChangeNickname) || user?.permissions.has(PermissionFlagsBits.Administrator)) && config.OWNER_ID !== interaction.user.id) {
+    logger.debug("Checking if user has permission to change bot's name")
+    if (!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.ManageChannels], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer le nom du bot"))] })
         return
     }

@@ -15,6 +15,7 @@ export async function execute(interaction: CommandInteraction) {
         }
     })
 
+    // Sort the users by the ratio of good answers (and the most good answers)
     users.sort((a, b) => {
         const ratioA = a.quizGoodAnswers / (a.quizGoodAnswers + a.quizBadAnswers)
         const ratioB = b.quizGoodAnswers / (b.quizGoodAnswers + b.quizBadAnswers)
