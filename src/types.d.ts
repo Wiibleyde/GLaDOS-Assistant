@@ -1,4 +1,4 @@
-type QuizType = {
+interface QuizType {
     question: string
     answer: string
     badAnswers: Array<string>
@@ -11,12 +11,12 @@ type QuizType = {
 }
 
 
-type Modules = {
+interface Modules {
     name: string
     status: StatusEnum
 }
 
-type Status = {
+interface Status {
     bot: StatusEnum
     modules: Modules[]
 }
