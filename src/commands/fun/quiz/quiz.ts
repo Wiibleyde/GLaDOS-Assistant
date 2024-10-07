@@ -1,8 +1,9 @@
 import { prisma } from "@/utils/database"
-import { errorEmbed } from "@/utils/embeds"
+import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { logger } from "@/utils/logger"
 import { backSpace } from "@/utils/textUtils"
-import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType, TextChannel } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType, TextChannel, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder, ModalSubmitInteraction } from "discord.js"
+import { config } from "@/config"
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
@@ -16,6 +17,10 @@ export async function execute(interaction: CommandInteraction) {
     // const response = await fetch(quizApiUrl)
     // const data = await response.json()
     const questionCount = await prisma.quizQuestions.count()
+    if(questionCount === 0) {
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Aucune question de quiz n'a été trouvée dans la base de données."))], ephemeral: true })
+        return
+    }
     const randomQuiz = await prisma.quizQuestions.findMany({
         take: 1,
         skip: Math.floor(Math.random() * questionCount),
@@ -47,14 +52,14 @@ export async function execute(interaction: CommandInteraction) {
 
     const embed = new EmbedBuilder()
         .setTitle("Question de quiz")
-        .setDescription(`**${quiz.question}**${backSpace}1) ${shuffledAnswers[0]}${backSpace}2) ${shuffledAnswers[1]}${backSpace}3) ${shuffledAnswers[2]}${backSpace}4) ${shuffledAnswers[3]}`)
+        .setDescription(`${'```'}${quiz.question}${'```'}${backSpace}1) ${'`'}${shuffledAnswers[0]}${'`'}${backSpace}2) ${'`'}${shuffledAnswers[1]}${'`'}${backSpace}3) ${'`'}${shuffledAnswers[2]}${'`'}${backSpace}4) ${'`'}${shuffledAnswers[3]}${'`'}`)
         .addFields(
             { name: "Catégorie / difficulté", value: `${formattedCategory} / ${quiz.difficulty}`, inline: true },
             { name: "Invalide", value: `<t:${Math.floor(invalidQuizTimestamp / 1000)}:R>`, inline: true },
         )
         .setColor(0x4B0082)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `GLaDOS Assistant - Pour vous servir. Uuid : ${quizJson.uuid}`, iconURL: interaction.client.user.displayAvatarURL() });
 
     if(quizJson.author) {
         embed.addFields(
@@ -70,7 +75,8 @@ export async function execute(interaction: CommandInteraction) {
         new ButtonBuilder().setCustomId("handleQuizButton--1").setLabel("1").setStyle(ButtonStyle.Primary),
         new ButtonBuilder().setCustomId("handleQuizButton--2").setLabel("2").setStyle(ButtonStyle.Primary),
         new ButtonBuilder().setCustomId("handleQuizButton--3").setLabel("3").setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setCustomId("handleQuizButton--4").setLabel("4").setStyle(ButtonStyle.Primary)
+        new ButtonBuilder().setCustomId("handleQuizButton--4").setLabel("4").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId("reportQuestionButton").setLabel("Signaler une erreur").setStyle(ButtonStyle.Danger)
     ]
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
@@ -87,19 +93,14 @@ export async function execute(interaction: CommandInteraction) {
 
     await interaction.reply({ content: "Question de quiz envoyée !", ephemeral: true })
 
-    // await prisma.quizQuestions.create({
-    //     data: {
-    //         question: quiz.question,
-    //         answer: quiz.answer,
-    //         badAnswer1: quiz.badAnswers[0],
-    //         badAnswer2: quiz.badAnswers[1],
-    //         badAnswer3: quiz.badAnswers[2],
-    //         category: quiz.category,
-    //         difficulty: quiz.difficulty,
-    //         guildId: "0",
-    //         lastTimeUsed: new Date(),
-    //     }
-    // })
+    await prisma.quizQuestions.update({
+        where: {
+            uuid: quizJson.uuid
+        },
+        data: {
+            lastTimeUsed: new Date()
+        }
+    })
 }
 
 export async function handleQuizButton(interaction: ButtonInteraction<CacheType>) {
@@ -110,7 +111,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
     }
     const quiz = quizes.get(message.id)
     if(!quiz) {
-        const questionTxt = message.embeds[0].description?.split("**")[1]
+        const questionTxt = message.embeds[0].description?.split("```")[1]
         if(!questionTxt) {
             await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (description introuvable)."))], ephemeral: true })
             return
@@ -153,7 +154,8 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         new ButtonBuilder().setCustomId("handleQuizButton--1").setLabel("1").setStyle(ButtonStyle.Primary),
         new ButtonBuilder().setCustomId("handleQuizButton--2").setLabel("2").setStyle(ButtonStyle.Primary),
         new ButtonBuilder().setCustomId("handleQuizButton--3").setLabel("3").setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setCustomId("handleQuizButton--4").setLabel("4").setStyle(ButtonStyle.Primary)
+        new ButtonBuilder().setCustomId("handleQuizButton--4").setLabel("4").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId("reportQuestionButton").setLabel("Signaler une erreur").setStyle(ButtonStyle.Danger)
     ]
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
@@ -284,4 +286,117 @@ export async function insertQuestionInDB() {
             logger.error(error)
         }
     }
+}
+
+export async function reportQuestionButton(interaction: ButtonInteraction<CacheType>) {
+    const message = interaction.message
+    if(!message) {
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (message introuvable)."))], ephemeral: true })
+        return
+    }
+    const question = message.embeds[0].description?.split("```")[1]
+    if(!question) {
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (description introuvable)."))], ephemeral: true })
+        return
+    }
+    const quiz = await prisma.quizQuestions.findFirst({
+        where: {
+            question: question
+        }
+    })
+    if(!quiz) {
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (question introuvable)."))], ephemeral: true })
+        return
+    }
+
+    const modal = new ModalBuilder()
+        .setCustomId("reportQuestionModal--" + quiz.uuid)
+        .setTitle(quiz.uuid)
+
+    const reportReason = new TextInputBuilder()
+        .setCustomId("reportReason")
+        .setPlaceholder("Raison du signalement")
+        .setLabel("Raison du signalement")
+        .setStyle(TextInputStyle.Paragraph)
+        .setRequired(true)
+
+    const actionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(reportReason)
+    modal.addComponents(actionRow)
+
+    await interaction.showModal(modal)
+}
+
+export async function reportQuestionModal(interaction: ModalSubmitInteraction) {
+    const user = interaction.user
+    const reportReason = interaction.fields.getTextInputValue("reportReason")
+    const uuid = interaction.customId.split("--")[1]
+    const question = await prisma.quizQuestions.findFirst({
+        where: {
+            uuid: uuid
+        },
+        include: {
+            author: true
+        }
+    })
+    if (!question) {
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Question introuvable"))], ephemeral: true })
+        return
+    }
+
+    const channel = await interaction.client.channels.fetch(config.REPORT_CHANNEL) as TextChannel
+    if (!channel) {
+        await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Channel de report introuvable"))], ephemeral: true })
+        return
+    }
+
+    const embed = new EmbedBuilder()
+        .setTitle("Signalement de question de quiz")
+        .setDescription(`UUID: ${uuid}${backSpace}`)
+        .setColor(0xFF0000)
+        .setTimestamp()
+        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+
+    if (reportReason) {
+        embed.addFields({
+            name: "Raison du signalement",
+            value: reportReason,
+            inline: false
+        })
+        embed.addFields({
+            name: "Question",
+            value: '```' + question.question + '```',
+            inline: false
+        })
+        embed.addFields({
+            name: "Réponses",
+            value: `Bonne réponse: ${"`"}${question.answer}${"`"}${backSpace}Mauvaises réponses: ${"`"}${question.badAnswer1}${"`"}, ${"`"}${question.badAnswer2}${"`"}, ${"`"}${question.badAnswer3}${"`"}`,
+            inline: false
+        })
+        if(question.author) {
+            embed.addFields({
+                name: "Auteur",
+                value: `<@${question.author.userId}>`,
+                inline: false
+            })
+        } else {
+            embed.addFields({
+                name: "Auteur",
+                value: `API`,
+                inline: false
+            })
+        }
+        embed.addFields({
+            name: "Catégorie",
+            value: question.category,
+            inline: true
+        })
+        embed.addFields({
+            name: "Difficulté",
+            value: question.difficulty,
+            inline: true
+        })
+    }
+
+    await channel.send({ content: `<@${config.OWNER_ID}>, report de : <@${user.id}>`, embeds: [embed] })
+    await interaction.reply({ embeds: [successEmbed(interaction, "Question signalée")], ephemeral: true })
 }

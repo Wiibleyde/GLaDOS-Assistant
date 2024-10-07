@@ -1,4 +1,6 @@
-import { CommandInteraction, SlashCommandBuilder, EmbedBuilder } from "discord.js"
+import { PermissionUtils } from "@/utils/permissionTester"
+import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from "discord.js"
+import { errorEmbed } from "@/utils/embeds"
 
 export let maintenance: boolean = false
 
@@ -8,6 +10,10 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    if(!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.Administrator], true)) {
+        await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })
+        return
+    }
     maintenance = !maintenance
     let color: number = maintenance ? 0xff0000 : 0x00ff00
     const embed = new EmbedBuilder()

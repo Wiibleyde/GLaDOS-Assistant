@@ -2,6 +2,7 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, ActionRowBuilder
 import { prisma } from "@/utils/database"
 import { client } from "@/index"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
+import { backSpace } from "@/utils/textUtils"
 
 const color = 0xB58D47
 const months = {
