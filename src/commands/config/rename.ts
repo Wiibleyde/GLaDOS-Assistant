@@ -19,7 +19,6 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
-    logger.debug("Checking if user has permission to change bot's name")
     if (!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.ManageChannels], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer le nom du bot"))] })
         return

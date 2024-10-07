@@ -70,8 +70,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
         }
     } else if (interaction.isModalSubmit()) {
-        if (modals[interaction.customId as keyof typeof modals]) {
-            modals[interaction.customId as keyof typeof modals](interaction)
+        const customId = interaction.customId.split("--")[0]
+        if (modals[customId as keyof typeof modals]) {
+            modals[customId as keyof typeof modals](interaction)
         }
     } else if (interaction.isButton()) {
         const customId = interaction.customId.split("--")[0]

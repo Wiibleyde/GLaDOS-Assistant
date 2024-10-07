@@ -17,7 +17,7 @@ import * as leaderboard from "./fun/quiz/leaderboard"
 
 import { addBirthdayModal } from "./general/birthday"
 
-import { handleQuizButton } from "./fun/quiz/quiz"
+import { handleQuizButton, reportQuestionButton, reportQuestionModal } from "./fun/quiz/quiz"
 
 import * as logs from "./dev/logs"
 import * as debug from "./dev/debug"
@@ -47,8 +47,10 @@ export const devCommands = {
 
 export const modals = {
     addBirthdayModal,
+    reportQuestionModal,
 }
 
 export const buttons = {
     handleQuizButton,
+    reportQuestionButton,
 }

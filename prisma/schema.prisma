@@ -83,3 +83,13 @@ model QuizQuestions {
     @@index([guildId])
     @@index([authorUuid], map: "QuizQuestions_authorUuid_fkey")
 }
+
+model BotMessageData {
+    uuid      String  @id @default(uuid())
+    guildId   String
+    channelId String
+    messageId String  @unique
+    createdAt DateTime @default(now())
+
+    @@index([guildId])
+}

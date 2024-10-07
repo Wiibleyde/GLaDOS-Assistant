@@ -1,5 +1,7 @@
-import { CommandInteraction, Role, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, PermissionFlagsBits, Role, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
+import { PermissionUtils } from "@/utils/permissionTester"
+import { errorEmbed } from "@/utils/embeds"
 
 export const data = new SlashCommandBuilder()
     .setName("debug")
@@ -14,6 +16,10 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
+    if(!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.Administrator], true)) {
+        await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })
+        return
+    }
     const serverId = interaction.options.get("serveur")?.value as string
     const server = interaction.client.guilds.cache.get(serverId)
     const serverConfig = await prisma.guildData.findFirst({

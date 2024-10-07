@@ -1,7 +1,5 @@
 import { CommandInteraction, ButtonInteraction, ModalSubmitInteraction, CacheType, PermissionFlagsBits } from 'discord.js';
 import { config } from '@/config';
-import { logger } from './logger';
-
 
 export namespace PermissionUtils {
     /**

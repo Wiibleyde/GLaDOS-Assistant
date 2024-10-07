@@ -9,3 +9,14 @@ type QuizType = {
     rightUsers?: Array<string>
     wrongUsers?: Array<string>
 }
+
+
+type Modules = {
+    name: string
+    status: StatusEnum
+}
+
+type Status = {
+    bot: StatusEnum
+    modules: Modules[]
+}
