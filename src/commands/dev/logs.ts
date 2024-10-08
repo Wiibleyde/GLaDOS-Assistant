@@ -1,4 +1,4 @@
-import { CommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js"
+import { CommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 import { PermissionUtils } from "@/utils/permissionTester"
 import { errorEmbed } from "@/utils/embeds"

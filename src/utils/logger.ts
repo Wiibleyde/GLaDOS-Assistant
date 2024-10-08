@@ -43,7 +43,7 @@ class Logger {
         return now.toLocaleString()
     }
 
-    public async info(...messageList: any[]) {
+    public async info(...messageList: Array<any>) {
         const message = messageList.join(" ")
         console.log(LogLevelColors.INFO + `[INFO] ${this.getNowDate()} ${message}` + resetColor)
         const embed: EmbedBuilder = new EmbedBuilder()
@@ -70,7 +70,7 @@ class Logger {
         })
     }
 
-    public async error(...messageList: any[]) {
+    public async error(...messageList: Array<any>) {
         const message = messageList.join(" ")
         console.error(LogLevelColors.ERROR + `[ERROR] ${this.getNowDate()} ${message}` + resetColor)
         const embed: EmbedBuilder = new EmbedBuilder()
@@ -97,7 +97,7 @@ class Logger {
         })
     }
 
-    public async warn(...messageList: any[]) {
+    public async warn(...messageList: Array<any>) {
         const message = messageList.join(" ")
         console.warn(LogLevelColors.WARN + `[WARN] ${this.getNowDate()} ${message}` + resetColor)
         const embed: EmbedBuilder = new EmbedBuilder()
@@ -124,7 +124,7 @@ class Logger {
         })
     }
 
-    public async debug(...messageList: any[]) {
+    public async debug(...messageList: Array<any>) {
         const message = messageList.join(" ")
         console.log(LogLevelColors.DEBUG + `[DEBUG] ${this.getNowDate()} ${message}` + resetColor)
         const embed: EmbedBuilder = new EmbedBuilder()

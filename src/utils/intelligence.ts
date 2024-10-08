@@ -39,8 +39,9 @@ export function generateWithGoogle(channelId:string, prompt: string, userAsking:
         }
         let response: GenerateContentResult | undefined
         try {
-            response = await currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`)
-            resolve(response.response.text())
+            currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`).then((response) => {
+                resolve(response.response.text())
+            })
         } catch (error) {
             if (response && response.response && response.response.candidates) {
                 logger.error(response.response.candidates[0].safetyRatings)

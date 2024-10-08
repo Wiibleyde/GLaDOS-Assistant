@@ -5,8 +5,10 @@ import { backSpace } from "@/utils/textUtils";
 interface Command {
     data: {
         description: string;
-    };
-    execute: (interaction: CommandInteraction) => Promise<void>;
+    }
+}
+interface Commands {
+    [key: string]: Command;
 }
 
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
@@ -14,8 +16,7 @@ export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setDescription("Affiche la liste des commandes");
 
 export async function execute(interaction: CommandInteraction) {
-    //@ts-expect-error
-    const typedCommands: { [key: string]: Command } = commands
+    const typedCommands: Commands = commands;
     const commandsList = Object.keys(typedCommands).map((key: string) => {return `**/${key}** : ${typedCommands[key].data.description}`;}).join(backSpace)
 
     const helpEmbed = new EmbedBuilder()

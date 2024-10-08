@@ -1,4 +1,4 @@
-import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials, PermissionFlagsBits } from "discord.js"
+import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials } from "discord.js"
 import { deployCommands, deployDevCommands } from "./deploy-commands"
 import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"

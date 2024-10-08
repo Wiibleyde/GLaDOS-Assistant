@@ -15,7 +15,7 @@ export async function execute(interaction: CommandInteraction) {
         return
     }
     maintenance = !maintenance
-    let color: number = maintenance ? 0xff0000 : 0x00ff00
+    const color: number = maintenance ? 0xff0000 : 0x00ff00
     const embed = new EmbedBuilder()
         .setTitle("Maintenance")
         .setDescription(`Le bot est maintenant en mode ${maintenance ? "maintenance" : "normal"}`)
