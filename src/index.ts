@@ -104,7 +104,7 @@ client.on(Events.MessageCreate, async (message) => {
         //     message.content = contentOfReply + message.content
         // }
         const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
-            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||  (Conversation réinitialisée) (si c'est encore Eliott je pète un câble)`
+            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||  (Conversation réinitialisée)`
         }).then(async (response) => {
             return response
         })
