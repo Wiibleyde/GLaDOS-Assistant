@@ -3,7 +3,7 @@ import { prisma } from "@/utils/database"
 import { PermissionUtils } from "@/utils/permissionTester"
 import { errorEmbed } from "@/utils/embeds"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("logs")
     .setDescription("Afficher les derniers logs du bot")
 

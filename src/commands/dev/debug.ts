@@ -1,9 +1,9 @@
-import { CommandInteraction, PermissionFlagsBits, Role, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, PermissionFlagsBits, Role, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 import { PermissionUtils } from "@/utils/permissionTester"
 import { errorEmbed } from "@/utils/embeds"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("debug")
     .setDescription("Passer en mode debug sur un serveur")
     .addStringOption(option =>

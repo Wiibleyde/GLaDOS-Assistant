@@ -1,7 +1,7 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quizstats")
     .setDescription("Affiche les statistiques du quiz")
 

@@ -1,9 +1,8 @@
-import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType, SlashCommandOptionsOnlyBuilder } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { PermissionUtils } from "@/utils/permissionTester"
-import { logger } from "@/utils/logger"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("rename")
     .setDescription("Renommer le bot")
     .addStringOption(option =>

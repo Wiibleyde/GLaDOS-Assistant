@@ -1,4 +1,4 @@
-import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials, PermissionFlagsBits } from "discord.js"
+import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials } from "discord.js"
 import { deployCommands, deployDevCommands } from "./deploy-commands"
 import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
@@ -9,6 +9,7 @@ import { prisma } from "./utils/database"
 import { initAi, generateWithGoogle } from "./utils/intelligence"
 import { maintenance } from "./commands/dev/maintenance"
 import { PermissionUtils } from "./utils/permissionTester"
+import { backSpace } from "./utils/textUtils"
 
 export const client = new Client({
     intents: [
@@ -66,7 +67,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
             logger.info(`Commande </${commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
         } catch (error: Error | any) {
-            logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>backSpace<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
+            logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>${backSpace}<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
             await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
         }
     } else if (interaction.isModalSubmit()) {
@@ -103,7 +104,7 @@ client.on(Events.MessageCreate, async (message) => {
         //     message.content = contentOfReply + message.content
         // }
         const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
-            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||  (Conversation réinitialisée) (si c'est encore Eliott je pète un câble)`
+            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||  (Conversation réinitialisée)`
         }).then(async (response) => {
             return response
         })

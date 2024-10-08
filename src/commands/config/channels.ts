@@ -1,11 +1,10 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType, SlashCommandOptionsOnlyBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { config } from "@/config"
 import { backSpace } from "@/utils/textUtils"
 import { PermissionUtils } from "@/utils/permissionTester"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("channels")
     .setDescription("Configurer les salons")
     .addStringOption(option =>
@@ -47,7 +46,6 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
-    const user = interaction.guild?.members.cache.get(interaction.client.user.id)
     if (!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.ManageChannels], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })
         return
