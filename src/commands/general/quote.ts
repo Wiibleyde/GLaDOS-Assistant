@@ -1,13 +1,14 @@
-import { CommandInteraction, SlashCommandBuilder, TextBasedChannel, TextChannel } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js"
 import Jimp from "jimp"
 import { prisma } from "@/utils/database"
 import { successEmbed, errorEmbed } from "@/utils/embeds"
+import { backSpace } from "@/utils/textUtils"
 
 const background = "assets/img/quote.png"
 const smoke = "assets/img/smoke.png"
 const fontPath = "assets/fonts/Ubuntu.fnt"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("quote")
     .setDescription("Créer une citation")
     .addStringOption(option =>
@@ -111,6 +112,6 @@ export async function execute(interaction: CommandInteraction) {
 
     const buffer = await image.getBufferAsync(Jimp.MIME_PNG)
 
-    const messageSent = await channel.send({ files: [buffer], content: `"${quote}" - ${author?.toString() ?? "Anonyme"} - ${date} ${context ? `backSpace${context}` : ""}` })
+    const messageSent = await channel.send({ files: [buffer], content: `"${quote}" - ${author?.toString() ?? "Anonyme"} - ${date} ${context ? `${backSpace}${context}` : ""}` })
     await interaction.editReply({ embeds: [successEmbed(interaction, `Citation créée et envoyée ${messageSent.url}`)] })
 }

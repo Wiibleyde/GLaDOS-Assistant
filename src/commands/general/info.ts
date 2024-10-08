@@ -1,4 +1,4 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js";
 import { prisma } from "@/utils/database";
 import { backSpace } from "@/utils/textUtils";
 
@@ -6,7 +6,7 @@ import packageJson from "../../../package.json";
 
 const infoImage = "./assets/img/info.png";
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("info")
     .setDescription("Affiche des informations sur le bot / l'utilisateur")
     .addStringOption(option =>

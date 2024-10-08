@@ -1,9 +1,9 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 import { successEmbed, errorEmbed } from "@/utils/embeds"
 import { logger } from "@/utils/logger"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("addquestion")
     .setDescription("Permet d'ajouter une question au quiz")
     .addStringOption(option =>

@@ -37,6 +37,7 @@ GLaDOS Assistant is a simple discord bot that can be used for multiple things, i
 - MariaDB database
     - *Windows docker don't work well with the Prisma ORM*
 - Discord bot token
+    - With good intents
 
 ## Installation
 
@@ -48,6 +49,7 @@ GLaDOS Assistant is a simple discord bot that can be used for multiple things, i
     DISCORD_CLIENT_ID=your_discord_bot_client_id
 
     GLADOS_HOME_GUILD=glados_home_guild_id
+    REPORT_CHANNEL=report_channel_id
 
     OWNER_ID=your_discord_user_id
 
@@ -74,6 +76,7 @@ This project is licensed under the GPL-2.0 License - see the [LICENSE](LICENSE) 
 - [**Discord.js**](https://discord.js.org/)
 - [**Prisma ORM**](https://www.prisma.io/)
 - [**Gemini**](https://gemini.google.com/)
+- [**TheCatAPI**](https://thecatapi.com/)
 
 ![](https://forthebadge.com/images/badges/built-with-love.svg)
 ![](https://forthebadge.com/images/badges/made-with-typescript.svg)

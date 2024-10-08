@@ -1,7 +1,7 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("Affiche le classement du quiz")
 
@@ -15,12 +15,11 @@ export async function execute(interaction: CommandInteraction) {
         }
     })
 
-    // Sort the users by the ratio of good answers (and the most good answers)
+    // Sort the users by the ratio of good answers (and take attention to the number of questions answered (to avoid a user with 1 good answer and 0 bad answer to be first))
     users.sort((a, b) => {
-        const ratioA = a.quizGoodAnswers / (a.quizGoodAnswers + a.quizBadAnswers)
-        const ratioB = b.quizGoodAnswers / (b.quizGoodAnswers + b.quizBadAnswers)
-        return ratioB - ratioA
+        return (b.quizGoodAnswers / (b.quizGoodAnswers + b.quizBadAnswers)) - (a.quizGoodAnswers / (a.quizGoodAnswers + a.quizBadAnswers))
     })
+    users.splice(10)
 
     const embed = new EmbedBuilder()
         .setTitle("Classement du quiz")

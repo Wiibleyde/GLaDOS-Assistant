@@ -9,7 +9,7 @@ interface Command {
     execute: (interaction: CommandInteraction) => Promise<void>;
 }
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("help")
     .setDescription("Affiche la liste des commandes");
 

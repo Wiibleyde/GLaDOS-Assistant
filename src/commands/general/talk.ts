@@ -1,8 +1,8 @@
-import { CommandInteraction, SlashCommandBuilder, TextChannel } from "discord.js"
+import { CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { logger } from "@/utils/logger"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("talk")
     .setDescription("Parler avec en utilisant bot")
     .addStringOption(option =>

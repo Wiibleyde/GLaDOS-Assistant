@@ -4,7 +4,7 @@ import { errorEmbed } from "@/utils/embeds"
 
 export let maintenance: boolean = false
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("maintenance")
     .setDescription("Passer le bot en mode maintenance")
 

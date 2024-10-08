@@ -1,11 +1,10 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType, SlashCommandOptionsOnlyBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { config } from "@/config"
 import { backSpace } from "@/utils/textUtils"
 import { PermissionUtils } from "@/utils/permissionTester"
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("channels")
     .setDescription("Configurer les salons")
     .addStringOption(option =>

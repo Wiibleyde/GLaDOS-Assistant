@@ -9,7 +9,7 @@ const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
 const quizes: Map<string, QuizType> = new Map()
 
-export const data = new SlashCommandBuilder()
+export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quiz")
     .setDescription("Affiche une question de quiz aléatoire")
 
