@@ -46,6 +46,12 @@ export function generateWithGoogle(channelId:string, prompt: string, userAsking:
         try {
             currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`).then((response) => {
                 resolve(response.response.text())
+            }).catch((error) => {
+                chats.delete(channelId)
+                reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
+                if (response && response.response && response.response.candidates) {
+                    logger.error(response.response.candidates[0].safetyRatings)
+                }
             })
         } catch (error) {
             if (response && response.response && response.response.candidates) {
