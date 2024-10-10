@@ -1,4 +1,4 @@
-import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials } from "discord.js"
+import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, MessageType, Partials } from "discord.js"
 import { deployCommands, deployDevCommands } from "./deploy-commands"
 import { errorEmbed } from "./utils/embeds"
 import { config } from "./config"
@@ -10,6 +10,7 @@ import { initAi, generateWithGoogle } from "./utils/intelligence"
 import { maintenance } from "./commands/dev/maintenance"
 import { PermissionUtils } from "./utils/permissionTester"
 import { backSpace } from "./utils/textUtils"
+import { isMessageQuizQuestion } from "./commands/fun/quiz/quiz"
 
 export const client = new Client({
     intents: [
@@ -98,11 +99,15 @@ client.on(Events.MessageCreate, async (message) => {
         return
     }
 
-    if (message.mentions.has(client.user?.id as string)) {
-        // if(message.type === MessageType.Reply) {
-        //     const contentOfReply = message.reference?.messageId ? await message.channel.messages.fetch(message.reference.messageId).then(msg => msg.content) : ''
-        //     message.content = contentOfReply + message.content
-        // }
+    if (message.mentions.has(client.user?.id as string) && !message.mentions.everyone) {
+        if(message.type === MessageType.Reply) {
+            if(isMessageQuizQuestion(message.reference?.messageId as string)) {
+                return
+            }
+            // const contentOfReply = message.reference?.messageId ? await message.channel.messages.fetch(message.reference.messageId).then(msg => msg.content) : ''
+            // message.content = contentOfReply + message.content
+        }
+        message.channel.sendTyping()
         const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
             return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||  (Conversation réinitialisée)`
         }).then(async (response) => {
