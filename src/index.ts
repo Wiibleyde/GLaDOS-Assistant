@@ -1,16 +1,18 @@
 import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, MessageType, Partials } from "discord.js"
-import { deployCommands, deployDevCommands } from "./deploy-commands"
-import { errorEmbed } from "./utils/embeds"
-import { config } from "./config"
-import { buttons, commands, devCommands, modals } from "./commands"
-import { logger } from "./utils/logger"
+import { deployCommands, deployDevCommands } from "@/deploy-commands"
+import { errorEmbed } from "@/utils/embeds"
+import { config } from "@/config"
+import { buttons, commands, devCommands, modals } from "@/commands"
+import { Logger } from "@/utils/logger"
 import { CronJob } from 'cron'
-import { prisma } from "./utils/database"
-import { initAi, generateWithGoogle } from "./utils/intelligence"
-import { maintenance } from "./commands/dev/maintenance"
-import { PermissionUtils } from "./utils/permissionTester"
-import { backSpace } from "./utils/textUtils"
-import { isMessageQuizQuestion } from "./commands/fun/quiz/quiz"
+import { prisma } from "@/utils/database"
+import { initAi, generateWithGoogle } from "@/utils/intelligence"
+import { maintenance } from "@/commands/dev/maintenance"
+import { PermissionUtils } from "@/utils/permissionTester"
+import { backSpace } from "@/utils/textUtils"
+import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
+
+export const logger = new Logger()
 
 export const client = new Client({
     intents: [

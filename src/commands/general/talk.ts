@@ -1,6 +1,6 @@
 import { CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { logger } from "@/utils/logger"
+import { logger } from "@/index"
 
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("talk")

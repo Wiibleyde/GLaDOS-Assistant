@@ -1,7 +1,6 @@
 import { config } from "@/config"
 import { ChatSession, GenerativeModel, GoogleGenerativeAI, GenerateContentResult } from "@google/generative-ai"
-import { logger } from "./logger"
-import { client } from "@/index"
+import { logger, client } from "@/index"
 
 const chats = new Map<string, ChatSession>()
 
