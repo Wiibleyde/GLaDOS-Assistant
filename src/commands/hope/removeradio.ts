@@ -75,11 +75,11 @@ export async function execute(interaction: CommandInteraction) {
         return
     }
 
-    const { embed, actionRow } = creatEmbedForRadio(interaction, newRadioData.displayName, newRadioData.RadioFrequencies)
+    const { embed, actionRow, files } = creatEmbedForRadio(interaction, newRadioData.displayName, newRadioData.RadioFrequencies)
 
     const message = await channel.messages.fetch(newRadioData.botMessageData.messageId)
 
-    await message.edit({ embeds: [embed], components: [actionRow] })
+    await message.edit({ embeds: [embed], components: [actionRow], files: files })
 
     await interaction.editReply({ embeds: [successEmbed(interaction, "La radio a été supprimée")] })
 }

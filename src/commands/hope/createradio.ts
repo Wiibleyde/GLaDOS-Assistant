@@ -4,6 +4,7 @@ import { PermissionUtils } from "@/utils/permissionTester";
 import { RadioFrequencies } from "@prisma/client";
 import { SlashCommandOptionsOnlyBuilder, SlashCommandBuilder, CommandInteraction, EmbedBuilder, TextChannel, ButtonBuilder, ButtonStyle, ActionRowBuilder, PermissionFlagsBits, ButtonInteraction, ModalSubmitInteraction, APIEmbedField } from "discord.js";
 
+export const radioImage = "./assets/img/radio.png"
 
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("createradio")
@@ -64,9 +65,9 @@ export async function execute(interaction: CommandInteraction) {
 
         const channel = interaction.channel as TextChannel
 
-        const { embed, actionRow } = creatEmbedForRadio(interaction, serviceName, radioData.RadioFrequencies)
+        const { embed, actionRow, files } = creatEmbedForRadio(interaction, serviceName, radioData.RadioFrequencies)
 
-        const message = await channel.send({ embeds: [embed], components: [actionRow] })
+        const message = await channel.send({ embeds: [embed], components: [actionRow], files: files })
 
         await prisma.radioData.update({
             where: {
@@ -90,9 +91,9 @@ export async function execute(interaction: CommandInteraction) {
             if (oldMessage) {
                 await oldMessage.delete();
                 const newChannel = interaction.channel as TextChannel
-                const { embed, actionRow } = creatEmbedForRadio(interaction, serviceName, isRadioExist.RadioFrequencies)
+                const { embed, actionRow, files } = creatEmbedForRadio(interaction, serviceName, isRadioExist.RadioFrequencies)
 
-                const message = await newChannel.send({ embeds: [embed], components: [actionRow] })
+                const message = await newChannel.send({ embeds: [embed], components: [actionRow], files: files })
 
                 await prisma.radioData.update({
                     where: {
@@ -135,12 +136,13 @@ function createButtonsForRadios(radios: RadioFrequencies[]): Array<ButtonBuilder
     })
 }
 
-export function creatEmbedForRadio(interaction: CommandInteraction|ButtonInteraction|ModalSubmitInteraction, name: string, radio: RadioFrequencies[]): { embed: EmbedBuilder, actionRow: ActionRowBuilder<ButtonBuilder> } {
+export function creatEmbedForRadio(interaction: CommandInteraction|ButtonInteraction|ModalSubmitInteraction, name: string, radio: RadioFrequencies[]): { embed: EmbedBuilder, actionRow: ActionRowBuilder<ButtonBuilder>, files?:  { attachment: string, name: string }[] } {
     const embed = new EmbedBuilder()
         .setTitle(`Radio du ${name}`)
         .setDescription('Voici les radios disponibles')
         .setColor("Aqua")
         .setTimestamp()
+        .setThumbnail("attachment://radio.png")
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     const fields: APIEmbedField[] = createFieldsForRadios(radio)
@@ -150,7 +152,9 @@ export function creatEmbedForRadio(interaction: CommandInteraction|ButtonInterac
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
 
-    return { embed, actionRow }
+    const files = [{ attachment: radioImage, name: "radio.png" }]
+
+    return { embed, actionRow, files }
 }
 
 /** Trucs à faire pour Hope :

@@ -78,11 +78,11 @@ export async function changeRadioModal(interaction: ModalSubmitInteraction) {
         return
     }
 
-    const { embed, actionRow } = creatEmbedForRadio(interaction, radioData.displayName, radioData.RadioFrequencies)
+    const { embed, actionRow, files } = creatEmbedForRadio(interaction, radioData.displayName, radioData.RadioFrequencies)
 
     const message = await channel.messages.fetch(radioData.botMessageData.messageId)
 
-    await message.edit({ embeds: [embed], components: [actionRow] })
+    await message.edit({ embeds: [embed], components: [actionRow], files: files })
 
     await interaction.reply({ content: "Fréquence de la radio changée avec succès !", ephemeral: true })
 }

@@ -72,11 +72,11 @@ export async function execute(interaction: CommandInteraction) {
             return
         }
 
-        const { embed, actionRow } = creatEmbedForRadio(interaction, updatedRadio.displayName, updatedRadio.RadioFrequencies)
+        const { embed, actionRow, files } = creatEmbedForRadio(interaction, updatedRadio.displayName, updatedRadio.RadioFrequencies)
 
         const message = await channel.messages.fetch(isRadioExist.botMessageData.messageId)
 
-        await message.edit({ embeds: [embed], components: [actionRow] })
+        await message.edit({ embeds: [embed], components: [actionRow], files: files })
 
         await interaction.editReply({ embeds: [successEmbed(interaction, "La radio a été ajoutée")] })
     } else {
