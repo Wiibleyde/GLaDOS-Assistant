@@ -1,9 +1,9 @@
 import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { logger } from "@/utils/logger"
 import { backSpace } from "@/utils/textUtils"
 import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ButtonInteraction, CacheType, TextChannel, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder, ModalSubmitInteraction } from "discord.js"
 import { config } from "@/config"
+import { logger } from "@/index"
 
 const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
@@ -283,7 +283,7 @@ export async function insertQuestionInDB() {
         if (error.code === "P2002") {
             return
         } else {
-            logger.error(error)
+            logger.error(`Erreur lors de l'insertion de la question de quiz dans la base de données : ${error.message}`)
         }
     }
 }

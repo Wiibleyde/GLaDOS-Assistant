@@ -15,9 +15,13 @@ import * as addquestion from "./fun/quiz/addquestion"
 import * as quizstats from "./fun/quiz/quizstats"
 import * as leaderboard from "./fun/quiz/leaderboard"
 
+import * as createradio from "./hope/createradio"
+
 import { addBirthdayModal } from "./general/birthday"
 
 import { handleQuizButton, reportQuestionButton, reportQuestionModal } from "./fun/quiz/quiz"
+
+import { changeRadio, changeRadioModal } from "./hope/changeRadio"
 
 import * as logs from "./dev/logs"
 import * as debug from "./dev/debug"
@@ -37,6 +41,9 @@ export const commands = {
     addquestion,
     quizstats,
     leaderboard,
+
+    // Hope commands
+    createradio,
 }
 
 export const devCommands = {
@@ -48,9 +55,11 @@ export const devCommands = {
 export const modals = {
     addBirthdayModal,
     reportQuestionModal,
+    changeRadioModal,
 }
 
 export const buttons = {
     handleQuizButton,
     reportQuestionButton,
+    changeRadio
 }
