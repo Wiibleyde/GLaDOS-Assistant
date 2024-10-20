@@ -85,11 +85,35 @@ model QuizQuestions {
 }
 
 model BotMessageData {
-    uuid      String  @id @default(uuid())
+    uuid      String   @id @default(uuid())
     guildId   String
     channelId String
-    messageId String  @unique
+    messageId String   @unique
     createdAt DateTime @default(now())
 
+    RadioData RadioData[]
+
     @@index([guildId])
+}
+
+model RadioFrequencies {
+    uuid               String @default(uuid())
+    name               String
+    frequency          String
+    radioDataUuid      String
+    radioData          RadioData @relation(fields: [radioDataUuid], references: [uuid])
+
+    @@id([frequency, radioDataUuid])
+}
+
+model RadioData {
+    uuid               String         @id @default(uuid())
+    botMessageData     BotMessageData @relation(fields: [botMessageDataUuid], references: [uuid])
+    botMessageDataUuid String
+    internalName       String
+    displayName        String
+    createdAt          DateTime       @default(now())
+
+    @@index([botMessageDataUuid], map: "RadioData_botMessageDataUuid_fkey")
+    RadioFrequencies RadioFrequencies[]
 }

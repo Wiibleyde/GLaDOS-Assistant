@@ -1,7 +1,7 @@
 import { REST, Routes } from "discord.js"
-import { config } from "./config"
-import { commands, devCommands } from "./commands"
-import { logger } from "@/utils/logger"
+import { config } from "@/config"
+import { commands, devCommands } from "@/commands"
+import { logger } from "@/index"
 import { client } from "."
 
 const commandsData = Object.values(commands).map((command) => command.data)
