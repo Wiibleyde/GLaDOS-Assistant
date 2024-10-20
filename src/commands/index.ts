@@ -16,6 +16,8 @@ import * as quizstats from "./fun/quiz/quizstats"
 import * as leaderboard from "./fun/quiz/leaderboard"
 
 import * as createradio from "./hope/createradio"
+import * as addradio from "./hope/addradio"
+import * as removeradio from "./hope/removeradio"
 
 import { addBirthdayModal } from "./general/birthday"
 
@@ -44,6 +46,8 @@ export const commands = {
 
     // Hope commands
     createradio,
+    addradio,
+    removeradio
 }
 
 export const devCommands = {
