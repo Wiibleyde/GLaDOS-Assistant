@@ -97,13 +97,13 @@ model BotMessageData {
 }
 
 model RadioFrequencies {
-    uuid               String @default(uuid())
+    uuid               String @id @default(uuid())
     name               String
     frequency          String
     radioDataUuid      String
     radioData          RadioData @relation(fields: [radioDataUuid], references: [uuid])
 
-    @@id([frequency, radioDataUuid])
+    @@unique([frequency, radioDataUuid])
 }
 
 model RadioData {
