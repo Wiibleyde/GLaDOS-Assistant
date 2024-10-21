@@ -1,4 +1,3 @@
-import { logger } from "@/index";
 import { prisma } from "@/utils/database";
 import { errorEmbed, successEmbed } from "@/utils/embeds";
 import { PermissionUtils } from "@/utils/permissionTester";
@@ -24,7 +23,6 @@ export async function execute(interaction: CommandInteraction) {
     }
     const guildId = interaction.guildId as string
     const serviceName = interaction.options.get("nom")?.value as string
-    logger.debug(`Prisma: ${prisma}`)
     const isRadioExist = await prisma.radioData.findFirst({
         where: {
             botMessageData: {
