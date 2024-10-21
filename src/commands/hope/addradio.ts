@@ -3,7 +3,6 @@ import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { PermissionUtils } from "@/utils/permissionTester"
 import { prisma } from "@/utils/database"
 import { creatEmbedForRadio } from "./createradio"
-import { logger } from "@/index"
 
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("addradio")
@@ -37,6 +36,28 @@ export async function execute(interaction: CommandInteraction) {
         }
     })
     if (isRadioExist) {
+        const existingRadio = await prisma.radioFrequencies.findFirst({
+            where: {
+                radioDataUuid: isRadioExist.uuid,
+                name: radioName
+            }
+        })
+        if (existingRadio) {
+            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Une radio avec ce nom existe déjà."))] })
+            return
+        }
+
+        const existingFrequency = await prisma.radioFrequencies.findFirst({
+            where: {
+                radioDataUuid: isRadioExist.uuid,
+                frequency: "0.0"
+            }
+        })
+        if (existingFrequency) {
+            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Une radio avec cette fréquence existe déjà."))] })
+            return
+        }
+
         await prisma.radioData.update({
             where: {
                 uuid: isRadioExist.uuid
