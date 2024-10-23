@@ -177,11 +177,13 @@ const possibleHalloweenStatus: Array<{ name: string, type: ActivityType }> = [
     { name: `la préparation des citrouilles. 🎃`, type: ActivityType.Competing },
     { name: `les fantômes... 👻`, type: ActivityType.Watching },
     { name: `Spooky Scary Skeletons`, type: ActivityType.Listening },
+    { name: `les bonbons ou un sort ! 🍬`, type: ActivityType.Playing },
 ]
 const possibleChristmasStatus: Array<{ name: string, type: ActivityType }> = [
     { name: `l'emballage des cadeaux. 🎁`, type: ActivityType.Competing },
     { name: `les lutins. 🧝`, type: ActivityType.Watching },
     { name: `les chants de Noël`, type: ActivityType.Listening },
+    { name: `le Père Noël. 🎅`, type: ActivityType.Playing },
 ]
 let statusIndex = 0
 const halloweenPeriod: { start: Date, end: Date } = {
