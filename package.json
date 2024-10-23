@@ -17,12 +17,12 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.17.1",
-    "@prisma/client": "^5.19.0",
+    "@prisma/client": "^5.21.1",
     "cron": "^3.1.7",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "jimp": "^0.22.12",
-    "prisma": "^5.19.1",
+    "prisma": "^5.21.1",
     "rotating-file-stream": "^3.2.3"
   },
   "devDependencies": {
