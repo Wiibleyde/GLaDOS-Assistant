@@ -173,7 +173,30 @@ const possibleStatus: Array<{ name: string, type: ActivityType }> = [
     { name: `votre aide.`, type: ActivityType.Competing },
     { name: `Aperture Science`, type: ActivityType.Watching },
 ]
+const possibleHalloweenStatus: Array<{ name: string, type: ActivityType }> = [
+    { name: `la préparation des citrouilles. 🎃`, type: ActivityType.Competing },
+    { name: `les fantômes... 👻`, type: ActivityType.Watching },
+    { name: `Spooky Scary Skeletons`, type: ActivityType.Listening },
+]
+const possibleChristmasStatus: Array<{ name: string, type: ActivityType }> = [
+    { name: `l'emballage des cadeaux. 🎁`, type: ActivityType.Competing },
+    { name: `les lutins. 🧝`, type: ActivityType.Watching },
+    { name: `les chants de Noël`, type: ActivityType.Listening },
+]
 let statusIndex = 0
+const halloweenPeriod: { start: Date, end: Date } = {
+    start: new Date(new Date().getFullYear(), 9, 24),
+    end: new Date(new Date().getFullYear(), 10, 7)
+}
+const christmasPeriod: { start: Date, end: Date } = {
+    start: new Date(new Date().getFullYear(), 11, 1),
+    end: new Date(new Date().getFullYear(), 0, 1)
+}
+
+const areInPeriod = (period: { start: Date, end: Date }) => {
+    const today = new Date()
+    return today >= period.start && today <= period.end
+}
 
 // Cron job to update bot status 10 seconds
 const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
@@ -188,7 +211,14 @@ const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
         })
         return
     }
-    const status = possibleStatus[statusIndex]
+    let status: { name: string, type: ActivityType }
+    if(areInPeriod(halloweenPeriod)) {
+        status = possibleHalloweenStatus[statusIndex]
+    } else if(areInPeriod(christmasPeriod)) {
+        status = possibleChristmasStatus[statusIndex]
+    } else {
+        status = possibleStatus[statusIndex]
+    }
     await client.user?.setPresence({
         activities: [
             {
