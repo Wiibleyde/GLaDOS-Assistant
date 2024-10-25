@@ -59,7 +59,7 @@ export async function execute(interaction: CommandInteraction) {
         )
         .setColor(0x4B0082)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir. Uuid : ${quizJson.uuid}`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     if(quizJson.author) {
         embed.addFields(
