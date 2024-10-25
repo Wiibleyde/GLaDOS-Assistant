@@ -1,6 +1,6 @@
 import { prisma } from "@/utils/database";
 import { errorEmbed, successEmbed } from "@/utils/embeds";
-import { PermissionUtils } from "@/utils/permissionTester";
+import { hasPermission } from "@/utils/permissionTester";
 import { RadioFrequencies } from "@prisma/client";
 import { SlashCommandOptionsOnlyBuilder, SlashCommandBuilder, CommandInteraction, EmbedBuilder, TextChannel, ButtonBuilder, ButtonStyle, ActionRowBuilder, PermissionFlagsBits, ButtonInteraction, ModalSubmitInteraction, APIEmbedField } from "discord.js";
 
@@ -17,7 +17,7 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     )
 
 export async function execute(interaction: CommandInteraction) {
-    if (!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
+    if (!await hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })
         return
     }

@@ -1,7 +1,7 @@
 import { CommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
-import { PermissionUtils } from "@/utils/permissionTester"
 import { errorEmbed } from "@/utils/embeds"
+import { hasPermission } from "@/utils/permissionTester"
 
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("logs")
@@ -9,7 +9,7 @@ export const data: SlashCommandBuilder = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
-    if(!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
+    if(!await hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })
         return
     }
