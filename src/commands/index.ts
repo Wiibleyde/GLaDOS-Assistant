@@ -9,6 +9,7 @@ import * as channels from "./config/channels"
 import * as rename from "./config/rename"
 
 import * as cat from "./fun/cat"
+import * as dog from "./fun/dog"
 
 import * as quiz from "./fun/quiz/quiz"
 import * as addquestion from "./fun/quiz/addquestion"
@@ -38,6 +39,7 @@ export const commands = {
     rename,
     quote,
     cat,
+    dog,
     quiz,
     help,
     addquestion,
