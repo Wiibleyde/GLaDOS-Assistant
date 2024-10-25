@@ -1,8 +1,8 @@
 import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, CommandInteraction, PermissionFlagsBits, TextChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
-import { PermissionUtils } from "@/utils/permissionTester"
 import { prisma } from "@/utils/database"
 import { creatEmbedForRadio } from "./createradio"
+import { hasPermission } from "@/utils/permissionTester"
 
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("addradio")
@@ -16,7 +16,7 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
-    if (!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
+    if (!await hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })
         return
     }

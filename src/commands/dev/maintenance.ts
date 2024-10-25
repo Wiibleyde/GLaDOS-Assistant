@@ -1,6 +1,6 @@
-import { PermissionUtils } from "@/utils/permissionTester"
 import { CommandInteraction, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from "discord.js"
 import { errorEmbed } from "@/utils/embeds"
+import { hasPermission } from "@/utils/permissionTester"
 
 export let maintenance: boolean = false
 
@@ -10,7 +10,7 @@ export const data: SlashCommandBuilder = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
-    if(!await PermissionUtils.hasPermission(interaction, [PermissionFlagsBits.Administrator], true)) {
+    if(!await hasPermission(interaction, [PermissionFlagsBits.Administrator], true)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })
         return
     }
