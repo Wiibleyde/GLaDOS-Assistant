@@ -5,6 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/wiibleyde/glados-assistant)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/wiibleyde/glados-assistant)![GitHub issues](https://img.shields.io/github/issues/wiibleyde/glados-assistant)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/wiibleyde/glados-assistant)![GitHub top language](https://img.shields.io/github/languages/top/wiibleyde/glados-assistant)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cbed5be6cea84e34911753e187c5efed)](https://app.codacy.com/gh/Wiibleyde/GLaDOS-Assistant/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## Description
 
