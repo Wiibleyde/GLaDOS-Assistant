@@ -36,15 +36,22 @@ export async function execute(interaction: CommandInteraction) {
     } else if (isNextClosureToday) {
         embed.setColor("Yellow");
         embed.addFields({
-            name: "Prochaine fermeture",
+            name: "Prochaine fermeture demain !",
             value: `<t:${Math.floor(closureStart / 1000)}:R>`
         });
     } else {
         embed.setColor("Green");
-        embed.addFields({
-            name: "Prochaine fermeture",
-            value: `<t:${Math.floor(closureStart / 1000)}:R>`
-        });
+        if(new Date(closureStart).getTime() > now) {
+            embed.addFields({
+                name: "Prochaine fermeture",
+                value: `<t:${Math.floor(closureStart / 1000)}:R>`
+            });
+        } else {
+            embed.addFields({
+                name: "Prochaine fermeture",
+                value: "Aucune fermeture prévue."
+            });
+        }
     }
 
     await interaction.editReply({ embeds: [embed] });
