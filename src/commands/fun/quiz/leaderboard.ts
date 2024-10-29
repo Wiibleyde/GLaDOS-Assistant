@@ -1,9 +1,28 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
+import { client } from "@/index"
 
-export const data: SlashCommandBuilder = new SlashCommandBuilder()
+export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("Affiche le classement du quiz")
+    .addStringOption(option =>
+        option.setName("type")
+            .setDescription("Type de classement")
+            .setRequired(true)
+            .addChoices({
+                name: "Ratio",
+                value: "ratio"
+            },
+            {
+                name: "Bonnes réponses",
+                value: "good"
+            },
+            {
+                name: "Mauvaises réponses",
+                value: "bad"
+            }
+        )
+    )
 
 export async function execute(interaction: CommandInteraction) {
     // Get the top 10 users with the best ratio
@@ -15,10 +34,27 @@ export async function execute(interaction: CommandInteraction) {
         }
     })
 
-    // Sort the users by the ratio of good answers (and take attention to the number of questions answered (to avoid a user with 1 good answer and 0 bad answer to be first))
-    users.sort((a, b) => {
-        return (b.quizGoodAnswers / (b.quizGoodAnswers + b.quizBadAnswers)) - (a.quizGoodAnswers / (a.quizGoodAnswers + a.quizBadAnswers))
-    })
+    users.filter(user => user.quizGoodAnswers + user.quizBadAnswers > 0)
+    users.filter(user => user.userId !== client.user?.id)
+
+    const type = interaction.options.get("type")?.value as string
+    switch (type) {
+        case "ratio":
+            users.sort((a, b) => {
+                return (b.quizGoodAnswers / (b.quizGoodAnswers + b.quizBadAnswers)) - (a.quizGoodAnswers / (a.quizGoodAnswers + a.quizBadAnswers))
+            })
+            break
+        case "good":
+            users.sort((a, b) => {
+                return b.quizGoodAnswers - a.quizGoodAnswers
+            })
+            break
+        case "bad":
+            users.sort((a, b) => {
+                return b.quizBadAnswers - a.quizBadAnswers
+            })
+            break
+    }
     users.splice(10)
 
     const embed = new EmbedBuilder()
