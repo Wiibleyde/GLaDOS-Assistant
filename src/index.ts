@@ -211,19 +211,19 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
 })
 birthdayCron.start()
 
-const possibleStatus: Array<{ name: string, type: ActivityType }> = [
+const possibleStatus: { name: string, type: ActivityType }[] = [
     { name: `le résultat des tests.`, type: ActivityType.Watching },
     { name: `vos demandes.`, type: ActivityType.Listening },
     { name: `votre aide.`, type: ActivityType.Competing },
     { name: `Aperture Science`, type: ActivityType.Watching },
 ]
-const possibleHalloweenStatus: Array<{ name: string, type: ActivityType }> = [
+const possibleHalloweenStatus: { name: string, type: ActivityType }[] = [
     { name: `la préparation des citrouilles. 🎃`, type: ActivityType.Competing },
     { name: `les fantômes... 👻`, type: ActivityType.Watching },
     { name: `Spooky Scary Skeletons`, type: ActivityType.Listening },
     { name: `les bonbons ou un sort ! 🍬`, type: ActivityType.Playing },
 ]
-const possibleChristmasStatus: Array<{ name: string, type: ActivityType }> = [
+const possibleChristmasStatus: { name: string, type: ActivityType }[] = [
     { name: `l'emballage des cadeaux. 🎁`, type: ActivityType.Competing },
     { name: `les lutins. 🧝`, type: ActivityType.Watching },
     { name: `les chants de Noël`, type: ActivityType.Listening },

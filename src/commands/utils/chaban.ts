@@ -99,7 +99,7 @@ interface ChabanData {
  * @returns A promise that resolves to an array of ChabanData objects.
  * @throws Will log an error and return an empty array if the fetch operation fails.
  */
-async function downloadJsonFile(url: string): Promise<Array<ChabanData>> {
+async function downloadJsonFile(url: string): Promise<ChabanData[]> {
     try {
         const response = await fetch(url);
         const data = await response.json();
