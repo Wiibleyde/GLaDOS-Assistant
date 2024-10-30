@@ -102,7 +102,7 @@ interface ChabanData {
 async function downloadJsonFile(url: string): Promise<ChabanData[]> {
     try {
         const response = await fetch(url);
-        const data = await response.json();
+        const data: ChabanData[] = await response.json();
         return data;
     } catch (error) {
         logger.error(`Failed to fetch Chaban-Delmas data: ${error}`);

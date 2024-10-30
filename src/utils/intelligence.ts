@@ -61,7 +61,7 @@ export function generateWithGoogle(channelId:string, prompt: string, userAsking:
         chats.set(channelId, currentChatSession)
     }
     return new Promise((resolve, reject) => {
-        const generateResponse = async () => {
+        const generateResponse = () => {
             if(!isAiActive) {
                 reject("L'IA est désactivée")
                 return

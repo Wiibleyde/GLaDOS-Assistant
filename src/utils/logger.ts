@@ -106,7 +106,7 @@ export class Logger {
      * If `logInDiscord` is true, sends the log message to a Discord webhook.
      * If `logInDb` is true, stores the log message in the database.
      */
-    public async info(...messageList: Array<unknown>): Promise<void> {
+    public async info(...messageList: unknown[]): Promise<void> {
         const message = messageList.join(" ")
         console.log(LogLevelColors.INFO + `[INFO] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
@@ -149,7 +149,7 @@ export class Logger {
      * - If `logInDiscord` is true, the message is sent to a Discord webhook with an embed.
      * - If `logInDb` is true, the message is stored in a database using Prisma.
      */
-    public async error(...messageList: Array<unknown>): Promise<void> {
+    public async error(...messageList: unknown[]): Promise<void> {
         const message = messageList.join(" ")
         console.error(LogLevelColors.ERROR + `[ERROR] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
@@ -196,7 +196,7 @@ export class Logger {
      * await logger.warn("This is a warning message", "with additional context");
      * ```
      */
-    public async warn(...messageList: Array<unknown>): Promise<void> {
+    public async warn(...messageList: unknown[]): Promise<void> {
         const message = messageList.join(" ")
         console.warn(LogLevelColors.WARN + `[WARN] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
@@ -238,7 +238,7 @@ export class Logger {
      * - If `logInDiscord` is true, the message is sent to a Discord webhook.
      * - If `logInDb` is true, the message is logged into a database.
      */
-    public async debug(...messageList: Array<unknown>): Promise<void> {
+    public async debug(...messageList: unknown[]): Promise<void> {
         const message = messageList.join(" ")
         console.log(LogLevelColors.DEBUG + `[DEBUG] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
