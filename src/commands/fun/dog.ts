@@ -1,14 +1,29 @@
-import { logger } from "@/index"
 import { errorEmbed } from "@/utils/embeds"
 import { CommandInteraction, SlashCommandBuilder } from "discord.js"
 
 const dogImgUrl = "https://dog.ceo/api/breeds/image/random"
 
+/**
+ * Defines a slash command named "dog" that displays an image of a dog.
+ * 
+ * @constant
+ * @type {SlashCommandBuilder}
+ * @name data
+ */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("dog")
     .setDescription("Affiche une image de chien")
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the command to fetch and send a random dog image.
+ *
+ * @param interaction - The command interaction object.
+ * @returns A promise that resolves when the interaction reply is sent.
+ *
+ * Fetches a random dog image from the specified URL and sends it as a reply to the interaction.
+ * If an error occurs during the fetch or if the image URL is not found, an error message is sent instead.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     const response = await fetch(dogImgUrl)
     const data = await response.json()
     const dogImg = data .message

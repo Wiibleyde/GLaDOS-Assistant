@@ -1,2 +1,4 @@
-export const backSpace = "\n";
-
+/**
+ * Represents a newline character.
+ */
+export const backSpace = "\n"

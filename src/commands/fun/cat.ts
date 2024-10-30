@@ -3,11 +3,24 @@ import { CommandInteraction, SlashCommandBuilder } from "discord.js"
 
 const catImgUrl = "https://api.thecatapi.com/v1/images/search"
 
+/**
+ * Command data for the "cat" command.
+ * This command displays a cat image.
+ */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("cat")
     .setDescription("Affiche une image de chat")
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the command to fetch and send a random cat image.
+ *
+ * @param interaction - The command interaction object.
+ * @returns A promise that resolves when the interaction reply is sent.
+ *
+ * Fetches a random cat image from the specified URL and sends it as a reply to the interaction.
+ * If an error occurs during the fetch or if the image URL is not found, an error message is sent instead.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     const response = await fetch(catImgUrl)
     const data = await response.json()
     const catImg = data[0].url

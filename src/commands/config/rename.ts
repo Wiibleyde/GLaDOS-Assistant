@@ -2,6 +2,19 @@ import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, Interacti
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
 
+/**
+ * Defines the slash command "rename" for renaming the bot.
+ * 
+ * This command allows users to rename the bot by providing a new name.
+ * 
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * 
+ * @property {string} name - The name of the command, which is "rename".
+ * @property {string} description - A brief description of the command, which is "Renommer le bot".
+ * @property {SlashCommandStringOption} options.nom - The new name for the bot. This option is not required.
+ * @property {InteractionContextType[]} contexts - The contexts in which this command can be used, which include guild and private channel.
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("rename")
     .setDescription("Renommer le bot")
@@ -16,7 +29,23 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
         InteractionContextType.PrivateChannel,
     ])
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the rename command to change the bot's nickname.
+ * 
+ * @param interaction - The command interaction object.
+ * @returns A promise that resolves when the command execution is complete.
+ * 
+ * The function performs the following steps:
+ * 1. Defers the reply to the interaction.
+ * 2. Checks if the user has the required permissions to manage channels.
+ * 3. If the user lacks permissions, sends an error message and returns.
+ * 4. Retrieves the new name from the interaction options.
+ * 5. If the new name is empty, resets the bot's nickname and sends a success message.
+ * 6. If the new name exceeds 32 characters, sends an error message.
+ * 7. If the new name is the same as the current username, sends an error message.
+ * 8. Otherwise, sets the bot's nickname to the new name and sends a success message.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if (!await hasPermission(interaction, [PermissionFlagsBits.ManageChannels], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer le nom du bot"))] })

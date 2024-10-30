@@ -4,6 +4,27 @@ import { prisma } from "@/utils/database"
 import { creatEmbedForRadio } from "./createradio"
 import { hasPermission } from "@/utils/permissionTester"
 
+/**
+ * Slash command definition for removing a radio.
+ * 
+ * This command allows users to remove a radio by specifying its name.
+ * 
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * 
+ * @example
+ * // Usage in a Discord bot
+ * client.on('interactionCreate', async interaction => {
+ *     if (!interaction.isCommand()) return;
+ * 
+ *     const { commandName } = interaction;
+ * 
+ *     if (commandName === 'removeradio') {
+ *         const radioName = interaction.options.getString('nom');
+ *         // Logic to remove the radio
+ *     }
+ * });
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("removeradio")
     .setDescription("Supprimer une radio")
@@ -14,7 +35,25 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             .setRequired(true)
     )
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the command to remove a radio from the configuration.
+ * 
+ * @param interaction - The command interaction object.
+ * @returns A promise that resolves when the command execution is complete.
+ * 
+ * @remarks
+ * This function performs the following steps:
+ * 1. Defers the reply to the interaction.
+ * 2. Checks if the user has the necessary permissions.
+ * 3. Retrieves the radio data from the database.
+ * 4. Checks if the specified radio exists.
+ * 5. Deletes the radio frequency from the database.
+ * 6. Updates the radio data and the corresponding message in the channel.
+ * 7. Sends a success message to the user.
+ * 
+ * If any step fails, an error message is sent to the user.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if (!await hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })

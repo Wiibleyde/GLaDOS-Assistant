@@ -20,6 +20,17 @@ const months = {
     12: "Décembre"
 }
 
+/**
+ * Defines the slash command for managing birthdays.
+ * 
+ * This command allows users to perform various actions related to birthdays:
+ * - "Ajouter" (add): Add a new birthday.
+ * - "Supprimer" (remove): Remove an existing birthday.
+ * - "Voir mon anniversaire" (view): View the user's own birthday.
+ * - "Voir les anniversaires" (list): View all birthdays.
+ * 
+ * @constant {SlashCommandOptionsOnlyBuilder} data - The slash command builder for the birthday command.
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("birthday")
     .setDescription("Gestion des anniversaires")
@@ -43,7 +54,19 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             .setRequired(true)
     )
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the appropriate birthday command based on the user's interaction.
+ * 
+ * @param interaction - The interaction object containing the command and options.
+ * @returns A promise that resolves when the command execution is complete.
+ * 
+ * The function handles the following actions:
+ * - "add": Adds a birthday.
+ * - "remove": Removes a birthday.
+ * - "view": Views a specific birthday.
+ * - "list": Lists all birthdays.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     switch (interaction.options.get("action")?.value) {
         case "add":
             await addBirthday(interaction)
@@ -60,7 +83,13 @@ export async function execute(interaction: CommandInteraction) {
     }
 }
 
-async function addBirthday(interaction: CommandInteraction) {
+/**
+ * Handles the interaction to add a birthday by displaying a modal for the user to input their birth date.
+ * 
+ * @param interaction - The command interaction that triggered this function.
+ * @returns A promise that resolves when the modal is shown to the user.
+ */
+async function addBirthday(interaction: CommandInteraction): Promise<void> {
     const modal = new ModalBuilder()
         .setCustomId("addBirthdayModal")
         .setTitle("Ajouter un anniversaire")
@@ -78,7 +107,21 @@ async function addBirthday(interaction: CommandInteraction) {
     await interaction.showModal(modal)
 }
 
-export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
+/**
+ * Handles the submission of a modal to add or update a user's birthday.
+ * 
+ * @param interaction - The interaction object representing the modal submission.
+ * @returns A promise that resolves when the interaction has been handled.
+ * 
+ * This function performs the following steps:
+ * 1. Extracts the user and birthday date text from the interaction.
+ * 2. Validates the date format and parses the day, month, and year.
+ * 3. Creates a Date object from the parsed values and validates it.
+ * 4. Checks if the user already has a birthday record in the database.
+ * 5. Updates the existing record or creates a new one with the provided birthday date.
+ * 6. Sends a success or error message as a reply to the interaction.
+ */
+export async function addBirthdayModal(interaction: ModalSubmitInteraction): Promise<void> {
     const user = interaction.user
     const birthdayDateText = interaction.fields.getTextInputValue("birthday")
     const dateParts = birthdayDateText.split("/")
@@ -124,7 +167,18 @@ export async function addBirthdayModal(interaction: ModalSubmitInteraction) {
     await interaction.reply({ embeds: [successEmbed(interaction, "Anniversaire ajouté")], ephemeral: true })
 }
 
-async function removeBirthday(interaction: CommandInteraction) {
+/**
+ * Removes the birthday entry for the user who initiated the interaction.
+ * 
+ * This function first defers the reply to the interaction, making it ephemeral.
+ * It then checks if the user has a birthday entry in the database. If no entry is found,
+ * it informs the user that no birthday is recorded. If an entry is found, it deletes the
+ * birthday entry from the database and informs the user that the birthday has been removed.
+ * 
+ * @param interaction - The interaction object representing the command interaction.
+ * @returns A promise that resolves when the operation is complete.
+ */
+async function removeBirthday(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.user
     const birthday = await prisma.globalUserData.findFirst({
@@ -144,7 +198,18 @@ async function removeBirthday(interaction: CommandInteraction) {
     await interaction.editReply({ content: "Anniversaire supprimé" })
 }
 
-async function viewBirthday(interaction: CommandInteraction) {
+/**
+ * Handles the interaction to view a user's birthday.
+ * 
+ * This function defers the reply to the interaction, fetches the user's birthday
+ * from the database, and sends an embedded message with the birthday information.
+ * If no birthday is found, it sends an appropriate message indicating that no
+ * birthday is recorded.
+ * 
+ * @param interaction - The command interaction that triggered this function.
+ * @returns A promise that resolves when the interaction reply is edited.
+ */
+async function viewBirthday(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const user = interaction.user
     const birthday = await prisma.globalUserData.findFirst({
@@ -173,7 +238,16 @@ async function viewBirthday(interaction: CommandInteraction) {
     await interaction.editReply({ embeds: [embed] })
 }
 
-async function listBirthday(interaction: CommandInteraction) {
+/**
+ * Handles the interaction to list birthdays of users in a guild.
+ * 
+ * This function fetches the members of the guild, retrieves their birthdays from the database,
+ * sorts them by month, and sends an embedded message listing the birthdays.
+ * 
+ * @param interaction - The command interaction that triggered this function.
+ * @returns A promise that resolves when the interaction reply is edited.
+ */
+async function listBirthday(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if (!interaction.guildId) {
         await interaction.editReply({ content: "Impossible de récupérer les anniversaires" })

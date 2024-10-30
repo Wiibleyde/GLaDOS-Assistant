@@ -4,11 +4,29 @@ import { hasPermission } from "@/utils/permissionTester"
 
 export let maintenance: boolean = false
 
+/**
+ * Slash command data for the "maintenance" command.
+ * This command is used to put the bot into maintenance mode.
+ */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("maintenance")
     .setDescription("Passer le bot en mode maintenance")
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the maintenance command, toggling the maintenance mode of the bot.
+ * 
+ * @param interaction - The command interaction that triggered this execution.
+ * @returns A promise that resolves when the command execution is complete.
+ * 
+ * The command performs the following steps:
+ * 1. Defers the reply to the interaction, making it ephemeral and fetching the reply.
+ * 2. Checks if the user has the necessary permissions (Administrator) to execute the command.
+ *    - If not, it edits the reply with an error message and exits.
+ * 3. Toggles the maintenance mode of the bot.
+ * 4. Creates an embed message indicating the new state of the bot (maintenance or normal).
+ * 5. Edits the reply with the embed message.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if(!await hasPermission(interaction, [PermissionFlagsBits.Administrator], true)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })

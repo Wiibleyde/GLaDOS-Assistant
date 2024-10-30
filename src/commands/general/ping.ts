@@ -1,9 +1,25 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
 
+/**
+ * Command data for the "ping" command.
+ * This command is used to check if the bot is online.
+ * 
+ * @constant {SlashCommandBuilder} data - The command builder for the "ping" command.
+ */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Savoir si le bot est en ligne")
 
+/**
+ * An object representing different ping thresholds.
+ * 
+ * The thresholds are categorized as follows:
+ * - `VERY_GOOD`: Ping less than or equal to 50ms.
+ * - `GOOD`: Ping less than or equal to 100ms.
+ * - `CORRECT`: Ping less than or equal to 150ms.
+ * - `WEAK`: Ping less than or equal to 200ms.
+ * - `BAD`: Ping less than or equal to 500ms.
+ */
 const PING_THRESHOLD = {
     VERY_GOOD: 50,
     GOOD: 100,
@@ -14,7 +30,13 @@ const PING_THRESHOLD = {
 
 const pingImage = "./assets/img/ping.png"
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the ping command, which provides the bot's current status including ping, memory usage, and uptime.
+ *
+ * @param interaction - The interaction object that triggered the command.
+ * @returns A promise that resolves when the reply has been edited with the ping information.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     const firstResponse = await interaction.deferReply({ ephemeral: true, fetchReply: true })
     let status: string
     let color: number

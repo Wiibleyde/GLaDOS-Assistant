@@ -1,15 +1,14 @@
 interface QuizType {
     question: string
     answer: string
-    badAnswers: Array<string>
+    badAnswers: string[]
     category: string
     difficulty: string
     createdAt: number
-    shuffleAnswers?: Array<string>
-    rightUsers?: Array<string>
-    wrongUsers?: Array<string>
+    shuffleAnswers?: string[]
+    rightUsers?: string[]
+    wrongUsers?: string[]
 }
-
 
 interface Modules {
     name: string

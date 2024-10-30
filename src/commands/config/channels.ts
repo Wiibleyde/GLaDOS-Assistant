@@ -4,6 +4,30 @@ import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { backSpace } from "@/utils/textUtils"
 import { hasPermission } from "@/utils/permissionTester"
 
+/**
+ * Slash command configuration for the "channels" command.
+ * This command allows users to configure various channels.
+ *
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * 
+ * @property {string} name - The name of the command ("channels").
+ * @property {string} description - A brief description of the command ("Configurer les salons").
+ * 
+ * @property {SlashCommandStringOption} action - The action to perform.
+ * - "view": View the current configuration.
+ * - "edit": Modify the current configuration.
+ * 
+ * @property {SlashCommandStringOption} key - The configuration key (optional).
+ * - "birthdayChannel": Channel for birthdays.
+ * - "quoteChannel": Channel for quotes.
+ * 
+ * @property {SlashCommandChannelOption} channel - The channel to configure (optional).
+ * 
+ * @property {Array<InteractionContextType>} contexts - The contexts in which this command can be used.
+ * - InteractionContextType.Guild: The command can be used in a guild.
+ * - InteractionContextType.PrivateChannel: The command can be used in a private channel.
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("channels")
     .setDescription("Configurer les salons")
@@ -44,7 +68,25 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
         InteractionContextType.PrivateChannel,
     ])
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Handles the execution of the configuration command for managing channels.
+ * 
+ * @param interaction - The command interaction object.
+ * @returns A promise that resolves to void.
+ * 
+ * This function performs the following actions:
+ * 1. Defers the reply to the interaction.
+ * 2. Checks if the user has the required permissions to manage channels.
+ * 3. Based on the action specified in the interaction options, it either:
+ *    - Views the current channel configuration and sends it as a reply.
+ *    - Edits the channel configuration by updating or creating a new entry in the database.
+ * 
+ * The function handles errors and sends appropriate error messages if:
+ * - The user does not have the required permissions.
+ * - No configuration is found when attempting to view.
+ * - Required options (key and channel) are missing when attempting to edit.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if (!await hasPermission(interaction, [PermissionFlagsBits.ManageChannels], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })
