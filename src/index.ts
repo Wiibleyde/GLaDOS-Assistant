@@ -90,6 +90,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 devCommands[commandName as keyof typeof devCommands].execute(interaction)
             }
             logger.info(`Commande </${commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: Error | any) {
             logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>${backSpace}<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
             await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })

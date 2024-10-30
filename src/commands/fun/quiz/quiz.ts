@@ -340,6 +340,7 @@ export async function insertQuestionInDB(): Promise<void> {
                 guildId: "0",
             }
         })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: Error | any) {
         if (error.code === "P2002") {
             return

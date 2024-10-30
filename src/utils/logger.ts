@@ -23,10 +23,35 @@ const webhookClient = new WebhookClient({
     url: config.LOGS_WEBHOOK_URL
 })
 
+/**
+ * The `Logger` class provides methods for logging messages at various levels (INFO, ERROR, WARN, DEBUG).
+ * It supports logging to the console, sending logs to a Discord webhook, and storing logs in a database.
+ * 
+ * @remarks
+ * - The logging behavior can be customized through the `logInDb` and `logInDiscord` properties.
+ * - The class uses Prisma for database interactions and Discord.js for sending webhook messages.
+ * 
+ * @example
+ * ```typescript
+ * const logger = new Logger(true, true);
+ * await logger.info("This is an informational message");
+ * await logger.error("This is an error message");
+ * await logger.warn("This is a warning message");
+ * await logger.debug("This is a debug message");
+ * ```
+ * 
+ * @public
+ */
 export class Logger {
     logInDb: boolean = true
     logInDiscord: boolean = true
 
+    /**
+     * Creates an instance of the logger utility.
+     * 
+     * @param logInDb - Determines whether to log messages in the database. Defaults to `true`.
+     * @param logInDiscord - Determines whether to log messages in Discord. Defaults to `true`.
+     */
     constructor(logInDb: boolean = true, logInDiscord: boolean = true) {
         this.logInDb = logInDb
         this.logInDiscord = logInDiscord
