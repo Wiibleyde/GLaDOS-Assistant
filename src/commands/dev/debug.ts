@@ -3,6 +3,20 @@ import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
 
+/**
+ * Defines the slash command options for the "debug" command.
+ * This command allows users to enable debug mode on a server.
+ * 
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * 
+ * @property {string} name - The name of the command ("debug").
+ * @property {string} description - A brief description of the command.
+ * @property {SlashCommandStringOption} options.serveur - The server ID where debug mode will be enabled.
+ * @property {string} options.serveur.name - The name of the option ("serveur").
+ * @property {string} options.serveur.description - A brief description of the option.
+ * @property {boolean} options.serveur.required - Indicates that this option is required.
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("debug")
     .setDescription("Passer en mode debug sur un serveur")
@@ -14,7 +28,22 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     )
 
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the debug command for a given interaction.
+ * 
+ * This command toggles the debug mode for the user on the specified server.
+ * If the user has the debug role, it will be removed; otherwise, it will be added.
+ * 
+ * @param interaction - The command interaction that triggered this execution.
+ * @returns A promise that resolves when the command execution is complete.
+ * 
+ * @remarks
+ * - The command checks if the user has the necessary permissions before proceeding.
+ * - If the server configuration does not exist, it creates a new entry in the database.
+ * - If the debug role does not exist, it creates a new role with administrator permissions.
+ * - The command provides feedback to the user about the current debug mode status.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if(!await hasPermission(interaction, [PermissionFlagsBits.Administrator], true)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })

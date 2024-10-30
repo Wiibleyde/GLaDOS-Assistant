@@ -9,11 +9,39 @@ const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
 const quizes: Map<string, QuizType> = new Map()
 
+/**
+ * Defines the slash command for the quiz feature.
+ * 
+ * This command, when invoked, will display a random quiz question.
+ * 
+ * @constant
+ * @type {SlashCommandBuilder}
+ * @name data
+ */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quiz")
     .setDescription("Affiche une question de quiz aléatoire")
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the quiz command, fetching a random quiz question from the database and sending it as an embedded message
+ * with interactive buttons for the user to select an answer.
+ *
+ * @param {CommandInteraction} interaction - The interaction object representing the command invocation.
+ * @returns {Promise<void>} A promise that resolves when the command execution is complete.
+ *
+ * @throws {Error} If no quiz questions are found in the database.
+ * @throws {Error} If an error occurs while retrieving the quiz question.
+ * @throws {Error} If an error occurs while sending the quiz question to the channel.
+ *
+ * @remarks
+ * - The function fetches a random quiz question from the database using Prisma.
+ * - It constructs an embedded message with the quiz question and possible answers.
+ * - The answers are shuffled to ensure randomness.
+ * - The embedded message includes metadata such as category, difficulty, and expiration time.
+ * - Interactive buttons are added to the message for the user to select an answer or report an error.
+ * - The quiz question's last usage time is updated in the database.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     // const response = await fetch(quizApiUrl)
     // const data = await response.json()
     const questionCount = await prisma.quizQuestions.count()
@@ -103,7 +131,24 @@ export async function execute(interaction: CommandInteraction) {
     })
 }
 
-export async function handleQuizButton(interaction: ButtonInteraction<CacheType>) {
+/**
+ * Handles the interaction when a user clicks a quiz button.
+ * 
+ * @param interaction - The interaction object representing the button click.
+ * @returns A promise that resolves to void.
+ * 
+ * This function performs the following steps:
+ * 1. Retrieves the message associated with the interaction.
+ * 2. Checks if the message exists; if not, replies with an error.
+ * 3. Retrieves the quiz associated with the message ID.
+ * 4. Checks if the quiz exists; if not, attempts to retrieve the question from the database and replies with an error if not found.
+ * 5. Checks if the quiz has expired; if so, replies with an expiration message.
+ * 6. Checks if the user has already answered the quiz correctly or incorrectly and replies accordingly.
+ * 7. Retrieves the user's answer and compares it with the correct answer.
+ * 8. Updates the quiz data and user data in the database based on whether the answer was correct or incorrect.
+ * 9. Edits the original message to update the list of users who answered correctly or incorrectly.
+ */
+export async function handleQuizButton(interaction: ButtonInteraction<CacheType>): Promise<void> {
     const message = interaction.message
     if(!message) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (message introuvable)."))], ephemeral: true })
@@ -253,7 +298,23 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
     }
 }
 
-export async function insertQuestionInDB() {
+/**
+ * Fetches a quiz question from an external API and inserts it into the database.
+ * 
+ * This function performs the following steps:
+ * 1. Fetches quiz data from a predefined API URL.
+ * 2. Parses the response to extract the first quiz question.
+ * 3. Constructs a `QuizType` object from the extracted data.
+ * 4. Attempts to insert the quiz question into the database using Prisma.
+ * 
+ * If a unique constraint violation occurs (error code "P2002"), the function will silently return.
+ * Any other errors encountered during the database insertion will be logged.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the operation is complete.
+ * 
+ * @throws {Error} Throws an error if the fetch operation fails or if an unexpected error occurs during database insertion.
+ */
+export async function insertQuestionInDB(): Promise<void> {
     const response = await fetch(quizApiUrl)
     const data = await response.json()
     const quizJson = data.quizzes[0]
@@ -288,7 +349,19 @@ export async function insertQuestionInDB() {
     }
 }
 
-export async function reportQuestionButton(interaction: ButtonInteraction<CacheType>) {
+/**
+ * Handles the interaction when a user clicks the "report question" button in a quiz.
+ * 
+ * This function retrieves the quiz question from the message embed, searches for the question
+ * in the database, and if found, presents a modal to the user to report the question.
+ * 
+ * @param interaction - The button interaction that triggered this function.
+ * 
+ * @returns A promise that resolves when the interaction is handled.
+ * 
+ * @throws Will reply with an error embed if the message, question description, or quiz question is not found.
+ */
+export async function reportQuestionButton(interaction: ButtonInteraction<CacheType>): Promise<void> {
     const message = interaction.message
     if(!message) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz (message introuvable)."))], ephemeral: true })

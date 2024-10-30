@@ -8,7 +8,21 @@ export let isAiActive = true
 let genAI: GoogleGenerativeAI
 let model: GenerativeModel
 
-export function initAi() {
+/**
+ * Initializes the AI by setting up the Google Generative AI model if the GOOGLE_API_KEY is defined in the configuration.
+ * If the GOOGLE_API_KEY is not defined, it logs a warning message and disables the AI functionality.
+ *
+ * The AI is configured to behave as GLaDOS, a sarcastic and intelligent AI from Aperture Science.
+ * It includes specific instructions on how to interact with users and handle mentions.
+ *
+ * @remarks
+ * - The AI model used is "gemini-1.5-flash".
+ * - The AI will not respond to itself or mention itself in responses.
+ * - Special handling is included for interactions with the developer.
+ *
+ * @throws {Error} If the GOOGLE_API_KEY is not defined in the configuration.
+ */
+export function initAi(): void {
     if(!config.GOOGLE_API_KEY) {
         logger.warn("GOOGLE_API_KEY n'est pas défini dans le fichier .env toutes les commandes de l'IA seront désactivées")
         isAiActive = false
@@ -28,6 +42,16 @@ export function initAi() {
     }
 }
 
+/**
+ * Generates a response using Google's AI model based on the provided prompt.
+ *
+ * @param channelId - The unique identifier for the chat channel.
+ * @param prompt - The prompt or question asked by the user.
+ * @param userAsking - The identifier of the user asking the question.
+ * @returns A promise that resolves to the generated response as a string.
+ *
+ * @throws Will reject the promise with an error message if the AI is inactive or if there is an issue generating the response.
+ */
 export function generateWithGoogle(channelId:string, prompt: string, userAsking: string): Promise<string> {
     let currentChatSession: ChatSession
     if(chats.has(channelId)) {
@@ -36,30 +60,33 @@ export function generateWithGoogle(channelId:string, prompt: string, userAsking:
         currentChatSession = model.startChat()
         chats.set(channelId, currentChatSession)
     }
-    return new Promise(async (resolve, reject) => {
-        if(!isAiActive) {
-            reject("L'IA est désactivée")
-            return
-        }
-        let response: GenerateContentResult | undefined
-        try {
-            currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`).then((response) => {
-                resolve(response.response.text())
-            }).catch((error) => {
-                chats.delete(channelId)
-                reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
+    return new Promise((resolve, reject) => {
+        const generateResponse = async () => {
+            if(!isAiActive) {
+                reject("L'IA est désactivée")
+                return
+            }
+            let response: GenerateContentResult | undefined
+            try {
+                currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`).then((response) => {
+                    resolve(response.response.text())
+                }).catch((error) => {
+                    chats.delete(channelId)
+                    reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
+                    if (response && response.response && response.response.candidates) {
+                        logger.error(response.response.candidates[0].safetyRatings)
+                    }
+                })
+            } catch (error) {
                 if (response && response.response && response.response.candidates) {
                     logger.error(response.response.candidates[0].safetyRatings)
                 }
-            })
-        } catch (error) {
-            if (response && response.response && response.response.candidates) {
-                logger.error(response.response.candidates[0].safetyRatings)
-            }
-            if(error instanceof Error && error.message) {
-                chats.delete(channelId)
-                reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
+                if(error instanceof Error && error.message) {
+                    chats.delete(channelId)
+                    reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
+                }
             }
         }
+        generateResponse()
     });
 }

@@ -6,6 +6,19 @@ import { SlashCommandOptionsOnlyBuilder, SlashCommandBuilder, CommandInteraction
 
 export const radioImage = "./assets/img/radio.png"
 
+/**
+ * Slash command configuration for creating a radio message.
+ * 
+ * This command allows users to create a message for the radio service.
+ * 
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * 
+ * @property {string} name - The name of the command, set to "createradio".
+ * @property {string} description - A brief description of the command.
+ * @property {SlashCommandStringOption} options - The options for the command.
+ * @property {string} options.nom - The name of the service, required.
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("createradio")
     .setDescription("Créer un message pour la radio")
@@ -16,7 +29,21 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             .setRequired(true)
     )
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the command to create or update a radio configuration.
+ *
+ * @param interaction - The command interaction object.
+ * @returns A promise that resolves to void.
+ *
+ * This function performs the following steps:
+ * 1. Checks if the user has the required permissions.
+ * 2. Retrieves the guild ID and service name from the interaction options.
+ * 3. Checks if a radio configuration already exists for the guild.
+ * 4. If the radio configuration does not exist, it creates a new one and sends a message to the channel.
+ * 5. If the radio configuration exists, it updates the existing message in the channel.
+ * 6. Sends a success reply to the interaction.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     if (!await hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission de changer la configuration."))] })
         return
@@ -111,8 +138,7 @@ export async function execute(interaction: CommandInteraction) {
 
                 await interaction.reply({ embeds: [successEmbed(interaction, `La radio du ${serviceName} a été mise à jour avec succès !`)], ephemeral: true })
             }
-        } else {
-        }
+        } else { /* empty */ }
     }
 }
 

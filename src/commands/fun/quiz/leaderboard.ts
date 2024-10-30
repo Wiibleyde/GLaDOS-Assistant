@@ -2,6 +2,16 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandOpti
 import { prisma } from "@/utils/database"
 import { client } from "@/index"
 
+/**
+ * Defines the slash command options for the "leaderboard" command.
+ * This command displays the quiz leaderboard.
+ * 
+ * Command options:
+ * - `type` (required): Specifies the type of leaderboard to display.
+ *   - `ratio`: Leaderboard based on the ratio of correct answers.
+ *   - `good`: Leaderboard based on the number of correct answers.
+ *   - `bad`: Leaderboard based on the number of incorrect answers.
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("Affiche le classement du quiz")
@@ -24,7 +34,14 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
         )
     )
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the leaderboard command, which retrieves and displays the top 10 users
+ * with the best quiz performance based on the specified type (ratio, good answers, or bad answers).
+ *
+ * @param {CommandInteraction} interaction - The interaction object representing the command invocation.
+ * @returns {Promise<void>} A promise that resolves when the leaderboard has been sent as a reply.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     // Get the top 10 users with the best ratio
     const users = await prisma.globalUserData.findMany({
         select: {

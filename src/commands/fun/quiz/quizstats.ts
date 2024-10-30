@@ -1,11 +1,27 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 
+/**
+ * Defines the slash command "quizstats" which displays the statistics of the quiz.
+ * 
+ * @constant {SlashCommandBuilder} data - The slash command builder instance for the "quizstats" command.
+ */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quizstats")
     .setDescription("Affiche les statistiques du quiz")
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the quiz statistics command.
+ * 
+ * This function retrieves the user's quiz data from the database and generates an embed
+ * containing the user's quiz statistics, including the number of questions answered,
+ * the number of correct and incorrect answers, and the percentage of correct answers.
+ * The embed color is determined based on the user's correct answer ratio.
+ * 
+ * @param interaction - The command interaction object.
+ * @returns A promise that resolves when the interaction reply is sent.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     const userData = await prisma.globalUserData.findFirst({
         where: {
             userId: interaction.user.id

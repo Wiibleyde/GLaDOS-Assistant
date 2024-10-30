@@ -10,7 +10,6 @@ interface QuizType {
     wrongUsers?: Array<string>
 }
 
-
 interface Modules {
     name: string
     status: StatusEnum

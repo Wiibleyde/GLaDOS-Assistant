@@ -8,6 +8,20 @@ const background = "assets/img/quote.png"
 const smoke = "assets/img/smoke.png"
 const fontPath = "assets/fonts/Ubuntu.fnt"
 
+/**
+ * Defines the slash command options for the "quote" command.
+ * 
+ * This command allows users to create a quote with the following options:
+ * 
+ * - `citation`: The quote text (required).
+ * - `auteur`: The author of the quote (required).
+ * - `contexte`: The context of the quote (optional).
+ * - `date`: The date of the quote (optional).
+ * 
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * @name data
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("quote")
     .setDescription("Créer une citation")
@@ -36,7 +50,25 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             .setRequired(false)
     )
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the quote command, which processes and posts a quote to a specified channel.
+ * 
+ * @param interaction - The command interaction object containing the user's input.
+ * @returns A promise that resolves when the command execution is complete.
+ * 
+ * The function performs the following steps:
+ * 1. Defers the reply to the interaction.
+ * 2. Retrieves the quote, author, context, and date from the interaction options.
+ * 3. Determines the channel where the quote should be posted.
+ * 4. Processes the author's profile picture and overlays it on a background image.
+ * 5. Creates a new quote record in the database.
+ * 6. Composites additional images and text onto the background image.
+ * 7. Sends the final image to the determined channel.
+ * 8. Edits the original interaction reply with a success message.
+ * 
+ * If the author is not found, the function replies with an error message.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     const quote = interaction.options.get("citation")?.value as string
     const author = interaction.options.get("auteur")?.user

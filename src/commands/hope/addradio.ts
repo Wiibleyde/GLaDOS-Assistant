@@ -4,6 +4,19 @@ import { prisma } from "@/utils/database"
 import { creatEmbedForRadio } from "./createradio"
 import { hasPermission } from "@/utils/permissionTester"
 
+/**
+ * Slash command configuration for adding a radio.
+ * 
+ * This command allows users to add a radio by specifying its name.
+ * 
+ * @constant {SlashCommandOptionsOnlyBuilder} data - The slash command builder instance.
+ * @property {string} name - The name of the command ("addradio").
+ * @property {string} description - A brief description of the command ("Ajouter une radio").
+ * @property {SlashCommandStringOption} options.nom - The name of the radio to be added.
+ * @property {string} options.nom.name - The name of the option ("nom").
+ * @property {string} options.nom.description - A brief description of the option ("Nom de la radio").
+ * @property {boolean} options.nom.required - Indicates that the option is required (true).
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("addradio")
     .setDescription("Ajouter une radio")
@@ -14,6 +27,26 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             .setRequired(true)
     )
 
+/**
+ * Executes the command to add a radio frequency to the server's radio configuration.
+ * 
+ * @param interaction - The command interaction object.
+ * 
+ * @remarks
+ * This function performs the following steps:
+ * 1. Defers the reply to the interaction.
+ * 2. Checks if the user has the necessary permissions.
+ * 3. Retrieves the guild ID and radio name from the interaction options.
+ * 4. Checks if a radio configuration already exists for the guild.
+ * 5. Validates if a radio with the same name or frequency already exists.
+ * 6. Updates the radio configuration with the new frequency.
+ * 7. Fetches the updated radio configuration and updates the corresponding message in the channel.
+ * 8. Sends a success or error message based on the outcome.
+ * 
+ * @throws Will throw an error if the user does not have the required permissions.
+ * @throws Will throw an error if a radio with the same name or frequency already exists.
+ * @throws Will throw an error if the radio configuration or the channel cannot be found.
+ */
 export async function execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if (!await hasPermission(interaction, [PermissionFlagsBits.Administrator], false)) {

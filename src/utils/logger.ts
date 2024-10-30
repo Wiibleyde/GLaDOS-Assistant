@@ -13,6 +13,12 @@ enum LogLevelColors {
     DEBUG = "\x1b[32m",
 }
 
+/**
+ * Initializes a new instance of the WebhookClient with the specified configuration.
+ *
+ * @param {Object} config - The configuration object.
+ * @param {string} config.LOGS_WEBHOOK_URL - The URL of the webhook to send logs to.
+ */
 const webhookClient = new WebhookClient({
     url: config.LOGS_WEBHOOK_URL
 })
@@ -26,7 +32,16 @@ export class Logger {
         this.logInDiscord = logInDiscord
     }
 
-    public async initLevels() {
+    /**
+     * Initializes the log levels in the database.
+     * 
+     * This method creates multiple log levels (ERROR, INFO, WARN, DEBUG) in the database
+     * using Prisma's `createMany` method. If any of these log levels already exist, 
+     * they will be skipped due to the `skipDuplicates` option.
+     * 
+     * @returns {Promise<void>} A promise that resolves when the log levels have been initialized.
+     */
+    public async initLevels(): Promise<void> {
         await prisma.logLevel.createMany({
             data: [
                 {
@@ -46,12 +61,27 @@ export class Logger {
         })
     }
 
-    private getNowDate() {
+    /**
+     * Gets the current date and time as a localized string.
+     *
+     * @returns {string} The current date and time in a locale-specific format.
+     */
+    private getNowDate(): string {
         const now = new Date()
         return now.toLocaleString()
     }
 
-    public async info(...messageList: Array<any>) {
+    /**
+     * Logs an informational message to the console, optionally to Discord and a database.
+     *
+     * @param {...Array<unknown>} messageList - The list of messages to log.
+     * @returns {Promise<void>} A promise that resolves when the logging is complete.
+     *
+     * Logs the message to the console with an "INFO" level tag and a timestamp.
+     * If `logInDiscord` is true, sends the log message to a Discord webhook.
+     * If `logInDb` is true, stores the log message in the database.
+     */
+    public async info(...messageList: Array<unknown>): Promise<void> {
         const message = messageList.join(" ")
         console.log(LogLevelColors.INFO + `[INFO] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
@@ -82,7 +112,19 @@ export class Logger {
         }
     }
 
-    public async error(...messageList: Array<any>) {
+    /**
+     * Logs an error message to the console, optionally sends it to a Discord webhook, and stores it in a database.
+     * 
+     * @param {...Array<unknown>} messageList - The list of messages to log.
+     * @returns {Promise<void>} A promise that resolves when the logging is complete.
+     * 
+     * @remarks
+     * - The message is joined into a single string with spaces.
+     * - The log is printed to the console with an error level.
+     * - If `logInDiscord` is true, the message is sent to a Discord webhook with an embed.
+     * - If `logInDb` is true, the message is stored in a database using Prisma.
+     */
+    public async error(...messageList: Array<unknown>): Promise<void> {
         const message = messageList.join(" ")
         console.error(LogLevelColors.ERROR + `[ERROR] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
@@ -113,7 +155,23 @@ export class Logger {
         }
     }
 
-    public async warn(...messageList: Array<any>) {
+    /**
+     * Logs a warning message to the console, optionally sends it to Discord and/or saves it to the database.
+     * 
+     * @param {...unknown[]} messageList - The list of messages to log.
+     * @returns {Promise<void>} A promise that resolves when the logging is complete.
+     * 
+     * @remarks
+     * - The message is joined into a single string with spaces.
+     * - If `logInDiscord` is true, the message is sent to a Discord webhook.
+     * - If `logInDb` is true, the message is saved to the database.
+     * 
+     * @example
+     * ```typescript
+     * await logger.warn("This is a warning message", "with additional context");
+     * ```
+     */
+    public async warn(...messageList: Array<unknown>): Promise<void> {
         const message = messageList.join(" ")
         console.warn(LogLevelColors.WARN + `[WARN] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
@@ -144,7 +202,18 @@ export class Logger {
         }
     }
 
-    public async debug(...messageList: Array<any>) {
+    /**
+     * Logs a debug message to the console, optionally to Discord via a webhook, and optionally to a database.
+     * 
+     * @param {...Array<unknown>} messageList - The list of messages to be logged.
+     * @returns {Promise<void>} A promise that resolves when the logging is complete.
+     * 
+     * @remarks
+     * - The message is joined into a single string with spaces.
+     * - If `logInDiscord` is true, the message is sent to a Discord webhook.
+     * - If `logInDb` is true, the message is logged into a database.
+     */
+    public async debug(...messageList: Array<unknown>): Promise<void> {
         const message = messageList.join(" ")
         console.log(LogLevelColors.DEBUG + `[DEBUG] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {

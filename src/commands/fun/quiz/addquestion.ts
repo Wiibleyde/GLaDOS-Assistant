@@ -3,6 +3,23 @@ import { prisma } from "@/utils/database"
 import { successEmbed, errorEmbed } from "@/utils/embeds"
 import { logger } from "@/index"
 
+/**
+ * Defines the slash command `/addquestion` which allows users to add a question to the quiz.
+ * 
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * 
+ * @property {string} question - The quiz question to be added. This option is required.
+ * @property {string} answer - The correct answer to the quiz question. This option is required.
+ * @property {string} bad1 - The first incorrect answer option. This option is required.
+ * @property {string} bad2 - The second incorrect answer option. This option is required.
+ * @property {string} bad3 - The third incorrect answer option. This option is required.
+ * @property {string} category - The category of the quiz question. This option is required.
+ * @property {string} difficulty - The difficulty level of the quiz question. This option is required and can be one of the following values:
+ * - `facile` (Easy)
+ * - `normal` (Normal)
+ * - `difficile` (Hard)
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("addquestion")
     .setDescription("Permet d'ajouter une question au quiz")
@@ -59,7 +76,20 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             .setRequired(true)
         )
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Handles the execution of the add question command for a quiz.
+ * 
+ * @param interaction - The command interaction object.
+ * 
+ * @remarks
+ * This function retrieves the question, answer, bad answers, category, and difficulty from the interaction options.
+ * It then attempts to add the question to the database. If the question already exists, it sends an error message.
+ * If the question is added successfully, it sends a success message.
+ * 
+ * @throws Will send an error message if the guild ID or user ID cannot be retrieved.
+ * Will also send an error message if there is an issue with adding the question to the database.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true })
     const question = interaction.options.get("question")?.value as string
     const answer = interaction.options.get("answer")?.value as string
@@ -106,10 +136,12 @@ export async function execute(interaction: CommandInteraction) {
         })
     } catch (error) {
         if ((error as any).code === "P2002") {
-            return await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Cette question existe déjà *(Si vous souhaitez la supprimer, contactez un administrateur de GLaDOS)*."))] })
+            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Cette question existe déjà *(Si vous souhaitez la supprimer, contactez un administrateur de GLaDOS)*."))] })
+            return
         }
         logger.error(`Erreur lors de l'ajout de la question : ${error}`)
-        return await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de l'ajout de la question."))] })
+        await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de l'ajout de la question."))] })
+        return
     }
 
     await interaction.editReply({ embeds: [successEmbed(interaction, "Question ajoutée avec succès !")] })

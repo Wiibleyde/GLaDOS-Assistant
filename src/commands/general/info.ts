@@ -6,6 +6,23 @@ import packageJson from "../../../package.json";
 
 const infoImage = "./assets/img/info.png";
 
+/**
+ * Slash command configuration for the "info" command.
+ * This command displays information about the bot or the user.
+ * 
+ * @constant
+ * @type {SlashCommandOptionsOnlyBuilder}
+ * 
+ * @property {string} name - The name of the command ("info").
+ * @property {string} description - A brief description of the command.
+ * @property {SlashCommandStringOption} section - The section to display information about.
+ * @property {string} section.name - The name of the section option ("section").
+ * @property {string} section.description - A brief description of the section option.
+ * @property {Array<{name: string, value: string}>} section.choices - The choices for the section option.
+ * @property {string} section.choices[].name - The name of the choice.
+ * @property {string} section.choices[].value - The value of the choice.
+ * @property {boolean} section.required - Indicates if the section option is required.
+ */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("info")
     .setDescription("Affiche des informations sur le bot / l'utilisateur")
@@ -23,7 +40,18 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             .setRequired(true)
     );
 
-export async function execute(interaction: CommandInteraction) {
+/**
+ * Executes the command based on the interaction provided.
+ * 
+ * @param interaction - The interaction object representing the command interaction.
+ * @returns A promise that resolves when the command execution is complete.
+ * 
+ * The function handles different sections of the command:
+ * - "bot": Provides information about the bot including version, language, author, libraries, and GitHub repository.
+ * - "user": Provides information about the user from the database including birthday, quiz good answers, and quiz bad answers.
+ * - default: Responds with "Section inconnue" if the section is not recognized.
+ */
+export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true,fetchReply: true })
 
     switch (interaction.options.get("section")?.value) {

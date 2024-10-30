@@ -2,12 +2,13 @@ import { CommandInteraction, ButtonInteraction, ModalSubmitInteraction, CacheTyp
 import { config } from '@/config';
 
 /**
- * Check if the user has the required permissions (PermissionsFlagsBits.Administrator bypasses all permissions)
- * @param interaction The interaction to check
- * @param permissionsToTests The permissions to check
- * @param exact If the user needs all the permissions or just one
- * @returns If the user has the required permissions
-* */
+ * Checks if a user has the required permissions for a given interaction.
+ *
+ * @param interaction - The interaction to check permissions for. Can be a CommandInteraction, ButtonInteraction, or ModalSubmitInteraction.
+ * @param permissionsToTests - An array of permissions (as bigint values) to check against the user's permissions.
+ * @param exact - If true, the user must have all the permissions in the array. If false, the user only needs to have at least one of the permissions.
+ * @returns A promise that resolves to a boolean indicating whether the user has the required permissions.
+ */
 export async function hasPermission(interaction: CommandInteraction|ButtonInteraction<CacheType>|ModalSubmitInteraction, permissionsToTests: bigint[], exact: boolean): Promise<boolean> {
     if(config.OWNER_ID == interaction.user.id) return true
     const member = await interaction.guild?.members.fetch(interaction.user.id)
