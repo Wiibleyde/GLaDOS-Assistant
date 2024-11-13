@@ -1,6 +1,7 @@
-import { CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js"
+import { CommandInteraction, PermissionFlagsBits, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { logger } from "@/index"
+import { hasPermission } from "@/utils/permissionTester"
 
 /**
  * Defines the slash command "talk" which allows users to send a message using the bot.
@@ -53,6 +54,12 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
  */
 export async function execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
+
+    if(!await hasPermission(interaction, [PermissionFlagsBits.ManageMessages], false)) {
+        await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })
+        return
+    }
+
     const message = interaction.options.get("message")?.value as string
     const member = interaction.options.get("mp")?.value as string
 
