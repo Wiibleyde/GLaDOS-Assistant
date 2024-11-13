@@ -1,0 +1,8 @@
+services:
+  glados-bot:
+    build: .
+    image: wiibleyde/glados-bot:latest
+    container_name: glados-bot
+    restart: unless-stopped
+    volumes:
+      - ./.env:/app/.env
