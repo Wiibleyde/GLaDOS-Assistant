@@ -3,7 +3,6 @@ import { client, logger } from ".."
 import { prisma } from "./database"
 import { Attachment, Sticker, TextChannel, ThreadChannel } from "discord.js"
 
-
 const opennedMp = new Map<string, string>()
 
 export async function initMpThreads() {
