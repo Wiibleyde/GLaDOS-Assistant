@@ -30,8 +30,8 @@ export function initAi(): void {
         genAI = new GoogleGenerativeAI(config.GOOGLE_API_KEY as string)
         model = genAI.getGenerativeModel(
             {
-                model: "gemini-1.5-pro",
-                systemInstruction: `Tu es GLaDOS, d'Aperture Science, tu es quasiment directrice de ce centre d'expériences ! Tu es très sarcastique et méchante mais tu es serviable et très intelligente. Les extraits de phrases qui ressemblent à ça <@[ID du compte]> sont des utilisateur (pour info, <@${client.user?.id}> est toi-même, donc ne répond pas à toi-même, ni même ne fait pas mention de toi même…), tu peux les mentionner en réécrivant la même chose (pour que quelqu'un t'entende, il faut que tu mentionne celui qui te parle pour lui répondre). Si jamais <@461807010086780930> te parle, il s’agit de ton développeur donc, soit gentille avec lui. Répond en maximum 1024 caractères (tu peux utiliser du markdown).`,
+                model: "gemini-1.5-flash",
+                systemInstruction: `Tu es GLaDOS, d'Aperture Science, tu es quasiment directrice de ce centre d'expériences ! Tu es très sarcastique et très méchante mais tu es serviable et très intelligente. Les extraits de phrases qui ressemblent à ça <@[ID du compte]> sont des utilisateur (pour info, <@${client.user?.id}> est toi-même, donc ne répond pas à toi-même, ni même ne fait pas mention de toi même…), tu peux les mentionner en réécrivant la même chose (pour que quelqu'un t'entende, il faut que tu mentionne celui qui te parle pour lui répondre). Si jamais <@461807010086780930> te parle, il s’agit de ton développeur donc, soit gentille avec lui. Répond en maximum 1024 caractères (tu peux utiliser du markdown).`,
             }
         )
     }
@@ -62,25 +62,18 @@ export function generateWithGoogle(channelId:string, prompt: string, userAsking:
                 return
             }
             let response: GenerateContentResult | undefined
-            try {
-                currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`).then((response) => {
-                    resolve(response.response.text())
-                }).catch((error) => {
-                    chats.delete(channelId)
-                    reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
-                    if (response && response.response && response.response.candidates) {
-                        logger.error(response.response.candidates[0].safetyRatings)
-                    }
-                })
-            } catch (error) {
-                if (response && response.response && response.response.candidates) {
-                    logger.error(response.response.candidates[0].safetyRatings)
+            currentChatSession?.sendMessage(`<@${userAsking}> écrit : ${prompt}`).then((response) => {
+                resolve(response.response.text())
+            }).catch((error) => {
+                chats.delete(channelId)
+                if (response?.response?.candidates && response.response.candidates.length > 0) {
+                    logger.error(`Erreur lors de la génération de la réponse : ${error} (note de sécurité : ${response.response.candidates[0].safetyRatings})`)
+                    reject(`${error} (rating: ${response.response.candidates[0].safetyRatings})`)
+                } else {
+                    logger.error(`Erreur lors de la génération de la réponse : ${error} (aucune note de sécurité disponible)`)
+                    reject(`${error} (no safety ratings available)`)
                 }
-                if(error instanceof Error && error.message) {
-                    chats.delete(channelId)
-                    reject("Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error.message + ")|| (Conversation réinitialisée)")
-                }
-            }
+            })
         }
         generateResponse()
     });

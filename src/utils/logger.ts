@@ -117,9 +117,8 @@ export class Logger {
                 .setColor(0x00FF00)
                 .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                options: {
-                    username: "GLaDOS INFO",
-                },
+                username: "GLaDOS INFO",
+                avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })
         }
@@ -160,9 +159,8 @@ export class Logger {
                 .setColor(0xFF0000)
                 .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                options: {
-                    username: "GLaDOS ERROR",
-                },
+                username: "GLaDOS ERROR",
+                avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })
         }
@@ -207,9 +205,8 @@ export class Logger {
                 .setColor(0xFFA500)
                 .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                options: {
-                    username: "GLaDOS WARN",
-                },
+                username: "GLaDOS WARN",
+                avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })
         }
@@ -249,9 +246,8 @@ export class Logger {
                 .setColor(0x0000FF)
                 .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                options: {
-                    username: "GLaDOS DEBUG",
-                },
+                username: "GLaDOS DEBUG",
+                avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })
         }
