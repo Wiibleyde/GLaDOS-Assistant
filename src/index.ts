@@ -11,6 +11,7 @@ import { maintenance } from "@/commands/dev/maintenance"
 import { backSpace } from "@/utils/textUtils"
 import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
 import { hasPermission } from "./utils/permissionTester"
+import { handleMessageSend, initMpThreads, recieveMessage } from "./utils/mpManager"
 
 export const logger = new Logger()
 
@@ -113,7 +114,15 @@ client.on(Events.MessageCreate, async (message) => {
 
     const guildId = message.guild?.id
     if (!guildId) {
-        logger.debug(`Message reçu en DM de <@${message.author.id}> : ${message.content}`)
+        const messageStickers = Array.from(message.stickers.values())
+        const messageAttachments = Array.from(message.attachments.values())
+        recieveMessage(message.author.id, message.content, messageStickers, messageAttachments)
+        return
+    }
+    if(guildId === config.GLADOS_HOME_GUILD && message.author.id != client.user?.id) {
+        const messageStickers = Array.from(message.stickers.values())
+        const messageAttachments = Array.from(message.attachments.values())
+        handleMessageSend(message.channel.id, message.content, messageStickers, messageAttachments)
         return
     }
 
@@ -303,6 +312,7 @@ process.on('SIGINT', async () => {
     process.exit(0)
 })
 
+initMpThreads()
 initAi()
 
 client.login(config.DISCORD_TOKEN)

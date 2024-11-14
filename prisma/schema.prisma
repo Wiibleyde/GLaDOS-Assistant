@@ -15,6 +15,7 @@ model GlobalUserData {
     quizBadAnswers  Int             @default(0)
     QuizQuestions   QuizQuestions[]
     Quote           Quote[]
+    MpThreads       MpThreads[]
 
     @@index([userId])
 }
@@ -97,23 +98,33 @@ model BotMessageData {
 }
 
 model RadioFrequencies {
-    uuid               String @id @default(uuid())
-    name               String
-    frequency          String
-    radioDataUuid      String
-    radioData          RadioData @relation(fields: [radioDataUuid], references: [uuid])
+    uuid          String    @id @default(uuid())
+    name          String
+    frequency     String
+    radioDataUuid String
+    radioData     RadioData @relation(fields: [radioDataUuid], references: [uuid])
 
     @@unique([frequency, radioDataUuid])
 }
 
 model RadioData {
-    uuid               String         @id @default(uuid())
-    botMessageData     BotMessageData @relation(fields: [botMessageDataUuid], references: [uuid])
+    uuid               String             @id @default(uuid())
+    botMessageData     BotMessageData     @relation(fields: [botMessageDataUuid], references: [uuid])
     botMessageDataUuid String
     internalName       String
     displayName        String
-    createdAt          DateTime       @default(now())
+    createdAt          DateTime           @default(now())
+    RadioFrequencies   RadioFrequencies[]
 
     @@index([botMessageDataUuid], map: "RadioData_botMessageDataUuid_fkey")
-    RadioFrequencies RadioFrequencies[]
+}
+
+model MpThreads {
+    uuid      String          @id @default(uuid())
+    userUuid  String
+    user      GlobalUserData? @relation(fields: [userUuid], references: [uuid], onDelete: Cascade)
+    threadId  String         @unique
+    createdAt DateTime        @default(now())
+
+    @@index([userUuid], map: "MpThreads_userUuid_fkey")
 }

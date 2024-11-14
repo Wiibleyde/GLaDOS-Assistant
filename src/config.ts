@@ -2,9 +2,9 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const { DISCORD_TOKEN, DISCORD_CLIENT_ID, GLADOS_HOME_GUILD, OWNER_ID, LOGS_WEBHOOK_URL, GOOGLE_API_KEY, REPORT_CHANNEL } = process.env
+const { DISCORD_TOKEN, DISCORD_CLIENT_ID, GLADOS_HOME_GUILD, OWNER_ID, LOGS_WEBHOOK_URL, GOOGLE_API_KEY, REPORT_CHANNEL, MP_CHANNEL } = process.env
 
-if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !GLADOS_HOME_GUILD || !OWNER_ID || !LOGS_WEBHOOK_URL || !REPORT_CHANNEL) {
+if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !GLADOS_HOME_GUILD || !OWNER_ID || !LOGS_WEBHOOK_URL || !REPORT_CHANNEL || !MP_CHANNEL) {
     throw new Error("Missing environment variables")
 }
 
@@ -18,6 +18,7 @@ if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !GLADOS_HOME_GUILD || !OWNER_ID || !
  * @property {string} LOGS_WEBHOOK_URL - The URL of the webhook used for logging.
  * @property {string} GOOGLE_API_KEY - The API key used to authenticate with Google services.
  * @property {string} REPORT_CHANNEL - The ID of the channel where reports are sent.
+ * @property {string} MP_CHANNEL - The ID of the channel where MPs are sent.
  */
 export const config = {
     DISCORD_TOKEN,
@@ -26,5 +27,6 @@ export const config = {
     OWNER_ID,
     LOGS_WEBHOOK_URL,
     GOOGLE_API_KEY,
-    REPORT_CHANNEL
+    REPORT_CHANNEL,
+    MP_CHANNEL
 }
