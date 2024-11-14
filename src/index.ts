@@ -132,15 +132,16 @@ client.on(Events.MessageCreate, async (message) => {
             // message.content = contentOfReply + message.content
         }
         message.channel.sendTyping()
-        const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch(async (error) => {
-            return `Je ne suis pas en mesure de répondre à cette question pour le moment. ||(${error.message})||  (Conversation réinitialisée)`
-        }).then(async (response) => {
+        const aiReponse = await generateWithGoogle(channelId, message.content.replace(`<@${client.user?.id}> `, ''), message.author.id).catch((error) => {
+            return "Je ne suis pas en mesure de répondre à cette question pour le moment. ||(" + error + ")|| (Conversation réinitialisée)"
+        }).then((response) => {
             return response
         })
 
-        await message.channel.send(`${aiReponse}`)
-
-        logger.info(`Réponse de l'IA à <@${message.author.id}> dans <#${channelId}> : ${aiReponse}`)
+        if (aiReponse) {
+            await message.channel.send(`${aiReponse}`)
+            logger.info(`Réponse de l'IA à <@${message.author.id}> dans <#${channelId}> : ${aiReponse}`)
+        }
     }
 })
 
