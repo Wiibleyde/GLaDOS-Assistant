@@ -67,8 +67,10 @@ export function generateWithGoogle(channelId:string, prompt: string, userAsking:
             }).catch((error) => {
                 chats.delete(channelId)
                 if (response?.response?.candidates && response.response.candidates.length > 0) {
+                    logger.error(`Erreur lors de la génération de la réponse : ${error} (note de sécurité : ${response.response.candidates[0].safetyRatings})`)
                     reject(`${error} (rating: ${response.response.candidates[0].safetyRatings})`)
                 } else {
+                    logger.error(`Erreur lors de la génération de la réponse : ${error} (aucune note de sécurité disponible)`)
                     reject(`${error} (no safety ratings available)`)
                 }
             })
