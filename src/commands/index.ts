@@ -20,6 +20,8 @@ import * as createradio from "./hope/createradio"
 import * as addradio from "./hope/addradio"
 import * as removeradio from "./hope/removeradio"
 
+import * as createcalendar from "./calendar/createcalendar"
+
 import * as chaban from "./utils/chaban"
 
 import { addBirthdayModal } from "./general/birthday"
@@ -49,10 +51,13 @@ export const commands = {
     leaderboard,
     chaban,
 
+    // Calendar commands
+    createcalendar,
+
     // Hope commands
     createradio,
     addradio,
-    removeradio
+    removeradio,
 }
 
 export const devCommands = {

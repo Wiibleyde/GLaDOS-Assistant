@@ -12,6 +12,7 @@ import { backSpace } from "@/utils/textUtils"
 import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
 import { hasPermission } from "./utils/permissionTester"
 import { handleMessageSend, initMpThreads, recieveMessage } from "./utils/mpManager"
+import { initCalendars, updateCalendars } from "./commands/calendar/createcalendar"
 
 export const logger = new Logger()
 
@@ -304,6 +305,17 @@ const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
 })
 statusCron.start()
 
+const calendarCron = new CronJob('0 0 0 * * *', async () => {
+    await initCalendars()
+})
+calendarCron.start()
+
+// CronJob to update the calendar events every 10 minutes
+const calendarEventsCron = new CronJob('0 */1 * * * *', async () => {
+    await updateCalendars()
+})
+calendarEventsCron.start()
+
 process.on('SIGINT', async () => {
     logger.info('Ctrl-C détécté, déconnexion...')
     await prisma.$disconnect()
@@ -314,5 +326,6 @@ process.on('SIGINT', async () => {
 
 initMpThreads()
 initAi()
+initCalendars()
 
 client.login(config.DISCORD_TOKEN)
