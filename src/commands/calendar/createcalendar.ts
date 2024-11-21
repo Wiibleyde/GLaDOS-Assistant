@@ -2,7 +2,7 @@ import { client, logger } from "@/index";
 import { prisma } from "@/utils/database";
 import { errorEmbed } from "@/utils/embeds";
 import { hasPermission } from "@/utils/permissionTester";
-import { CommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js";
+import { CommandInteraction, EmbedBuilder, GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel, PermissionFlagsBits, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js";
 import { CalendarComponent, CalendarResponse, sync } from 'node-ical';
 
 const icalMap = new Map<string, CalendarResponse>() // Map<guildId, CalendarResponse>
@@ -134,31 +134,16 @@ export async function updateCalendars() {
         }
     })
     for (const guild of guilds) {
-        upsertCalendarMessage(guild.guildId, guild.CalendarMessageData?.channelId as string, guild.CalendarMessageData?.messageId ?? null, findNextEvent(icalMap.get(guild.guildId) as CalendarResponse) as MCalendarComponent)
+        const nextEvent = findNextEvent(icalMap.get(guild.guildId) as CalendarResponse) as MCalendarComponent | null
+        const event = areInEvent(icalMap.get(guild.guildId) as CalendarResponse) as MCalendarComponent | null
+        upsertCalendarMessage(guild.guildId, guild.CalendarMessageData?.channelId as string, guild.CalendarMessageData?.messageId ?? null, nextEvent)
+        if(event) {
+            await createDiscordEvent(guild.guildId, event)
+        }
     }
 }
 
 const exemptedEvents = ["Férié", "Vacances", "Jour férié"]
-
-/*{
-    "type": "VEVENT",
-    "params": [],
-    "categories": [
-        "HYPERPLANNING"
-    ],
-    "dtstamp": "2024-11-19T11:33:16.000Z",
-    "uid": "Ferie-13-BONNELL_Nathan-Index-Education",
-    "start": "2025-08-14T22:00:00.000Z",
-    "datetype": "date",
-    "end": "2025-08-15T22:00:00.000Z",
-    "summary": {
-        "params": {
-            "LANGUAGE": "fr"
-        },
-        "val": "Férié"
-    },
-    "method": "PUBLISH"
-}*/
 
 type MCalendarComponent = CalendarComponent & {
     summary?: {
@@ -185,8 +170,34 @@ function findNextEvent(calendar: CalendarResponse): MCalendarComponent | null {
     return nextEvent
 }
 
-function prepareEmbed(nextEvent: MCalendarComponent): EmbedBuilder {
-    const embed = new EmbedBuilder()
+function areInEvent(calendar: CalendarResponse): MCalendarComponent | null {
+    let nextEvent: CalendarComponent | null = null
+    let nextEventTime: number = Infinity
+    const now = new Date().getTime()
+    Object.keys(calendar).forEach(key => {
+        const event = calendar[key] as MCalendarComponent
+        const eventStart = new Date(event.start).getTime()
+        const eventEnd = new Date(event.end).getTime()
+        if (event.summary?.val && !exemptedEvents.includes(event.summary.val)) {
+            if (eventStart < now && eventEnd > now && eventStart < nextEventTime) {
+                nextEvent = event
+                nextEventTime = eventStart
+            }
+        }
+    })
+    return nextEvent
+}
+
+function prepareEmbed(nextEvent: MCalendarComponent | null): EmbedBuilder {
+    if(!nextEvent) {
+        return new EmbedBuilder()
+            .setTitle("Prochain événement")
+            .setColor(0xFF0000)
+            .setDescription(`Aucun événement à venir.`)
+            .setTimestamp()
+            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() })
+    }
+    return new EmbedBuilder()
         .setTitle("Prochain événement")
         .setColor(0x00FF00)
         .setDescription(`**${nextEvent.summary?.val}**`)
@@ -201,10 +212,9 @@ function prepareEmbed(nextEvent: MCalendarComponent): EmbedBuilder {
         })
         .setTimestamp()
         .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() })
-    return embed
 }
 
-async function upsertCalendarMessage(guildId: string, channelId: string, messageId: string | null, nextEvent: MCalendarComponent): Promise<void> {
+async function upsertCalendarMessage(guildId: string, channelId: string, messageId: string | null, nextEvent: MCalendarComponent | null): Promise<void> {
     if (messageId) {
         const message = await client.channels.fetch(channelId).then(channel => (channel as TextChannel).messages.fetch(messageId))
         await message.edit({ embeds: [prepareEmbed(nextEvent)] })
@@ -225,4 +235,31 @@ async function upsertCalendarMessage(guildId: string, channelId: string, message
             }
         })
     }
+}
+
+async function createDiscordEvent(guildId: string, eventToAdd: MCalendarComponent): Promise<void> {
+    const guild = await client.guilds.fetch(guildId);
+    const eventManager = guild.scheduledEvents;
+    if(!eventManager) {
+        logger.error(`Scheduled events are not enabled for guild ${guildId}`);
+        return;
+    }
+    const events = await eventManager.fetch();
+    for (const event of events) {
+        if (event[1].name === eventToAdd.summary?.val && event[1].scheduledStartAt?.getTime() === new Date(eventToAdd.start).getTime()) {
+            return;
+        }
+    }
+    eventManager.create({
+        name: eventToAdd.summary?.val ?? "Événement",
+        description: "Événement ajouté automatiquement par GLaDOS Assistant.",
+        scheduledStartTime: new Date(eventToAdd.start),
+        scheduledEndTime: new Date(eventToAdd.end),
+        privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
+        entityType: GuildScheduledEventEntityType.External,
+        entityMetadata: {
+            location: "Inconnu",
+        },
+        reason: "L'événement est dans le calendrier, ajouté automatiquement par GLaDOS Assistant."
+    });
 }
