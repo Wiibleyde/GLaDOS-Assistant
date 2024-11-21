@@ -11,7 +11,7 @@ import { maintenance } from "@/commands/dev/maintenance"
 import { backSpace } from "@/utils/textUtils"
 import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
 import { hasPermission } from "./utils/permissionTester"
-import { handleMessageSend, initMpThreads, recieveMessage } from "./utils/mpManager"
+import { handleMessageSend, initMpThreads, isNewMessageInMpThread, recieveMessage } from "./utils/mpManager"
 import { initCalendars, updateCalendars } from "./commands/calendar/createcalendar"
 
 export const logger = new Logger()
@@ -120,7 +120,7 @@ client.on(Events.MessageCreate, async (message) => {
         recieveMessage(message.author.id, message.content, messageStickers, messageAttachments)
         return
     }
-    if(guildId === config.GLADOS_HOME_GUILD && message.author.id != client.user?.id) {
+    if(guildId === config.GLADOS_HOME_GUILD && message.author.id != client.user?.id && isNewMessageInMpThread(message.channel.id)) {
         const messageStickers = Array.from(message.stickers.values())
         const messageAttachments = Array.from(message.attachments.values())
         handleMessageSend(message.channel.id, message.content, messageStickers, messageAttachments)

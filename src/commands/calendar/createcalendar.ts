@@ -182,7 +182,6 @@ function findNextEvent(calendar: CalendarResponse): MCalendarComponent | null {
             }
         }
     })
-    logger.debug(`Next event: ${JSON.stringify(nextEvent)}`)
     return nextEvent
 }
 
