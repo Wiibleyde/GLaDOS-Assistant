@@ -3,20 +3,6 @@ import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Defines the slash command options for the "debug" command.
- * This command allows users to enable debug mode on a server.
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} name - The name of the command ("debug").
- * @property {string} description - A brief description of the command.
- * @property {SlashCommandStringOption} options.serveur - The server ID where debug mode will be enabled.
- * @property {string} options.serveur.name - The name of the option ("serveur").
- * @property {string} options.serveur.description - A brief description of the option.
- * @property {boolean} options.serveur.required - Indicates that this option is required.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("debug")
     .setDescription("Passer en mode debug sur un serveur")

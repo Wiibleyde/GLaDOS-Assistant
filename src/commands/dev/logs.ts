@@ -3,15 +3,6 @@ import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Command data for the "logs" command.
- * 
- * This command displays the latest logs of the bot.
- * 
- * @constant
- * @type {SlashCommandBuilder}
- * @name data
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("logs")
     .setDescription("Afficher les derniers logs du bot")

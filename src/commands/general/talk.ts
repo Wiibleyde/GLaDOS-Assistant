@@ -3,25 +3,6 @@ import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { logger } from "@/index"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Defines the slash command "talk" which allows users to send a message using the bot.
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} name - The name of the command, set to "talk".
- * @property {string} description - A brief description of the command, set to "Parler avec en utilisant bot".
- * 
- * @property {SlashCommandStringOption} options.message - The message to send.
- * @property {string} options.message.name - The name of the option, set to "message".
- * @property {string} options.message.description - A brief description of the option, set to "Le message à envoyer".
- * @property {boolean} options.message.required - Indicates if the option is required, set to true.
- * 
- * @property {SlashCommandStringOption} options.mp - The ID of the person to send the message to.
- * @property {string} options.mp.name - The name of the option, set to "mp".
- * @property {string} options.mp.description - A brief description of the option, set to "ID de la personne".
- * @property {boolean} options.mp.required - Indicates if the option is required, set to false.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("talk")
     .setDescription("Parler avec en utilisant bot")

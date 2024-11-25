@@ -3,13 +3,6 @@ import { CommandInteraction, SlashCommandBuilder } from "discord.js"
 
 const dogImgUrl = "https://dog.ceo/api/breeds/image/random"
 
-/**
- * Defines a slash command named "dog" that displays an image of a dog.
- * 
- * @constant
- * @type {SlashCommandBuilder}
- * @name data
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("dog")
     .setDescription("Affiche une image de chien")

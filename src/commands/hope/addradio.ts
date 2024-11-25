@@ -4,19 +4,6 @@ import { prisma } from "@/utils/database"
 import { creatEmbedForRadio } from "./createradio"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Slash command configuration for adding a radio.
- * 
- * This command allows users to add a radio by specifying its name.
- * 
- * @constant {SlashCommandOptionsOnlyBuilder} data - The slash command builder instance.
- * @property {string} name - The name of the command ("addradio").
- * @property {string} description - A brief description of the command ("Ajouter une radio").
- * @property {SlashCommandStringOption} options.nom - The name of the radio to be added.
- * @property {string} options.nom.name - The name of the option ("nom").
- * @property {string} options.nom.description - A brief description of the option ("Nom de la radio").
- * @property {boolean} options.nom.required - Indicates that the option is required (true).
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("addradio")
     .setDescription("Ajouter une radio")

@@ -20,17 +20,6 @@ const months = {
     12: "Décembre"
 }
 
-/**
- * Defines the slash command for managing birthdays.
- * 
- * This command allows users to perform various actions related to birthdays:
- * - "Ajouter" (add): Add a new birthday.
- * - "Supprimer" (remove): Remove an existing birthday.
- * - "Voir mon anniversaire" (view): View the user's own birthday.
- * - "Voir les anniversaires" (list): View all birthdays.
- * 
- * @constant {SlashCommandOptionsOnlyBuilder} data - The slash command builder for the birthday command.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("birthday")
     .setDescription("Gestion des anniversaires")

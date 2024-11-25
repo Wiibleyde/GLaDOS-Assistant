@@ -16,27 +16,6 @@ import { initCalendars, updateCalendars } from "./commands/calendar/createcalend
 
 export const logger = new Logger()
 
-/**
- * Initializes a new instance of the Client with specified intents and partials.
- * 
- * The client is configured with the following intents:
- * - Guilds: Enables the bot to receive events related to guilds.
- * - GuildMessages: Enables the bot to receive events related to guild messages.
- * - GuildMembers: Enables the bot to receive events related to guild members.
- * - GuildVoiceStates: Enables the bot to receive events related to voice states in guilds.
- * - GuildMessageReactions: Enables the bot to receive events related to message reactions in guilds.
- * - GuildMessageTyping: Enables the bot to receive events related to typing in guilds.
- * - DirectMessages: Enables the bot to receive events related to direct messages.
- * - DirectMessageReactions: Enables the bot to receive events related to reactions in direct messages.
- * - DirectMessageTyping: Enables the bot to receive events related to typing in direct messages.
- * - MessageContent: Enables the bot to receive the content of messages.
- * 
- * The client is also configured with the following partials:
- * - User: Allows the bot to receive partial user objects.
- * - Channel: Allows the bot to receive partial channel objects.
- * - Message: Allows the bot to receive partial message objects.
- * - GuildMember: Allows the bot to receive partial guild member objects.
- */
 export const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,

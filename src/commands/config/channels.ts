@@ -4,30 +4,6 @@ import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { backSpace } from "@/utils/textUtils"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Slash command configuration for the "channels" command.
- * This command allows users to configure various channels.
- *
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} name - The name of the command ("channels").
- * @property {string} description - A brief description of the command ("Configurer les salons").
- * 
- * @property {SlashCommandStringOption} action - The action to perform.
- * - "view": View the current configuration.
- * - "edit": Modify the current configuration.
- * 
- * @property {SlashCommandStringOption} key - The configuration key (optional).
- * - "birthdayChannel": Channel for birthdays.
- * - "quoteChannel": Channel for quotes.
- * 
- * @property {SlashCommandChannelOption} channel - The channel to configure (optional).
- * 
- * @property {Array<InteractionContextType>} contexts - The contexts in which this command can be used.
- * - InteractionContextType.Guild: The command can be used in a guild.
- * - InteractionContextType.PrivateChannel: The command can be used in a private channel.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("channels")
     .setDescription("Configurer les salons")
