@@ -15,6 +15,7 @@ import { handleMessageSend, initMpThreads, isNewMessageInMpThread, recieveMessag
 import { initCalendars, updateCalendars } from "./commands/calendar/createcalendar"
 
 export const logger = new Logger()
+logger.initLevels()
 
 export const client = new Client({
     intents: [
@@ -36,8 +37,6 @@ export const client = new Client({
         Partials.GuildMember
     ]
 })
-
-logger.initLevels()
 
 client.once(Events.ClientReady, async () => {
     client.user?.setPresence({
