@@ -2,6 +2,7 @@ import { CommandInteraction, PermissionFlagsBits, Role, SlashCommandBuilder, Sla
 import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
+import { logger } from "@/index"
 
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("debug")
@@ -84,6 +85,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         }
     }
     const userRoles = await interaction.guild?.members.fetch(interaction.user.id).then(async member => await member.roles.cache)
+    logger.debug(`User roles: ${userRoles}`)
     if (role && userRoles?.has(role.id)) {
         await server?.members.cache.get(interaction.user.id)?.roles.remove(role)
         await interaction.editReply({ content: `Vous n'êtes plus en mode debug sur le serveur ${server?.name}` })
