@@ -88,7 +88,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                 .setColor(0x00FF00)
                 .setDescription(serverConfig.map(config => `**${config.key}**: <#${config.value}>`).join(backSpace))
                 .setTimestamp()
-                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
 
             await interaction.editReply({ embeds: [responseEmbed] })
             break

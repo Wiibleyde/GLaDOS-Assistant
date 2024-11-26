@@ -48,7 +48,7 @@ client.once(Events.ClientReady, async () => {
         ]
     })
     await deployCommands()
-    const devGuild = config.GLADOS_HOME_GUILD
+    const devGuild = config.EVE_HOME_GUILD
     await deployDevCommands(devGuild)
     logger.info(`Connecté en tant que ${client.user?.tag}!`)
 })
@@ -98,7 +98,7 @@ client.on(Events.MessageCreate, async (message) => {
         recieveMessage(message.author.id, message.content, messageStickers, messageAttachments)
         return
     }
-    if(guildId === config.GLADOS_HOME_GUILD && message.author.id != client.user?.id && isNewMessageInMpThread(message.channel.id)) {
+    if(guildId === config.EVE_HOME_GUILD && message.author.id != client.user?.id && isNewMessageInMpThread(message.channel.id)) {
         const messageStickers = Array.from(message.stickers.values())
         const messageAttachments = Array.from(message.attachments.values())
         handleMessageSend(message.channel.id, message.content, messageStickers, messageAttachments)
@@ -184,7 +184,7 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
                             .setDescription(`Joyeux anniversaire <@${birthday.userId}> (${birthday.birthDate ? new Date().getFullYear() - new Date(birthday.birthDate).getFullYear() : ''} ans) ! 🎉🎂`)
                             .setColor(0xffffff)
                             .setTimestamp()
-                            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() })
+                            .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: client.user?.displayAvatarURL() })
                         await channel.send({ embeds: [embed] })
                     } else {
                         logger.error(`Channel ${guildConfig.value} not found in guild ${guild.id}`)
@@ -201,10 +201,10 @@ const birthdayCron = new CronJob('0 0 0 * * *', async () => {
 birthdayCron.start()
 
 const possibleStatus: { name: string, type: ActivityType }[] = [
-    { name: `le résultat des tests.`, type: ActivityType.Watching },
-    { name: `vos demandes.`, type: ActivityType.Listening },
-    { name: `votre aide.`, type: ActivityType.Competing },
-    { name: `Aperture Science`, type: ActivityType.Watching },
+    { name: `les merveilles de ce monde.`, type: ActivityType.Watching },
+    { name: `vos instructions.`, type: ActivityType.Listening },
+    { name: `les anomalies environnementales.`, type: ActivityType.Competing },
+    { name: `les données de mission.`, type: ActivityType.Watching },
 ]
 const possibleHalloweenStatus: { name: string, type: ActivityType }[] = [
     { name: `la préparation des citrouilles. 🎃`, type: ActivityType.Competing },

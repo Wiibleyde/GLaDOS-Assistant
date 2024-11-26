@@ -120,7 +120,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
     } catch (error) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((error as any).code === "P2002") {
-            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Cette question existe déjà *(Si vous souhaitez la supprimer, contactez un administrateur de GLaDOS)*."))] })
+            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Cette question existe déjà *(Si vous souhaitez la supprimer, contactez un administrateur de Eve)*."))] })
             return
         }
         logger.error(`Erreur lors de l'ajout de la question : ${error}`)

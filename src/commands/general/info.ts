@@ -44,8 +44,8 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             const author = packageJson.author.name
 
             const infoEmbed: EmbedBuilder = new EmbedBuilder()
-                .setTitle("GLaDOS Assistant")
-                .setDescription(`GLaDOS Assistant est un bot Discord pour vous servir !`)
+                .setTitle("Eve")
+                .setDescription(`Eve est un bot discord, toujours prête à vous aider.`)
                 .addFields(
                     { name: "Version", value: version, inline: true },
                     { name: "Langage", value: "TypeScript", inline: true },
@@ -56,7 +56,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                 .setThumbnail("attachment://info.png")
                 .setTimestamp()
                 .setColor(0xffffff)
-                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
 
             await interaction.editReply({ embeds: [infoEmbed], files: [{ attachment: infoImage, name: "info.png" }] })
             break
@@ -85,7 +85,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                 )
                 .setTimestamp()
                 .setColor(0xffffff)
-                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
 
             await interaction.editReply({ embeds: [embed] })
             break

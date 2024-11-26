@@ -40,7 +40,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         .setDescription("Les derniers logs du bot")
         .setColor(0xffffff)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     logs.forEach(log => {
         embed.addFields(

@@ -62,7 +62,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         .setTimestamp()
         .setColor(color)
         .setThumbnail("attachment://ping.png")
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
 
     await interaction.editReply({ embeds: [pingEmbed], files: [{ attachment: pingImage, name: "ping.png" }] })
 }

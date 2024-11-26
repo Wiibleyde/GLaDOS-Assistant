@@ -35,7 +35,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         .setDescription(`Le bot est maintenant en mode ${maintenance ? "maintenance" : "normal"}`)
         .setColor(color)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     await interaction.editReply({ embeds: [embed] })
 }

@@ -183,7 +183,7 @@ export function creatEmbedForRadio(interaction: CommandInteraction|ButtonInterac
         .setColor("Aqua")
         .setTimestamp()
         .setThumbnail("attachment://radio.png")
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     const fields: APIEmbedField[] = createFieldsForRadios(radio)
     embed.addFields(fields)

@@ -78,7 +78,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         )
         .setColor(0x4B0082)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     if(quizJson.author) {
         embed.addFields(
@@ -419,7 +419,7 @@ export async function reportQuestionModal(interaction: ModalSubmitInteraction) {
         .setDescription(`UUID: ${uuid}${backSpace}`)
         .setColor(0xFF0000)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     if (reportReason) {
         embed.addFields({

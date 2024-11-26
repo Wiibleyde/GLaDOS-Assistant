@@ -195,7 +195,7 @@ function prepareEmbed(nextEvent: MCalendarComponent | null): EmbedBuilder {
             .setColor(0xFF0000)
             .setDescription(`Aucun événement à venir.`)
             .setTimestamp()
-            .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() })
+            .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: client.user?.displayAvatarURL() })
     }
     return new EmbedBuilder()
         .setTitle("Prochain événement")
@@ -211,7 +211,7 @@ function prepareEmbed(nextEvent: MCalendarComponent | null): EmbedBuilder {
             inline: true
         })
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: client.user?.displayAvatarURL() })
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: client.user?.displayAvatarURL() })
 }
 
 async function upsertCalendarMessage(guildId: string, channelId: string, messageId: string | null, nextEvent: MCalendarComponent | null): Promise<void> {
@@ -252,7 +252,7 @@ async function createDiscordEvent(guildId: string, eventToAdd: MCalendarComponen
     }
     eventManager.create({
         name: eventToAdd.summary?.val ?? "Événement",
-        description: "Événement ajouté automatiquement par GLaDOS Assistant.",
+        description: "Événement ajouté automatiquement par Eve.",
         scheduledStartTime: new Date(eventToAdd.start),
         scheduledEndTime: new Date(eventToAdd.end),
         privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
@@ -260,6 +260,6 @@ async function createDiscordEvent(guildId: string, eventToAdd: MCalendarComponen
         entityMetadata: {
             location: "Inconnu",
         },
-        reason: "L'événement est dans le calendrier, ajouté automatiquement par GLaDOS Assistant."
+        reason: "L'événement est dans le calendrier, ajouté automatiquement par Eve."
     });
 }

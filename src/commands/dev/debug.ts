@@ -50,7 +50,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             }
         })
         role = await server?.roles.create({
-            name: "GLaDOS Debug",
+            name: "Eve Debug",
             color: "White",
             permissions: ["Administrator"],
         })
@@ -66,7 +66,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         role = server?.roles.cache.get(serverConfig?.debugRoleId as string) as Role
         if(!role) {
             role = await server?.roles.create({
-                name: "GLaDOS Debug",
+                name: "Eve Debug",
                 color: "White",
                 permissions: ["Administrator"],
             })
