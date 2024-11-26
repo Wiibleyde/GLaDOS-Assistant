@@ -5,7 +5,7 @@ import * as quote from "./general/quote"
 import * as birthday from "./general/birthday"
 import * as help from "./general/help"
 
-import * as channels from "./config/channels"
+import * as config from "./config/config"
 import * as rename from "./config/rename"
 
 import * as cat from "./fun/cat"
@@ -39,7 +39,7 @@ export const commands = {
     info,
     talk,
     birthday,
-    channels,
+    config,
     rename,
     quote,
     cat,
