@@ -83,7 +83,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             return
         }
     }
-    const userRoles = server?.members.cache.get(interaction.user.id)?.roles.cache
+    const userRoles = await interaction.guild?.members.fetch(interaction.user.id).then(async member => await member.roles.cache)
     if (role && userRoles?.has(role.id)) {
         await server?.members.cache.get(interaction.user.id)?.roles.remove(role)
         await interaction.editReply({ content: `Vous n'êtes plus en mode debug sur le serveur ${server?.name}` })
