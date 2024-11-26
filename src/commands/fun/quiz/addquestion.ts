@@ -3,23 +3,6 @@ import { prisma } from "@/utils/database"
 import { successEmbed, errorEmbed } from "@/utils/embeds"
 import { logger } from "@/index"
 
-/**
- * Defines the slash command `/addquestion` which allows users to add a question to the quiz.
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} question - The quiz question to be added. This option is required.
- * @property {string} answer - The correct answer to the quiz question. This option is required.
- * @property {string} bad1 - The first incorrect answer option. This option is required.
- * @property {string} bad2 - The second incorrect answer option. This option is required.
- * @property {string} bad3 - The third incorrect answer option. This option is required.
- * @property {string} category - The category of the quiz question. This option is required.
- * @property {string} difficulty - The difficulty level of the quiz question. This option is required and can be one of the following values:
- * - `facile` (Easy)
- * - `normal` (Normal)
- * - `difficile` (Hard)
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("addquestion")
     .setDescription("Permet d'ajouter une question au quiz")
@@ -137,7 +120,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
     } catch (error) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((error as any).code === "P2002") {
-            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Cette question existe déjà *(Si vous souhaitez la supprimer, contactez un administrateur de GLaDOS)*."))] })
+            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Cette question existe déjà *(Si vous souhaitez la supprimer, contactez un administrateur de Eve)*."))] })
             return
         }
         logger.error(`Erreur lors de l'ajout de la question : ${error}`)

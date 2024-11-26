@@ -3,15 +3,6 @@ import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Command data for the "logs" command.
- * 
- * This command displays the latest logs of the bot.
- * 
- * @constant
- * @type {SlashCommandBuilder}
- * @name data
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("logs")
     .setDescription("Afficher les derniers logs du bot")
@@ -49,7 +40,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         .setDescription("Les derniers logs du bot")
         .setColor(0xffffff)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     logs.forEach(log => {
         embed.addFields(

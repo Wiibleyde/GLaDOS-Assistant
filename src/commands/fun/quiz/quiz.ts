@@ -9,15 +9,6 @@ const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
 const quizes: Map<string, QuizType> = new Map()
 
-/**
- * Defines the slash command for the quiz feature.
- * 
- * This command, when invoked, will display a random quiz question.
- * 
- * @constant
- * @type {SlashCommandBuilder}
- * @name data
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quiz")
     .setDescription("Affiche une question de quiz aléatoire")
@@ -87,7 +78,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         )
         .setColor(0x4B0082)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     if(quizJson.author) {
         embed.addFields(
@@ -428,7 +419,7 @@ export async function reportQuestionModal(interaction: ModalSubmitInteraction) {
         .setDescription(`UUID: ${uuid}${backSpace}`)
         .setColor(0xFF0000)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     if (reportReason) {
         embed.addFields({

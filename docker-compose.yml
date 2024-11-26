@@ -1,8 +1,8 @@
 services:
-  glados-bot:
+  eve-bot:
     build: .
-    image: wiibleyde/glados-bot:latest
-    container_name: glados-bot
+    image: wiibleyde/eve-bot:latest
+    container_name: eve-bot
     restart: unless-stopped
     volumes:
       - ./.env:/app/.env

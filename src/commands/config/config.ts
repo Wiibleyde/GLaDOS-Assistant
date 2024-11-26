@@ -1,35 +1,12 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType, SlashCommandOptionsOnlyBuilder } from "discord.js"
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionContextType, SlashCommandOptionsOnlyBuilder, ChannelType } from "discord.js"
 import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { backSpace } from "@/utils/textUtils"
 import { hasPermission } from "@/utils/permissionTester"
+import { logger } from "@/index"
 
-/**
- * Slash command configuration for the "channels" command.
- * This command allows users to configure various channels.
- *
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} name - The name of the command ("channels").
- * @property {string} description - A brief description of the command ("Configurer les salons").
- * 
- * @property {SlashCommandStringOption} action - The action to perform.
- * - "view": View the current configuration.
- * - "edit": Modify the current configuration.
- * 
- * @property {SlashCommandStringOption} key - The configuration key (optional).
- * - "birthdayChannel": Channel for birthdays.
- * - "quoteChannel": Channel for quotes.
- * 
- * @property {SlashCommandChannelOption} channel - The channel to configure (optional).
- * 
- * @property {Array<InteractionContextType>} contexts - The contexts in which this command can be used.
- * - InteractionContextType.Guild: The command can be used in a guild.
- * - InteractionContextType.PrivateChannel: The command can be used in a private channel.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
-    .setName("channels")
+    .setName("config")
     .setDescription("Configurer les salons")
     .addStringOption(option =>
         option
@@ -55,12 +32,15 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
             }, {
                 name: "Salon des citations",
                 value: "quoteChannel"
+            }, {
+                name: "Catégorie des formations",
+                value: "trainingCategory"
             })
     )
     .addChannelOption(option =>
         option
             .setName("channel")
-            .setDescription("Salon")
+            .setDescription("Salon ou catégorie à configurer")
             .setRequired(false)
     )
     .setContexts([
@@ -108,7 +88,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                 .setColor(0x00FF00)
                 .setDescription(serverConfig.map(config => `**${config.key}**: <#${config.value}>`).join(backSpace))
                 .setTimestamp()
-                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
 
             await interaction.editReply({ embeds: [responseEmbed] })
             break
@@ -126,6 +106,17 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                     key
                 }
             })
+            logger.debug(`Key: ${key}, Channel: ${channel}`)
+            if (key === "trainingCategory") {
+                logger.debug(`Checking if channel ${channel} is a category`)
+                const channelData = await interaction.guild?.channels.fetch(channel)
+                if (channelData?.type !== ChannelType.GuildCategory) {
+                    logger.debug(`Channel ${channel} is not a category`)
+                    await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Le salon fourni n'est pas une catégorie."))] })
+                    return
+                }
+                logger.debug(`Channel ${channel} is a category`)
+            }
             if (existingConfig) {
                 await prisma.config.update({
                     where: {

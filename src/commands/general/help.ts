@@ -11,9 +11,6 @@ interface Commands {
     [key: string]: Command;
 }
 
-/**
- * Defines the "help" slash command which displays the list of commands.
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("help")
     .setDescription("Affiche la liste des commandes");
@@ -33,7 +30,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         .setDescription(commandsList)
         .setColor(0x4B0082)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
 }

@@ -4,27 +4,6 @@ import { prisma } from "@/utils/database"
 import { creatEmbedForRadio } from "./createradio"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Slash command definition for removing a radio.
- * 
- * This command allows users to remove a radio by specifying its name.
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @example
- * // Usage in a Discord bot
- * client.on('interactionCreate', async interaction => {
- *     if (!interaction.isCommand()) return;
- * 
- *     const { commandName } = interaction;
- * 
- *     if (commandName === 'removeradio') {
- *         const radioName = interaction.options.getString('nom');
- *         // Logic to remove the radio
- *     }
- * });
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("removeradio")
     .setDescription("Supprimer une radio")

@@ -13,12 +13,6 @@ enum LogLevelColors {
     DEBUG = "\x1b[32m",
 }
 
-/**
- * Initializes a new instance of the WebhookClient with the specified configuration.
- *
- * @param {Object} config - The configuration object.
- * @param {string} config.LOGS_WEBHOOK_URL - The URL of the webhook to send logs to.
- */
 const webhookClient = new WebhookClient({
     url: config.LOGS_WEBHOOK_URL
 })
@@ -115,9 +109,9 @@ export class Logger {
                 .setDescription(message)
                 .setTimestamp()
                 .setColor(0x00FF00)
-                .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
+                .setFooter({ text: `Eve - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                username: "GLaDOS INFO",
+                username: "Eve INFO",
                 avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })
@@ -157,9 +151,9 @@ export class Logger {
                 .setDescription(message)
                 .setTimestamp()
                 .setColor(0xFF0000)
-                .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
+                .setFooter({ text: `Eve - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                username: "GLaDOS ERROR",
+                username: "Eve ERROR",
                 avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })
@@ -203,9 +197,9 @@ export class Logger {
                 .setDescription(message)
                 .setTimestamp()
                 .setColor(0xFFA500)
-                .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
+                .setFooter({ text: `Eve - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                username: "GLaDOS WARN",
+                username: "Eve WARN",
                 avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })
@@ -244,9 +238,9 @@ export class Logger {
                 .setDescription(message)
                 .setTimestamp()
                 .setColor(0x0000FF)
-                .setFooter({ text: `GLaDOS Assistant - Webhook log`, iconURL: client.user?.displayAvatarURL() })
+                .setFooter({ text: `Eve - Webhook log`, iconURL: client.user?.displayAvatarURL() })
             webhookClient.send({
-                username: "GLaDOS DEBUG",
+                username: "Eve DEBUG",
                 avatarURL: client.user?.displayAvatarURL(),
                 embeds: [embed]
             })

@@ -1,11 +1,6 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 
-/**
- * Defines the slash command "quizstats" which displays the statistics of the quiz.
- * 
- * @constant {SlashCommandBuilder} data - The slash command builder instance for the "quizstats" command.
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quizstats")
     .setDescription("Affiche les statistiques du quiz")
@@ -57,7 +52,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             inline: true
         })
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
     if (ratio < 50) {
         embed.setColor("#FF0000")
     } else if (ratio < 75) {

@@ -4,10 +4,6 @@ import { hasPermission } from "@/utils/permissionTester"
 
 export let maintenance: boolean = false
 
-/**
- * Slash command data for the "maintenance" command.
- * This command is used to put the bot into maintenance mode.
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("maintenance")
     .setDescription("Passer le bot en mode maintenance")
@@ -39,7 +35,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         .setDescription(`Le bot est maintenant en mode ${maintenance ? "maintenance" : "normal"}`)
         .setColor(color)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() });
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() });
 
     await interaction.editReply({ embeds: [embed] })
 }

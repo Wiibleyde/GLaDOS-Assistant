@@ -29,7 +29,7 @@ export function handleMessageSend(channelId: string, message: string, stickers: 
     }
 }
 
-function isNewMessageInMpThread(threadId: string) {
+export function isNewMessageInMpThread(threadId: string) {
     return opennedMp.has(threadId)
 }
 

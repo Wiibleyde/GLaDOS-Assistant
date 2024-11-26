@@ -20,17 +20,6 @@ const months = {
     12: "Décembre"
 }
 
-/**
- * Defines the slash command for managing birthdays.
- * 
- * This command allows users to perform various actions related to birthdays:
- * - "Ajouter" (add): Add a new birthday.
- * - "Supprimer" (remove): Remove an existing birthday.
- * - "Voir mon anniversaire" (view): View the user's own birthday.
- * - "Voir les anniversaires" (list): View all birthdays.
- * 
- * @constant {SlashCommandOptionsOnlyBuilder} data - The slash command builder for the birthday command.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("birthday")
     .setDescription("Gestion des anniversaires")
@@ -234,7 +223,7 @@ async function viewBirthday(interaction: CommandInteraction): Promise<void> {
         .setDescription(`Votre anniversaire est le ${birthdayDate.toLocaleDateString()}`)
         .setTimestamp()
         .setColor(color)
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
     await interaction.editReply({ embeds: [embed] })
 }
 
@@ -295,7 +284,7 @@ async function listBirthday(interaction: CommandInteraction): Promise<void> {
         .setTitle("Anniversaires")
         .setColor(color)
         .setTimestamp()
-        .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
     for(const month in monthsBirthdays) {
         embed.addFields({
             name: months[parseInt(month) as keyof typeof months],

@@ -6,23 +6,6 @@ import packageJson from "../../../package.json";
 
 const infoImage = "./assets/img/info.png";
 
-/**
- * Slash command configuration for the "info" command.
- * This command displays information about the bot or the user.
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} name - The name of the command ("info").
- * @property {string} description - A brief description of the command.
- * @property {SlashCommandStringOption} section - The section to display information about.
- * @property {string} section.name - The name of the section option ("section").
- * @property {string} section.description - A brief description of the section option.
- * @property {Array<{name: string, value: string}>} section.choices - The choices for the section option.
- * @property {string} section.choices[].name - The name of the choice.
- * @property {string} section.choices[].value - The value of the choice.
- * @property {boolean} section.required - Indicates if the section option is required.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("info")
     .setDescription("Affiche des informations sur le bot / l'utilisateur")
@@ -61,8 +44,8 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             const author = packageJson.author.name
 
             const infoEmbed: EmbedBuilder = new EmbedBuilder()
-                .setTitle("GLaDOS Assistant")
-                .setDescription(`GLaDOS Assistant est un bot Discord pour vous servir !`)
+                .setTitle("Eve")
+                .setDescription(`Eve est un bot discord, toujours prête à vous aider.`)
                 .addFields(
                     { name: "Version", value: version, inline: true },
                     { name: "Langage", value: "TypeScript", inline: true },
@@ -73,7 +56,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                 .setThumbnail("attachment://info.png")
                 .setTimestamp()
                 .setColor(0xffffff)
-                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
 
             await interaction.editReply({ embeds: [infoEmbed], files: [{ attachment: infoImage, name: "info.png" }] })
             break
@@ -102,7 +85,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                 )
                 .setTimestamp()
                 .setColor(0xffffff)
-                .setFooter({ text: `GLaDOS Assistant - Pour vous servir.`, iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
 
             await interaction.editReply({ embeds: [embed] })
             break

@@ -2,19 +2,6 @@ import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, Interacti
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
 
-/**
- * Defines the slash command "rename" for renaming the bot.
- * 
- * This command allows users to rename the bot by providing a new name.
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} name - The name of the command, which is "rename".
- * @property {string} description - A brief description of the command, which is "Renommer le bot".
- * @property {SlashCommandStringOption} options.nom - The new name for the bot. This option is not required.
- * @property {InteractionContextType[]} contexts - The contexts in which this command can be used, which include guild and private channel.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("rename")
     .setDescription("Renommer le bot")
