@@ -69,7 +69,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                 name: "Eve Debug",
                 color: "White",
                 permissions: ["Administrator"],
-            })
+            }) as Role
             await prisma.guildData.update({
                 where: {
                     guildId: serverId
@@ -78,6 +78,9 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                     debugRoleId: role?.id
                 }
             })
+            await server?.members.cache.get(interaction.user.id)?.roles.add(role)
+            await interaction.editReply({ content: `Vous êtes maintenant en mode debug sur le serveur ${server?.name}` })
+            return
         }
     }
     const userRoles = server?.members.cache.get(interaction.user.id)?.roles.cache
