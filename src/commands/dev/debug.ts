@@ -36,7 +36,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         return
     }
     const serverId = interaction.options.get("serveur")?.value as string
-    const server = interaction.client.guilds.cache.get(serverId)
+    const server = await interaction.client.guilds.fetch(serverId).catch(() => null)
     const serverConfig = await prisma.guildData.findFirst({
         where: {
             guildId: serverId
