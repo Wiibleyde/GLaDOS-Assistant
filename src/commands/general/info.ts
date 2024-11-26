@@ -51,7 +51,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                     { name: "Langage", value: "TypeScript", inline: true },
                     { name: "Auteur", value: author, inline: true },
                     { name: "Bibliothèques", value: libs, inline: false },
-                    { name: "Dépôt GitHub", value: "[Cliquez ici](https://github.com/Wiibleyde/GLaDOS-Assistant)", inline: true }
+                    { name: "Dépôt GitHub", value: "[Cliquez ici](https://github.com/Wiibleyde/Eve)", inline: true }
                 )
                 .setThumbnail("attachment://info.png")
                 .setTimestamp()
