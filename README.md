@@ -12,6 +12,7 @@
 Eve is a simple discord bot that can be used for multiple things, including IA functionalities, and more.
 
 ## Table of Contents
+
 - [Description](#description)
 - [Table of Contents](#table-of-contents)
 - [Features](#features)
@@ -24,11 +25,11 @@ Eve is a simple discord bot that can be used for multiple things, including IA f
 ## Features
 
 - [x] IA functionalities
-    - [x] Chat with the bot by simply mentioning it (with a real discussion)
+  - [x] Chat with the bot by simply mentioning it (with a real discussion)
 - [x] Birthday reminder
 - [x] Quiz functionalities
 - [x] Fun commands
-    - [x] cat pictures
+  - [x] cat pictures
 - [x] Debug functionalities
 
 ## Prerequisites
@@ -36,15 +37,16 @@ Eve is a simple discord bot that can be used for multiple things, including IA f
 - Node.js
 - Yarn
 - MariaDB database
-    - *Windows docker don't work well with the Prisma ORM*
+  - *Windows docker don't work well with the Prisma ORM*
 - Discord bot token
-    - With good intents
+  - With good intents
 
 ## Installation
 
 1. Clone the repository
 2. Install the dependencies with `yarn`
 3. Create a `.env` file at the root of the project with the following content:
+
     ```env
     DISCORD_TOKEN=your_discord_token
     DISCORD_CLIENT_ID=your_discord_bot_client_id
@@ -61,6 +63,7 @@ Eve is a simple discord bot that can be used for multiple things, including IA f
 
     GOOGLE_API_KEY=your_google_api_key
     ```
+
 4. Run the prisma migrations with `yarn prisma migrate deploy`
 5. Build the project with `yarn build`
 6. Start the bot with `yarn start`
