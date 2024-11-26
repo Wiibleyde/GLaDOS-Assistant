@@ -2,6 +2,7 @@ import { CommandInteraction, PermissionFlagsBits, Role, SlashCommandBuilder, Sla
 import { prisma } from "@/utils/database"
 import { errorEmbed } from "@/utils/embeds"
 import { hasPermission } from "@/utils/permissionTester"
+import { logger } from "@/index"
 
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("debug")
@@ -30,6 +31,7 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
  * - The command provides feedback to the user about the current debug mode status.
  */
 export async function execute(interaction: CommandInteraction): Promise<void> {
+    logger.debug("Executing debug command")
     await interaction.deferReply({ ephemeral: true, fetchReply: true })
     if(!await hasPermission(interaction, [PermissionFlagsBits.Administrator], true)) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Vous n'avez pas la permission d'utiliser cette commande."))] })
@@ -54,6 +56,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             color: "White",
             permissions: ["Administrator"],
         })
+        logger.debug(`Created debug role for server ${serverId}`)
         await prisma.guildData.update({
             where: {
                 guildId: serverId
@@ -63,8 +66,10 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             }
         })
     } else {
+        logger.debug(`Server config found for server ${serverId}`)
         role = server?.roles.cache.get(serverConfig?.debugRoleId as string) as Role
         if(!role) {
+            logger.debug(`Debug role not found for server ${serverId}`)
             role = await server?.roles.create({
                 name: "Eve Debug",
                 color: "White",
@@ -78,6 +83,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                     debugRoleId: role?.id
                 }
             })
+            logger.debug(`Created debug role for server ${serverId}`)
         }
     }
     const userRoles = server?.members.cache.get(interaction.user.id)?.roles.cache
@@ -91,5 +97,6 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         return
     }
     await server?.members.cache.get(interaction.user.id)?.roles.add(role)
+    logger.debug(`Added debug role to user ${interaction.user.id} on server ${serverId}`)
     await interaction.editReply({ content: `Vous êtes maintenant en mode debug sur le serveur ${server?.name}` })
 }
