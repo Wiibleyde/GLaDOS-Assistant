@@ -1,15 +1,15 @@
-# GLaDOS Assistant
+# Eve
 
-![GLaDOS Banner](./glados-banner.png)
+![Eve Banner](./eve-banner.png)
 
-![GitHub](https://img.shields.io/github/license/wiibleyde/glados-assistant)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/wiibleyde/glados-assistant)![GitHub issues](https://img.shields.io/github/issues/wiibleyde/glados-assistant)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/wiibleyde/glados-assistant)![GitHub top language](https://img.shields.io/github/languages/top/wiibleyde/glados-assistant)
+![GitHub](https://img.shields.io/github/license/wiibleyde/eve)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/wiibleyde/eve)![GitHub issues](https://img.shields.io/github/issues/wiibleyde/eve)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/wiibleyde/eve)![GitHub top language](https://img.shields.io/github/languages/top/wiibleyde/eve)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/cbed5be6cea84e34911753e187c5efed)](https://app.codacy.com/gh/Wiibleyde/GLaDOS-Assistant/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## Description
 
-GLaDOS Assistant is a simple discord bot that can be used for multiple things, including IA functionalities, and more.
+Eve is a simple discord bot that can be used for multiple things, including IA functionalities, and more.
 
 ## Table of Contents
 - [Description](#description)
@@ -49,8 +49,9 @@ GLaDOS Assistant is a simple discord bot that can be used for multiple things, i
     DISCORD_TOKEN=your_discord_token
     DISCORD_CLIENT_ID=your_discord_bot_client_id
 
-    GLADOS_HOME_GUILD=glados_home_guild_id
+    EVE_HOME_GUILD=glados_home_guild_id
     REPORT_CHANNEL=report_channel_id
+    MP_CHANNEL=mp_channel_id
 
     OWNER_ID=your_discord_user_id
 
@@ -60,7 +61,7 @@ GLaDOS Assistant is a simple discord bot that can be used for multiple things, i
 
     GOOGLE_API_KEY=your_google_api_key
     ```
-4. Run the prisma migrations with `yarn prisma db push`
+4. Run the prisma migrations with `yarn prisma migrate deploy`
 5. Build the project with `yarn build`
 6. Start the bot with `yarn start`
 
@@ -77,7 +78,6 @@ This project is licensed under the GPL-2.0 License - see the [LICENSE](LICENSE) 
 - [**Discord.js**](https://discord.js.org/)
 - [**Prisma ORM**](https://www.prisma.io/)
 - [**Gemini**](https://gemini.google.com/)
-- [**TheCatAPI**](https://thecatapi.com/)
 
 ![](https://forthebadge.com/images/badges/built-with-love.svg)
 ![](https://forthebadge.com/images/badges/made-with-typescript.svg)
