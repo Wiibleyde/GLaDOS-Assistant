@@ -13,12 +13,6 @@ enum LogLevelColors {
     DEBUG = "\x1b[32m",
 }
 
-/**
- * Initializes a new instance of the WebhookClient with the specified configuration.
- *
- * @param {Object} config - The configuration object.
- * @param {string} config.LOGS_WEBHOOK_URL - The URL of the webhook to send logs to.
- */
 const webhookClient = new WebhookClient({
     url: config.LOGS_WEBHOOK_URL
 })

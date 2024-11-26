@@ -2,16 +2,6 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandOpti
 import { prisma } from "@/utils/database"
 import { client } from "@/index"
 
-/**
- * Defines the slash command options for the "leaderboard" command.
- * This command displays the quiz leaderboard.
- * 
- * Command options:
- * - `type` (required): Specifies the type of leaderboard to display.
- *   - `ratio`: Leaderboard based on the ratio of correct answers.
- *   - `good`: Leaderboard based on the number of correct answers.
- *   - `bad`: Leaderboard based on the number of incorrect answers.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("Affiche le classement du quiz")

@@ -8,20 +8,6 @@ const background = "assets/img/quote.png"
 const smoke = "assets/img/smoke.png"
 const fontPath = "assets/fonts/Ubuntu.fnt"
 
-/**
- * Defines the slash command options for the "quote" command.
- * 
- * This command allows users to create a quote with the following options:
- * 
- * - `citation`: The quote text (required).
- * - `auteur`: The author of the quote (required).
- * - `contexte`: The context of the quote (optional).
- * - `date`: The date of the quote (optional).
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * @name data
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("quote")
     .setDescription("Créer une citation")

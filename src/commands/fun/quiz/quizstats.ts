@@ -1,11 +1,6 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
 import { prisma } from "@/utils/database"
 
-/**
- * Defines the slash command "quizstats" which displays the statistics of the quiz.
- * 
- * @constant {SlashCommandBuilder} data - The slash command builder instance for the "quizstats" command.
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quizstats")
     .setDescription("Affiche les statistiques du quiz")

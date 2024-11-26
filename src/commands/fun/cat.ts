@@ -3,10 +3,6 @@ import { CommandInteraction, SlashCommandBuilder } from "discord.js"
 
 const catImgUrl = "https://api.thecatapi.com/v1/images/search"
 
-/**
- * Command data for the "cat" command.
- * This command displays a cat image.
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("cat")
     .setDescription("Affiche une image de chat")

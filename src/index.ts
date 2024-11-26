@@ -11,31 +11,12 @@ import { maintenance } from "@/commands/dev/maintenance"
 import { backSpace } from "@/utils/textUtils"
 import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
 import { hasPermission } from "./utils/permissionTester"
-import { handleMessageSend, initMpThreads, recieveMessage } from "./utils/mpManager"
+import { handleMessageSend, initMpThreads, isNewMessageInMpThread, recieveMessage } from "./utils/mpManager"
+import { initCalendars, updateCalendars } from "./commands/calendar/createcalendar"
 
 export const logger = new Logger()
+logger.initLevels()
 
-/**
- * Initializes a new instance of the Client with specified intents and partials.
- * 
- * The client is configured with the following intents:
- * - Guilds: Enables the bot to receive events related to guilds.
- * - GuildMessages: Enables the bot to receive events related to guild messages.
- * - GuildMembers: Enables the bot to receive events related to guild members.
- * - GuildVoiceStates: Enables the bot to receive events related to voice states in guilds.
- * - GuildMessageReactions: Enables the bot to receive events related to message reactions in guilds.
- * - GuildMessageTyping: Enables the bot to receive events related to typing in guilds.
- * - DirectMessages: Enables the bot to receive events related to direct messages.
- * - DirectMessageReactions: Enables the bot to receive events related to reactions in direct messages.
- * - DirectMessageTyping: Enables the bot to receive events related to typing in direct messages.
- * - MessageContent: Enables the bot to receive the content of messages.
- * 
- * The client is also configured with the following partials:
- * - User: Allows the bot to receive partial user objects.
- * - Channel: Allows the bot to receive partial channel objects.
- * - Message: Allows the bot to receive partial message objects.
- * - GuildMember: Allows the bot to receive partial guild member objects.
- */
 export const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -56,8 +37,6 @@ export const client = new Client({
         Partials.GuildMember
     ]
 })
-
-logger.initLevels()
 
 client.once(Events.ClientReady, async () => {
     client.user?.setPresence({
@@ -119,7 +98,7 @@ client.on(Events.MessageCreate, async (message) => {
         recieveMessage(message.author.id, message.content, messageStickers, messageAttachments)
         return
     }
-    if(guildId === config.GLADOS_HOME_GUILD && message.author.id != client.user?.id) {
+    if(guildId === config.GLADOS_HOME_GUILD && message.author.id != client.user?.id && isNewMessageInMpThread(message.channel.id)) {
         const messageStickers = Array.from(message.stickers.values())
         const messageAttachments = Array.from(message.attachments.values())
         handleMessageSend(message.channel.id, message.content, messageStickers, messageAttachments)
@@ -304,6 +283,17 @@ const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
 })
 statusCron.start()
 
+const calendarCron = new CronJob('0 0 0 * * *', async () => {
+    await initCalendars()
+})
+calendarCron.start()
+
+// CronJob to update the calendar events every 10 minutes
+const calendarEventsCron = new CronJob('0 */1 * * * *', async () => {
+    await updateCalendars()
+})
+calendarEventsCron.start()
+
 process.on('SIGINT', async () => {
     logger.info('Ctrl-C détécté, déconnexion...')
     await prisma.$disconnect()
@@ -314,5 +304,6 @@ process.on('SIGINT', async () => {
 
 initMpThreads()
 initAi()
+initCalendars()
 
 client.login(config.DISCORD_TOKEN)

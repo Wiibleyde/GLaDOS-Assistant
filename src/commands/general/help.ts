@@ -11,9 +11,6 @@ interface Commands {
     [key: string]: Command;
 }
 
-/**
- * Defines the "help" slash command which displays the list of commands.
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("help")
     .setDescription("Affiche la liste des commandes");

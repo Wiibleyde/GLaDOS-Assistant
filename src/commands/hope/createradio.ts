@@ -6,19 +6,6 @@ import { SlashCommandOptionsOnlyBuilder, SlashCommandBuilder, CommandInteraction
 
 export const radioImage = "./assets/img/radio.png"
 
-/**
- * Slash command configuration for creating a radio message.
- * 
- * This command allows users to create a message for the radio service.
- * 
- * @constant
- * @type {SlashCommandOptionsOnlyBuilder}
- * 
- * @property {string} name - The name of the command, set to "createradio".
- * @property {string} description - A brief description of the command.
- * @property {SlashCommandStringOption} options - The options for the command.
- * @property {string} options.nom - The name of the service, required.
- */
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("createradio")
     .setDescription("Créer un message pour la radio")

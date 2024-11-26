@@ -9,15 +9,6 @@ const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
 const quizes: Map<string, QuizType> = new Map()
 
-/**
- * Defines the slash command for the quiz feature.
- * 
- * This command, when invoked, will display a random quiz question.
- * 
- * @constant
- * @type {SlashCommandBuilder}
- * @name data
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quiz")
     .setDescription("Affiche une question de quiz aléatoire")

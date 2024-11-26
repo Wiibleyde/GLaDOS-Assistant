@@ -5,7 +5,7 @@ import * as quote from "./general/quote"
 import * as birthday from "./general/birthday"
 import * as help from "./general/help"
 
-import * as channels from "./config/channels"
+import * as config from "./config/config"
 import * as rename from "./config/rename"
 
 import * as cat from "./fun/cat"
@@ -19,6 +19,8 @@ import * as leaderboard from "./fun/quiz/leaderboard"
 import * as createradio from "./hope/createradio"
 import * as addradio from "./hope/addradio"
 import * as removeradio from "./hope/removeradio"
+
+import * as createcalendar from "./calendar/createcalendar"
 
 import * as chaban from "./utils/chaban"
 
@@ -37,7 +39,7 @@ export const commands = {
     info,
     talk,
     birthday,
-    channels,
+    config,
     rename,
     quote,
     cat,
@@ -49,10 +51,13 @@ export const commands = {
     leaderboard,
     chaban,
 
+    // Calendar commands
+    createcalendar,
+
     // Hope commands
     createradio,
     addradio,
-    removeradio
+    removeradio,
 }
 
 export const devCommands = {

@@ -4,10 +4,6 @@ import { hasPermission } from "@/utils/permissionTester"
 
 export let maintenance: boolean = false
 
-/**
- * Slash command data for the "maintenance" command.
- * This command is used to put the bot into maintenance mode.
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("maintenance")
     .setDescription("Passer le bot en mode maintenance")

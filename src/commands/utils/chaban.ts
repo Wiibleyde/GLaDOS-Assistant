@@ -1,20 +1,8 @@
 import { logger } from "@/index";
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
-/**
- * URL to fetch the JSON data for the Chaban-Delmas bridge forecasts from the Bordeaux Metropole Open Data API.
- * 
- * @constant {string}
- * @see {@link https://opendata.bordeaux-metropole.fr/api/explore/v2.1/catalog/datasets/previsions_pont_chaban/exports/json?lang=fr&timezone=Europe%2FBerlin}
- */
 const url = `https://opendata.bordeaux-metropole.fr/api/explore/v2.1/catalog/datasets/previsions_pont_chaban/exports/json?lang=fr&timezone=Europe%2FBerlin`
 
-/**
- * Defines a slash command named "chaban" that provides information about the Chaban-Delmas bridge.
- * 
- * @constant
- * @type {SlashCommandBuilder}
- */
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("chaban")
     .setDescription("Informations sur le pont Chaban-Delmas");
