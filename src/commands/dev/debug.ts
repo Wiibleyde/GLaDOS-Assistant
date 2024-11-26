@@ -84,7 +84,11 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             return
         }
     }
-    const userRoles = await interaction.guild?.members.fetch(interaction.user.id).then(async member => await member.roles.cache)
+    if (!server) {
+        await interaction.editReply({ content: "Impossible de trouver le serveur" })
+        return
+    }
+    const userRoles = await server.members.fetch(interaction.user.id).then(async member => await member.roles.cache)
     logger.debug(`User roles: ${JSON.stringify(userRoles)}`)
     if (role && userRoles?.has(role.id)) {
         await server?.members.cache.get(interaction.user.id)?.roles.remove(role)
