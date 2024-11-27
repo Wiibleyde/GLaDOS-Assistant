@@ -62,6 +62,8 @@ Eve is a simple discord bot that can be used for multiple things, including IA f
     DATABASE_URL="mysql_connection_url"
 
     GOOGLE_API_KEY=your_google_api_key
+
+    BLAGUE_API_TOKEN=your_blague_api_token
     ```
 
 4. Run the prisma migrations with `yarn prisma migrate deploy`

@@ -10,6 +10,7 @@ import * as rename from "./config/rename"
 
 import * as cat from "./fun/cat"
 import * as dog from "./fun/dog"
+import * as blague from "./fun/blague"
 
 import * as quiz from "./fun/quiz/quiz"
 import * as addquestion from "./fun/quiz/addquestion"
@@ -50,6 +51,7 @@ export const commands = {
     quizstats,
     leaderboard,
     chaban,
+    blague,
 
     // Calendar commands
     createcalendar,

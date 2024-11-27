@@ -18,6 +18,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "@prisma/client": "^5.22.0",
+    "blagues-api": "^2.1.1",
     "cron": "^3.2.1",
     "discord.js": "^14.16.3",
     "dotenv": "^16.0.3",
