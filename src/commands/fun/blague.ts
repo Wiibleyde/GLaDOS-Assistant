@@ -57,7 +57,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
             value: joke.answer
         })
         .setColor(randomEmbedColor())
-        .setFooter({ text: `Eve – Toujours prête à vous aider. (Eve et ses développeurs ne sont pas responsables des blagues affichées)`, iconURL: interaction.client.user?.displayAvatarURL() })
+        .setFooter({ text: `Eve et ses développeurs ne sont pas responsables des blagues affichées.`, iconURL: interaction.client.user?.displayAvatarURL() })
         .setTimestamp()
 
     await interaction.editReply({ embeds: [embed] })
