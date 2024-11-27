@@ -17,6 +17,7 @@ import { initCalendars, updateCalendars } from "./commands/calendar/createcalend
 export const logger = new Logger()
 logger.initLevels()
 
+
 export const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,

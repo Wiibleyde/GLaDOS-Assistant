@@ -2,9 +2,9 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const { DISCORD_TOKEN, DISCORD_CLIENT_ID, EVE_HOME_GUILD, OWNER_ID, LOGS_WEBHOOK_URL, GOOGLE_API_KEY, REPORT_CHANNEL, MP_CHANNEL } = process.env
+const { DISCORD_TOKEN, DISCORD_CLIENT_ID, EVE_HOME_GUILD, OWNER_ID, LOGS_WEBHOOK_URL, GOOGLE_API_KEY, REPORT_CHANNEL, MP_CHANNEL, BLAGUE_API_TOKEN } = process.env
 
-if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !EVE_HOME_GUILD || !OWNER_ID || !LOGS_WEBHOOK_URL || !REPORT_CHANNEL || !MP_CHANNEL) {
+if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !EVE_HOME_GUILD || !OWNER_ID || !LOGS_WEBHOOK_URL || !REPORT_CHANNEL || !MP_CHANNEL || !BLAGUE_API_TOKEN) {
     throw new Error("Missing environment variables")
 }
 
@@ -19,6 +19,7 @@ if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !EVE_HOME_GUILD || !OWNER_ID || !LOG
  * @property {string} GOOGLE_API_KEY - The API key used to authenticate with Google services.
  * @property {string} REPORT_CHANNEL - The ID of the channel where reports are sent.
  * @property {string} MP_CHANNEL - The ID of the channel where MPs are sent.
+ * @property {string} BLAGUE_API_TOKEN - The token used to authenticate with the Blague API.
  */
 export const config = {
     DISCORD_TOKEN,
@@ -28,5 +29,6 @@ export const config = {
     LOGS_WEBHOOK_URL,
     GOOGLE_API_KEY,
     REPORT_CHANNEL,
-    MP_CHANNEL
+    MP_CHANNEL,
+    BLAGUE_API_TOKEN
 }
