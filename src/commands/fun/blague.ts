@@ -25,10 +25,10 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
                     name: "Humour noir",
                     value: blagues.categories.DARK
                 }, */
-                {
+                /* {
                     name: "Limite limite",
                     value: blagues.categories.LIMIT
-                },
+                }, */
                 {
                     name: "Beauf",
                     value: blagues.categories.BEAUF
