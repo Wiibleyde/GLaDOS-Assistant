@@ -1,5 +1,20 @@
 import dotenv from "dotenv"
 
+export const playerConfig = {
+    extraMessages: false,
+    enableEmoji: false,
+    loopMessage: false,
+    emojis:{
+        back: '⏪',
+        skip: '⏩',
+        ResumePause: '⏯️',
+        savetrack: '💾',
+        volumeUp: '🔊',
+        volumeDown: '🔉',
+        loop: '🔁',
+    },
+}
+
 dotenv.config()
 
 const { DISCORD_TOKEN, DISCORD_CLIENT_ID, EVE_HOME_GUILD, OWNER_ID, LOGS_WEBHOOK_URL, GOOGLE_API_KEY, REPORT_CHANNEL, MP_CHANNEL, BLAGUE_API_TOKEN } = process.env

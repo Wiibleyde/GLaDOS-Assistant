@@ -35,6 +35,21 @@ import * as logs from "./dev/logs"
 import * as debug from "./dev/debug"
 import * as maintenance from "./dev/maintenance"
 
+import * as back from "./music/back"
+import * as clear from "./music/clear"
+import * as filter from "./music/filter"
+import * as pause from "./music/pause"
+import * as play from "./music/play"
+import * as resume from "./music/resume"
+import * as skip from "./music/skip"
+import * as loop from "./music/loop"
+import * as syncedlyrics from "./music/syncedlyrics"
+
+import { backButton } from "./music/back"
+import { resumeAndPauseButton } from "./music/pause"
+import { skipButton } from "./music/skip"
+import { loopButton } from "./music/loop"
+
 export const commands = {
     ping,
     info,
@@ -60,6 +75,17 @@ export const commands = {
     createradio,
     addradio,
     removeradio,
+
+    // Music commands
+    back,
+    clear,
+    filter,
+    pause,
+    play,
+    resume,
+    skip,
+    loop,
+    syncedlyrics,
 }
 
 export const devCommands = {
@@ -77,5 +103,9 @@ export const modals = {
 export const buttons = {
     handleQuizButton,
     reportQuestionButton,
-    changeRadio
+    changeRadio,
+    backButton,
+    resumeAndPauseButton,
+    skipButton,
+    loopButton,
 }
