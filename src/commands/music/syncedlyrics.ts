@@ -22,10 +22,14 @@ export async function execute(interaction: CommandInteraction) {
         q: queue.currentTrack?.title,
     }).catch(async (error) => {
         logger.error(error)
-        await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
+        return await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
     })
 
-    const lyrics = result?.[0]
+    const lyrics = Array.isArray(result) ? result[0] : null
+
+    if(!lyrics) {
+        return await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Aucune parole trouvée pour cette musique."))], ephemeral: true})
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const thread = await (queue.metadata as { channel: any }).channel.threads.create({
