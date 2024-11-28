@@ -41,6 +41,7 @@ export const client = new Client({
 
 client.once(Events.ClientReady, async () => {
     client.user?.setPresence({
+        status: "dnd",
         activities: [
             {
                 name: `le démarrage...`,
@@ -249,13 +250,14 @@ const areInPeriod = (period: { start: Date, end: Date }) => {
  * @function
  * @returns {Promise<void>} - A promise that resolves when the presence is updated.
  */
-const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
+const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', () => {
     if(maintenance) {
-        await client.user?.setPresence({
+        client.user?.setPresence({
+            status: "idle",
             activities: [
                 {
                     name: `la maintenance...`,
-                    type: ActivityType.Competing
+                    type: ActivityType.Competing,
                 }
             ]
         })
@@ -269,7 +271,9 @@ const statusCron = new CronJob('0,10,20,30,40,50 * * * * *', async () => {
     } else {
         status = possibleStatus[statusIndex]
     }
-    await client.user?.setPresence({
+    client.user?.setPresence({
+        status: "online",
+        afk: false,
         activities: [
             {
                 name: status.name,
