@@ -142,7 +142,7 @@ player.events.on("playerStart", (queue, track) => {
 
     const embed = new EmbedBuilder()
         .setTitle("Lecture en cours")
-        .setDescription(`[${track.title}](${track.url}) a commencé à jouer dans <${queue.channel?.name}>.`)
+        .setDescription(`[${track.title}](${track.url}) a commencé à jouer dans <#${queue.channel?.id}>.`)
         .setThumbnail(track.thumbnail)
         .setColor('Green')
         .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: client.user?.displayAvatarURL() })
