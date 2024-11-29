@@ -1,6 +1,6 @@
 import { playerConfig } from "@/config";
 import { client, logger, player } from "..";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageActionRowComponentBuilder } from "discord.js";
 
 player.events.on("audioTrackAdd", (queue, track) => {
     if(playerConfig.extraMessages) {
@@ -142,7 +142,7 @@ player.events.on("playerStart", (queue, track) => {
 
     const embed = new EmbedBuilder()
         .setTitle("Lecture en cours")
-        .setDescription(`[${track.title}](${track.url}) a commencé à jouer dans <${queue.channel?.name}>.`)
+        .setDescription(`[${track.title}](${track.url}) a commencé à jouer dans <#${queue.channel?.id}>.`)
         .setThumbnail(track.thumbnail)
         .setColor('Green')
         .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: client.user?.displayAvatarURL() })
@@ -173,6 +173,6 @@ player.events.on("playerStart", (queue, track) => {
     //     .setCustomId('lyricsButton')
     //     .setStyle(ButtonStyle.Secondary)
 
-    const row = new ActionRowBuilder().addComponents(back, skip, resumepause, loop)
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(back, skip, resumepause, loop)
     queue.metadata.channel.send({ embeds: [embed], components: [row] })
 })
