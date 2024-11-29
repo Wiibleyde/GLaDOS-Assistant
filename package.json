@@ -1,12 +1,12 @@
 {
   "name": "eve",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Eve",
   "author": {
     "email": "nathan@bonnell.fr",
     "name": "Wiibleyde"
   },
-  "license": "MIT",
+  "license": "GPL-2.0-only",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
