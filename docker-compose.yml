@@ -1,8 +1,0 @@
-services:
-  eve-bot:
-    build: .
-    image: wiibleyde/eve-bot:latest
-    container_name: eve-bot
-    restart: unless-stopped
-    volumes:
-      - ./.env:/app/.env
