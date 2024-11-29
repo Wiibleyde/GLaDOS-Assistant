@@ -44,6 +44,7 @@ Eve is a simple discord bot that can be used for multiple things, including IA f
 
 - Node.js
 - Yarn
+- ffmpeg
 - MariaDB database
   - *Windows docker don't work well with the Prisma ORM*
 - Discord bot token
@@ -91,6 +92,10 @@ This project is licensed under the GPL-2.0 License - see the [LICENSE](LICENSE) 
 - [**Discord.js**](https://discord.js.org/)
 - [**Prisma ORM**](https://www.prisma.io/)
 - [**Gemini**](https://gemini.google.com/)
+- [**Discord Player**](https://discord-player.js.org/)
+- [**ZerioDev/Music-bot**](https://github.com/ZerioDev/Music-bot)
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ![built-with-love](https://forthebadge.com/images/badges/built-with-love.svg)
 ![made-with-typescript](https://forthebadge.com/images/badges/made-with-typescript.svg)
