@@ -47,6 +47,7 @@ import * as syncedlyrics from "./music/syncedlyrics"
 import * as queue from "./music/queue"
 import * as nowplaying from "./music/nowplaying"
 import * as remove from "./music/remove"
+import * as stop from "./music/stop"
 
 import { backButton } from "./music/back"
 import { resumeAndPauseButton } from "./music/pause"
@@ -92,6 +93,7 @@ export const commands = {
     queue,
     nowplaying,
     remove,
+    stop,
 }
 
 export const devCommands = {
