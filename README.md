@@ -26,10 +26,19 @@ Eve is a simple discord bot that can be used for multiple things, including IA f
 
 - [x] IA functionalities
   - [x] Chat with the bot by simply mentioning it (with a real discussion)
+- [x] Music fonctionalities
+  - [x] Play music from youtube
+  - [x] Pause/Resume music
+  - [x] Skip music
+  - [x] Stop music
+  - [x] Queue management
 - [x] Birthday reminder
 - [x] Quiz functionalities
 - [x] Fun commands
   - [x] cat pictures
+  - [x] dog pictures
+  - [x] jokes
+  - [x] quotes
 - [x] Debug functionalities
 
 ## Prerequisites
