@@ -46,7 +46,7 @@ export async function execute(interaction: CommandInteraction) {
             },
         })
 
-        await interaction.reply({ embeds: [successEmbed(interaction, `Musique ajoutée à la file d'attente: [${track.title}](${track.url})`)], ephemeral: true })
+        await interaction.reply({ embeds: [successEmbed(interaction, `Musique ajoutée à la file d'attente: [${track.title}](${track.url})`)] })
     } catch (error) {
         logger.error(error)
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Impossible de jouer la musique."))], ephemeral: true })

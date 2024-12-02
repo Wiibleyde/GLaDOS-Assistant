@@ -22,5 +22,5 @@ async function skip(interaction:CommandInteraction|ButtonInteraction) {
 
     await queue.node.skip()
 
-    await interaction.reply({ embeds: [successEmbed(interaction, "Musique suivante")], ephemeral: true })
+    await interaction.reply({ embeds: [successEmbed(interaction, "Musique suivante")] })
 }

@@ -23,5 +23,5 @@ async function back(interaction: CommandInteraction|ButtonInteraction) {
 
     await queue.history.back()
 
-    await interaction.reply({ embeds: [successEmbed(interaction, "Musique précédente")], ephemeral: true })
+    await interaction.reply({ embeds: [successEmbed(interaction, "Musique précédente")] })
 }

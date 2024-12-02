@@ -17,5 +17,5 @@ export async function execute(interaction: CommandInteraction) {
 
     if (!success) return await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Impossible de mettre en pause la musique."))], ephemeral: true })
 
-    await interaction.reply({ embeds: [successEmbed(interaction, "Musique mise en pause")], ephemeral: true })
+    await interaction.reply({ embeds: [successEmbed(interaction, "Musique mise en pause")] })
 }
