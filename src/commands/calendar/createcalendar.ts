@@ -135,11 +135,11 @@ export async function updateCalendars() {
     })
     for (const guild of guilds) {
         const nextEvent = findNextEvent(icalMap.get(guild.guildId) as CalendarResponse) as MCalendarComponent | null
-        const event = areInEvent(icalMap.get(guild.guildId) as CalendarResponse) as MCalendarComponent | null
+        // const event = areInEvent(icalMap.get(guild.guildId) as CalendarResponse) as MCalendarComponent | null
         upsertCalendarMessage(guild.guildId, guild.CalendarMessageData?.channelId as string, guild.CalendarMessageData?.messageId ?? null, nextEvent)
-        if(event) {
-            await createDiscordEvent(guild.guildId, event)
-        }
+        // if(event) {
+        //     await createDiscordEvent(guild.guildId, event)
+        // }
     }
 }
 
@@ -250,15 +250,19 @@ async function createDiscordEvent(guildId: string, eventToAdd: MCalendarComponen
             return;
         }
     }
+
+    const eventName = eventToAdd.summary?.val?.substring(0, 100) ?? "Événement";
+    const eventDescription = "Événement ajouté automatiquement par Eve.".substring(0, 1000);
+
     eventManager.create({
-        name: eventToAdd.summary?.val ?? "Événement",
-        description: "Événement ajouté automatiquement par Eve.",
-        scheduledStartTime: new Date(eventToAdd.start),
-        scheduledEndTime: new Date(eventToAdd.end),
+        name: eventName,
+        description: eventDescription,
+        scheduledStartTime: eventToAdd.start,
+        scheduledEndTime: eventToAdd.end,
         privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
         entityType: GuildScheduledEventEntityType.External,
         entityMetadata: {
-            location: "Inconnu",
+            location: "Inconnu".substring(0, 100),
         },
         reason: "L'événement est dans le calendrier, ajouté automatiquement par Eve."
     });
