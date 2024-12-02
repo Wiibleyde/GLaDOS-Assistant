@@ -2,7 +2,7 @@ import { client, logger } from "@/index";
 import { prisma } from "@/utils/database";
 import { errorEmbed } from "@/utils/embeds";
 import { hasPermission } from "@/utils/permissionTester";
-import { CommandInteraction, EmbedBuilder, GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel, PermissionFlagsBits, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js";
+import { CommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, TextChannel } from "discord.js";
 import { CalendarComponent, CalendarResponse, sync } from 'node-ical';
 
 const icalMap = new Map<string, CalendarResponse>() // Map<guildId, CalendarResponse>
@@ -170,23 +170,23 @@ function findNextEvent(calendar: CalendarResponse): MCalendarComponent | null {
     return nextEvent
 }
 
-function areInEvent(calendar: CalendarResponse): MCalendarComponent | null {
-    let nextEvent: CalendarComponent | null = null
-    let nextEventTime: number = Infinity
-    const now = new Date().getTime()
-    Object.keys(calendar).forEach(key => {
-        const event = calendar[key] as MCalendarComponent
-        const eventStart = new Date(event.start).getTime()
-        const eventEnd = new Date(event.end).getTime()
-        if (event.summary?.val && !exemptedEvents.includes(event.summary.val)) {
-            if (eventStart < now && eventEnd > now && eventStart < nextEventTime) {
-                nextEvent = event
-                nextEventTime = eventStart
-            }
-        }
-    })
-    return nextEvent
-}
+// function areInEvent(calendar: CalendarResponse): MCalendarComponent | null {
+//     let nextEvent: CalendarComponent | null = null
+//     let nextEventTime: number = Infinity
+//     const now = new Date().getTime()
+//     Object.keys(calendar).forEach(key => {
+//         const event = calendar[key] as MCalendarComponent
+//         const eventStart = new Date(event.start).getTime()
+//         const eventEnd = new Date(event.end).getTime()
+//         if (event.summary?.val && !exemptedEvents.includes(event.summary.val)) {
+//             if (eventStart < now && eventEnd > now && eventStart < nextEventTime) {
+//                 nextEvent = event
+//                 nextEventTime = eventStart
+//             }
+//         }
+//     })
+//     return nextEvent
+// }
 
 function prepareEmbed(nextEvent: MCalendarComponent | null): EmbedBuilder {
     if(!nextEvent) {
@@ -237,33 +237,33 @@ async function upsertCalendarMessage(guildId: string, channelId: string, message
     }
 }
 
-async function createDiscordEvent(guildId: string, eventToAdd: MCalendarComponent): Promise<void> {
-    const guild = await client.guilds.fetch(guildId);
-    const eventManager = guild.scheduledEvents;
-    if(!eventManager) {
-        logger.error(`Scheduled events are not enabled for guild ${guildId}`);
-        return;
-    }
-    const events = await eventManager.fetch();
-    for (const event of events) {
-        if (event[1].name === eventToAdd.summary?.val && event[1].scheduledStartAt?.getTime() === new Date(eventToAdd.start).getTime()) {
-            return;
-        }
-    }
+// async function createDiscordEvent(guildId: string, eventToAdd: MCalendarComponent): Promise<void> {
+//     const guild = await client.guilds.fetch(guildId);
+//     const eventManager = guild.scheduledEvents;
+//     if(!eventManager) {
+//         logger.error(`Scheduled events are not enabled for guild ${guildId}`);
+//         return;
+//     }
+//     const events = await eventManager.fetch();
+//     for (const event of events) {
+//         if (event[1].name === eventToAdd.summary?.val && event[1].scheduledStartAt?.getTime() === new Date(eventToAdd.start).getTime()) {
+//             return;
+//         }
+//     }
 
-    const eventName = eventToAdd.summary?.val?.substring(0, 100) ?? "Événement";
-    const eventDescription = "Événement ajouté automatiquement par Eve.".substring(0, 1000);
+//     const eventName = eventToAdd.summary?.val?.substring(0, 100) ?? "Événement";
+//     const eventDescription = "Événement ajouté automatiquement par Eve.".substring(0, 1000);
 
-    eventManager.create({
-        name: eventName,
-        description: eventDescription,
-        scheduledStartTime: eventToAdd.start,
-        scheduledEndTime: eventToAdd.end,
-        privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
-        entityType: GuildScheduledEventEntityType.External,
-        entityMetadata: {
-            location: "Inconnu".substring(0, 100),
-        },
-        reason: "L'événement est dans le calendrier, ajouté automatiquement par Eve."
-    });
-}
+//     eventManager.create({
+//         name: eventName,
+//         description: eventDescription,
+//         scheduledStartTime: eventToAdd.start,
+//         scheduledEndTime: eventToAdd.end,
+//         privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
+//         entityType: GuildScheduledEventEntityType.External,
+//         entityMetadata: {
+//             location: "Inconnu".substring(0, 100),
+//         },
+//         reason: "L'événement est dans le calendrier, ajouté automatiquement par Eve."
+//     });
+// }
