@@ -19,5 +19,5 @@ async function clear(interaction:CommandInteraction|ButtonInteraction) {
 
     queue.tracks.clear()
 
-    await interaction.reply({ embeds: [successEmbed(interaction, "File d'attente vidée")], ephemeral: true })
+    await interaction.reply({ embeds: [successEmbed(interaction, "File d'attente vidée")] })
 }

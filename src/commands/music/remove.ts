@@ -27,5 +27,5 @@ export async function execute(interaction: CommandInteraction) {
 
     queue.removeTrack(index)
 
-    await interaction.reply({ embeds: [successEmbed(interaction, `La musique ${name} a été supprimée de la file d'attente.`)], ephemeral: true })
+    await interaction.reply({ embeds: [successEmbed(interaction, `La musique ${name} a été supprimée de la file d'attente.`)] })
 }

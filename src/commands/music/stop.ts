@@ -14,5 +14,5 @@ export async function execute(interaction: CommandInteraction) {
 
     queue.delete()
 
-    await interaction.reply({ embeds: [successEmbed(interaction, "La musique a été arrêtée.")], ephemeral: true })
+    await interaction.reply({ embeds: [successEmbed(interaction, "La musique a été arrêtée.")] })
 }

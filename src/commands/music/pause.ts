@@ -29,7 +29,7 @@ export async function resumeAndPauseButton(interaction: ButtonInteraction) {
 
     if(!resumed) {
         queue.node.pause()
-        return await interaction.reply({ embeds: [successEmbed(interaction, "Musique mise en pause")], ephemeral: true })
+        return await interaction.reply({ embeds: [successEmbed(interaction, "Musique mise en pause")] })
     }
 
     await interaction.reply({ embeds: [successEmbed(interaction, "Musique reprise")], ephemeral: true })
