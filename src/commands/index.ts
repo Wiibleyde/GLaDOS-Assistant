@@ -1,3 +1,4 @@
+import * as chill from "./fun/chill"
 import * as ping from "./general/ping"
 import * as info from "./general/info"
 import * as talk from "./general/talk"
@@ -55,6 +56,7 @@ import { skipButton } from "./music/skip"
 import { loopButton } from "./music/loop"
 
 export const commands = {
+    chill,
     ping,
     info,
     talk,
