@@ -9,7 +9,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
     const embed = new EmbedBuilder()
         .setTitle("Chill")
         .setDescription("Gif du mec chill")
-        .setImage("https://tenor.com/view/chill-guy-my-new-character-gif-2777893510283028272")
+        .setImage("https://media1.tenor.com/m/Jo0PbgBIZzAAAAAd/chill-guy-my-new-character.gif")
 
     await interaction.reply({ embeds: [embed], ephemeral: false })
 }
