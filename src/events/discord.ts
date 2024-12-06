@@ -9,6 +9,7 @@ import { config } from "@/config"
 import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
 import { generateWithGoogle } from "@/utils/intelligence"
 import { backSpace } from "@/utils/textUtils"
+import { detectFeur, generateResponse } from "@/utils/messageManager"
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
@@ -87,5 +88,9 @@ client.on(Events.MessageCreate, async (message) => {
             await message.channel.send(`${aiReponse}`)
             logger.info(`Réponse de l'IA à <@${message.author.id}> dans <#${channelId}> : ${aiReponse}`)
         }
+    }
+
+    if(detectFeur(message.content)) {
+        message.channel.send(generateResponse())
     }
 })
