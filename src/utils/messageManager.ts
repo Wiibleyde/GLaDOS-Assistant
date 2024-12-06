@@ -1,18 +1,17 @@
 const quoiRegexs = [
     // Quoi
-    /quoi/,
-    /quoi\?/,
-    /quoi\ ?/,
-    /quoi\ ?\?/,
-    /quoi\ ?\?/,
-
+    /quoi$/,
+    /quoi\?$/,
+    /quoi\ ?$/,
+    /quoi\ ?\?$/,
+    /quoi\ ?\?$/,
 
     // Koa
-    /koa/,
-    /koa\?/,
-    /koa\ ?/,
-    /koa\ ?\?/,
-    /koa\ ?\?/,
+    /koa$/,
+    /koa\?$/,
+    /koa\ ?$/,
+    /koa\ ?\?$/,
+    /koa\ ?\?$/
 ]
 
 export const possibleResponses = [
