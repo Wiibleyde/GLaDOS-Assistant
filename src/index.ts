@@ -1,5 +1,5 @@
 import { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits, Partials } from "discord.js"
-import { deployCommands, deployDevCommands } from "@/deploy-commands"
+import { deployCommands, deployContextMenus, deployDevCommands } from "@/deploy-commands"
 import { config } from "@/config"
 import { Logger } from "@/utils/logger"
 import { CronJob } from 'cron'
@@ -49,6 +49,7 @@ client.once(Events.ClientReady, async () => {
         ]
     })
     await deployCommands()
+    await deployContextMenus()
     const devGuild = config.EVE_HOME_GUILD
     await deployDevCommands(devGuild)
     logger.info(`Connecté en tant que ${client.user?.tag}!`)

@@ -71,7 +71,6 @@ export const commands = {
     addquestion,
     quizstats,
     leaderboard,
-    chaban,
     blague,
 
     // Calendar commands
@@ -101,7 +100,8 @@ export const commands = {
 export const devCommands = {
     logs,
     debug,
-    maintenance
+    maintenance,
+    chaban,
 }
 
 export const modals = {
