@@ -23,7 +23,7 @@ const rest = new REST().setToken(config.DISCORD_TOKEN)
  */
 export async function deployCommands(): Promise<void> {
     try {
-        logger.info("Chargement des commandes globales...")
+        logger.info(`Chargement des commandes globales... (${commandsData.length} commandes)`)
 
         await rest.put(
             Routes.applicationCommands(config.DISCORD_CLIENT_ID),
@@ -32,7 +32,7 @@ export async function deployCommands(): Promise<void> {
             }
         );
 
-        logger.info("Commandes chargées avec succès !");
+        logger.info(`${commandsData.length} commandes chargées avec succès`)
     } catch (error) {
         logger.error(error as string)
     }
