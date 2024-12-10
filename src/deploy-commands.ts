@@ -9,7 +9,7 @@ const commandsData = Object.values(commands).map((command) => command.data)
 const devCommandsData = Object.values(devCommands).map((command) => command.data)
 const contextCommandsData = Object.values(contextMenus).map((command) => command.data)
 
-const rest = new REST().setToken(config.DISCORD_TOKEN)
+const rest = new REST({ version: '9', timeout: 15000 }).setToken(config.DISCORD_TOKEN)
 
 /**
  * Deploys the commands to the Discord application.
@@ -23,14 +23,14 @@ const rest = new REST().setToken(config.DISCORD_TOKEN)
  */
 export async function deployCommands(): Promise<void> {
     try {
-        logger.info(`Chargement des commandes globales... (${commandsData.length} commandes)`)
+        logger.info(`Chargement des commandes globales (${commandsData.length})...`)
 
         await rest.put(
             Routes.applicationCommands(config.DISCORD_CLIENT_ID),
             {
                 body: commandsData,
             }
-        );
+        )
 
         logger.info(`${commandsData.length} commandes chargées avec succès`)
     } catch (error) {
@@ -43,9 +43,9 @@ export async function deployContextMenus(): Promise<void> {
         logger.info("Chargement des menus contextuels")
 
         await rest.put(
-            Routes.applicationCommands(config.DISCORD_CLIENT_ID),
+            Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, config.EVE_HOME_GUILD),
             {
-                body: contextCommandsData
+                body: contextCommandsData,
             }
         )
 

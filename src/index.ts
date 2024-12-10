@@ -49,11 +49,10 @@ client.once(Events.ClientReady, async () => {
         ]
     })
 
+    await deployCommands()
     await deployContextMenus()
     const devGuild = config.EVE_HOME_GUILD
     await deployDevCommands(devGuild)
-
-    await deployCommands()
 
     logger.info(`Connecté en tant que ${client.user?.tag}!`)
 

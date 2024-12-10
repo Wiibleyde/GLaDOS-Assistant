@@ -9,13 +9,16 @@ import { config } from "@/config"
 import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
 import { generateWithGoogle } from "@/utils/intelligence"
 import { detectFeur, generateResponse } from "@/utils/messageManager"
-import { contextMenus } from "@/contextMenus"
+import { contextMessageMenus, contextUserMenus } from "@/contextMenus"
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isContextMenuCommand()) {
         if(interaction.isMessageContextMenuCommand()) {
-            const commandName = interaction.commandName as keyof typeof contextMenus
-            contextMenus[commandName].execute(interaction)
+            const commandName = interaction.commandName as keyof typeof contextMessageMenus
+            contextMessageMenus[commandName].execute(interaction)
+        } else if(interaction.isUserContextMenuCommand()) {
+            const commandName = interaction.commandName as keyof typeof contextUserMenus
+            contextUserMenus[commandName].execute(interaction)
         }
         logger.info(`Commande contextuelle </${interaction.commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
     } else if (interaction.isCommand()) {
