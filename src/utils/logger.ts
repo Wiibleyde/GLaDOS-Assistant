@@ -90,6 +90,10 @@ export class Logger {
         return now.toLocaleString()
     }
 
+    private formatMessage(messageList: unknown[]): string {
+        return messageList.join(" ").substring(0, 1950)
+    }
+
     /**
      * Logs an informational message to the console, optionally to Discord and a database.
      *
@@ -101,7 +105,7 @@ export class Logger {
      * If `logInDb` is true, stores the log message in the database.
      */
     public async info(...messageList: unknown[]): Promise<void> {
-        const message = messageList.join(" ")
+        const message = this.formatMessage(messageList)
         console.log(LogLevelColors.INFO + `[INFO] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
             const embed: EmbedBuilder = new EmbedBuilder()
@@ -143,7 +147,7 @@ export class Logger {
      * - If `logInDb` is true, the message is stored in a database using Prisma.
      */
     public async error(...messageList: unknown[]): Promise<void> {
-        const message = messageList.join(" ")
+        const message = this.formatMessage(messageList)
         console.error(LogLevelColors.ERROR + `[ERROR] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
             const embed: EmbedBuilder = new EmbedBuilder()
@@ -189,7 +193,7 @@ export class Logger {
      * ```
      */
     public async warn(...messageList: unknown[]): Promise<void> {
-        const message = messageList.join(" ")
+        const message = this.formatMessage(messageList)
         console.warn(LogLevelColors.WARN + `[WARN] ${this.getNowDate()} ${message}` + resetColor)
         if(this.logInDiscord) {
             const embed: EmbedBuilder = new EmbedBuilder()

@@ -56,7 +56,6 @@ import { skipButton } from "./music/skip"
 import { loopButton } from "./music/loop"
 
 export const commands = {
-    chill,
     ping,
     info,
     talk,
@@ -71,8 +70,9 @@ export const commands = {
     addquestion,
     quizstats,
     leaderboard,
-    chaban,
     blague,
+    chill,
+    chaban,
 
     // Calendar commands
     createcalendar,
@@ -101,7 +101,7 @@ export const commands = {
 export const devCommands = {
     logs,
     debug,
-    maintenance
+    maintenance,
 }
 
 export const modals = {

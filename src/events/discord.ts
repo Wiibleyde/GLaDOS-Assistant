@@ -8,41 +8,48 @@ import { handleMessageSend, isNewMessageInMpThread, recieveMessage } from "@/uti
 import { config } from "@/config"
 import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
 import { generateWithGoogle } from "@/utils/intelligence"
-import { backSpace } from "@/utils/textUtils"
 import { detectFeur, generateResponse } from "@/utils/messageManager"
+import { contextMessageMenus, contextUserMenus } from "@/contextMenus"
 
 client.on(Events.InteractionCreate, async (interaction) => {
-    if (interaction.isCommand()) {
-        try {
-            if(maintenance) {
-                if(!await hasPermission(interaction, [], false)) {
-                    await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Le bot est en maintenance, veuillez réessayer plus tard."))], ephemeral: true })
-                    return
-                }
-            }
-            const { commandName } = interaction
-            if (commands[commandName as keyof typeof commands]) {
-                commands[commandName as keyof typeof commands].execute(interaction)
-            }
-            if (devCommands[commandName as keyof typeof devCommands]) {
-                devCommands[commandName as keyof typeof devCommands].execute(interaction)
-            }
-            logger.info(`Commande </${commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: Error | any) {
-            logger.error(`Erreur commande : </${interaction.commandName}:${interaction.commandId}>${backSpace}<@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> : ${error.message}`)
-            await interaction.reply({ embeds: [errorEmbed(interaction, error)], ephemeral: true })
+    if (interaction.isContextMenuCommand()) {
+        if(interaction.isMessageContextMenuCommand()) {
+            const commandName = interaction.commandName as keyof typeof contextMessageMenus
+            contextMessageMenus[commandName].execute(interaction)
+        } else if(interaction.isUserContextMenuCommand()) {
+            const commandName = interaction.commandName as keyof typeof contextUserMenus
+            contextUserMenus[commandName].execute(interaction)
         }
+        logger.info(`Commande contextuelle </${interaction.commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
+    } else if (interaction.isCommand()) {
+        if(maintenance) {
+            if(!await hasPermission(interaction, [], false)) {
+                await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Le bot est en maintenance, veuillez réessayer plus tard."))], ephemeral: true })
+                return
+            }
+        }
+        const { commandName } = interaction
+        if (commands[commandName as keyof typeof commands]) {
+            commands[commandName as keyof typeof commands].execute(interaction)
+        }
+        if (devCommands[commandName as keyof typeof devCommands]) {
+            devCommands[commandName as keyof typeof devCommands].execute(interaction)
+        }
+        logger.info(`Commande </${commandName}:${interaction.commandId}> par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
     } else if (interaction.isModalSubmit()) {
         const customId = interaction.customId.split("--")[0]
         if (modals[customId as keyof typeof modals]) {
             modals[customId as keyof typeof modals](interaction)
         }
+        logger.info(`Modal soumis par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> (${interaction.customId})`)
     } else if (interaction.isButton()) {
         const customId = interaction.customId.split("--")[0]
         if (buttons[customId as keyof typeof buttons]) {
             buttons[customId as keyof typeof buttons](interaction)
         }
+        logger.info(`Bouton cliqué par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> (${interaction.customId})`)
+    } else {
+        logger.error(`Interaction inconnue par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
     }
 })
 
