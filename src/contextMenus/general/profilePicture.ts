@@ -1,4 +1,4 @@
-import { successEmbed } from "@/utils/embeds";
+import { EmbedBuilder } from "@discordjs/builders";
 import { ApplicationCommandType, ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from "discord.js";
 
 export const data: ContextMenuCommandBuilder = new ContextMenuCommandBuilder()
@@ -12,5 +12,12 @@ export async function execute(interaction: UserContextMenuCommandInteraction): P
     const author = interaction.targetUser
     const userProfilePicture = author?.displayAvatarURL({ extension: "png", size: 1024 })
 
-    await interaction.editReply({ embeds: [successEmbed(interaction, `Photo de profil de ${author?.toString()}: ${userProfilePicture}`)] })
+    const embed = new EmbedBuilder()
+        .setTitle("Photo de profil")
+        .setImage(userProfilePicture)
+        .setColor(0x00ff00)
+        .setTimestamp()
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
+
+    await interaction.editReply({ embeds: [embed] })
 }

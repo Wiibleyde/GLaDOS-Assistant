@@ -35,6 +35,7 @@ export const client = new Client({
     ]
 })
 
+
 export const player = new Player(client, {ytdlOptions: {quality: 'highestaudio', highWaterMark: 1 << 25}})
 player.extractors.register(YoutubeiExtractor, {})
 

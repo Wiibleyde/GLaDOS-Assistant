@@ -33,7 +33,7 @@ export async function execute(interaction: CommandInteraction) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const thread = await (queue.metadata as { channel: any }).channel.threads.create({
-        name: `Paroles synchronisées de ${queue.currentTrack?.title}`,
+        name: `Paroles synchronisées de ${queue.currentTrack?.title.slice(0, 50)}`,
     })
 
     queue.setMetadata({

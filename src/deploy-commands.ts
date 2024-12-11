@@ -3,11 +3,14 @@ import { config } from "@/config"
 import { commands, devCommands } from "@/commands"
 import { logger } from "@/index"
 import { client } from "."
-import { contextMenus } from "./contextMenus"
+import { contextMessageMenus, contextUserMenus } from "./contextMenus"
 
 const commandsData = Object.values(commands).map((command) => command.data)
 const devCommandsData = Object.values(devCommands).map((command) => command.data)
-const contextCommandsData = Object.values(contextMenus).map((command) => command.data)
+const contextCommandsData = [
+    ...Object.values(contextMessageMenus).map((command) => command.data),
+    ...Object.values(contextUserMenus).map((command) => command.data)
+]
 
 const rest = new REST({ version: '9', timeout: 15000 }).setToken(config.DISCORD_TOKEN)
 
@@ -43,7 +46,7 @@ export async function deployContextMenus(): Promise<void> {
         logger.info("Chargement des menus contextuels")
 
         await rest.put(
-            Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, config.EVE_HOME_GUILD),
+            Routes.applicationCommands(config.DISCORD_CLIENT_ID),
             {
                 body: contextCommandsData,
             }

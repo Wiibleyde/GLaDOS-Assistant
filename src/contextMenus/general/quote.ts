@@ -1,7 +1,7 @@
 import { prisma } from "@/utils/database";
 import { successEmbed } from "@/utils/embeds";
 import { createQuote } from "@/utils/quote";
-import { ApplicationCommandType, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, TextChannel } from "discord.js";
+import { ApplicationCommandType, ContextMenuCommandBuilder,  MessageContextMenuCommandInteraction, TextChannel } from "discord.js";
 
 export const data: ContextMenuCommandBuilder = new ContextMenuCommandBuilder()
     .setName("Créer un citation")
@@ -13,7 +13,7 @@ export async function execute(interaction: MessageContextMenuCommandInteraction)
 
     const quote = interaction.targetMessage?.content
     const author = interaction.targetMessage?.author
-    const date = interaction.targetMessage?.createdAt.toISOString() || new Date().toLocaleDateString()
+    const date = interaction.targetMessage?.createdAt.toLocaleDateString() || new Date().toLocaleDateString()
     const userProfilePicture = author?.displayAvatarURL({ extension: "png", size: 1024 })
 
     let channelWhereToPost = null
