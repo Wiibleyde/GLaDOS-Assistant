@@ -3,11 +3,14 @@ import { config } from "@/config"
 import { commands, devCommands } from "@/commands"
 import { logger } from "@/index"
 import { client } from "."
-import { contextMenus } from "./contextMenus"
+import { contextMessageMenus, contextUserMenus } from "./contextMenus"
 
 const commandsData = Object.values(commands).map((command) => command.data)
 const devCommandsData = Object.values(devCommands).map((command) => command.data)
-const contextCommandsData = Object.values(contextMenus).map((command) => command.data)
+const contextCommandsData = [
+    ...Object.values(contextMessageMenus).map((command) => command.data),
+    ...Object.values(contextUserMenus).map((command) => command.data)
+]
 
 const rest = new REST({ version: '9', timeout: 15000 }).setToken(config.DISCORD_TOKEN)
 
@@ -40,10 +43,10 @@ export async function deployCommands(): Promise<void> {
 
 export async function deployContextMenus(): Promise<void> {
     try {
-        logger.info("Chargement des menus contextuels")
+        logger.info(`Chargement des menus contextuels (${contextCommandsData.length})...`)
 
         await rest.put(
-            Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, config.EVE_HOME_GUILD),
+            Routes.applicationCommands(config.DISCORD_CLIENT_ID),
             {
                 body: contextCommandsData,
             }
@@ -70,7 +73,7 @@ export async function deployContextMenus(): Promise<void> {
  */
 export async function deployDevCommands(guildId: string): Promise<void> {
     try {
-        logger.info("Chargement des commandes pour la guilde...")
+        logger.info(`Chargement des commandes de développement pour la guilde ${guildId} (${devCommandsData.length})...`)
 
         await rest.put(
             Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, guildId),
