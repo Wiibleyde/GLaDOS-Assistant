@@ -43,7 +43,7 @@ export async function deployCommands(): Promise<void> {
 
 export async function deployContextMenus(): Promise<void> {
     try {
-        logger.info("Chargement des menus contextuels")
+        logger.info(`Chargement des menus contextuels (${contextCommandsData.length})...`)
 
         await rest.put(
             Routes.applicationCommands(config.DISCORD_CLIENT_ID),
@@ -73,7 +73,7 @@ export async function deployContextMenus(): Promise<void> {
  */
 export async function deployDevCommands(guildId: string): Promise<void> {
     try {
-        logger.info("Chargement des commandes pour la guilde...")
+        logger.info(`Chargement des commandes de développement pour la guilde ${guildId} (${devCommandsData.length})...`)
 
         await rest.put(
             Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, guildId),
