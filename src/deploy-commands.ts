@@ -12,7 +12,7 @@ const contextCommandsData = [
     ...Object.values(contextUserMenus).map((command) => command.data)
 ]
 
-const rest = new REST({ version: '9', timeout: 15000 }).setToken(config.DISCORD_TOKEN)
+const rest = new REST().setToken(config.DISCORD_TOKEN)
 
 /**
  * Deploys the commands to the Discord application.
