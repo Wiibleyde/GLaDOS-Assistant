@@ -26,33 +26,16 @@ const rest = new REST().setToken(config.DISCORD_TOKEN)
  */
 export async function deployCommands(): Promise<void> {
     try {
-        logger.info(`Chargement des commandes globales (${commandsData.length})...`)
+        logger.info(`Chargement des commandes globales (${commandsData.length + contextCommandsData.length})...`)
 
         await rest.put(
             Routes.applicationCommands(config.DISCORD_CLIENT_ID),
             {
-                body: commandsData,
+                body: [...commandsData, ...contextCommandsData],
             }
         )
 
         logger.info(`${commandsData.length} commandes chargées avec succès`)
-    } catch (error) {
-        logger.error(error as string)
-    }
-}
-
-export async function deployContextMenus(): Promise<void> {
-    try {
-        logger.info(`Chargement des menus contextuels (${contextCommandsData.length})...`)
-
-        await rest.put(
-            Routes.applicationCommands(config.DISCORD_CLIENT_ID),
-            {
-                body: contextCommandsData,
-            }
-        )
-
-        logger.info("Menus contextuels chargés avec succès")
     } catch (error) {
         logger.error(error as string)
     }
