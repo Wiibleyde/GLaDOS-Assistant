@@ -9,6 +9,8 @@ const quizApiUrl = "https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=1"
 
 const quizes: Map<string, QuizType> = new Map()
 
+const maxTime = 18000000 // 5 hours
+
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("quiz")
     .setDescription("Affiche une question de quiz aléatoire")
@@ -57,7 +59,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         createdAt: Date.now()
     }
 
-    const invalidQuizTimestamp = quiz.createdAt + 3600000
+    const invalidQuizTimestamp = quiz.createdAt + maxTime
 
     if(!quiz) {
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Une erreur est survenue lors de la récupération de la question de quiz."))], ephemeral: true })
@@ -165,7 +167,7 @@ export async function handleQuizButton(interaction: ButtonInteraction<CacheType>
         return
     }
 
-    if(quiz.createdAt + 3600000 < Date.now()) {
+    if(quiz.createdAt + maxTime < Date.now()) { // 1 hour
         await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Quiz expiré (la réponse était: ||" + quiz.answer + "||)"))], ephemeral: true })
         return
     }
