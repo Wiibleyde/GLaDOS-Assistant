@@ -1,5 +1,4 @@
-import { EmbedBuilder } from "@discordjs/builders";
-import { ApplicationCommandType, ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandType, ContextMenuCommandBuilder, EmbedBuilder, UserContextMenuCommandInteraction } from "discord.js";
 
 export const data: ContextMenuCommandBuilder = new ContextMenuCommandBuilder()
     .setName("Récupèrer la photo de profil")

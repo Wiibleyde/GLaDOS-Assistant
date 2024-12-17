@@ -9,10 +9,10 @@ export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
         option.setName("type")
             .setDescription("Type de classement")
             .setRequired(true)
-            .addChoices({
+            .addChoices(/*{
                 name: "Ratio",
                 value: "ratio"
-            },
+            },*/
             {
                 name: "Bonnes réponses",
                 value: "good"
