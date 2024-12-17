@@ -10,6 +10,8 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         .setTitle("Chill")
         .setDescription("Gif du mec chill")
         .setImage("https://media1.tenor.com/m/Jo0PbgBIZzAAAAAd/chill-guy-my-new-character.gif")
+        .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user.displayAvatarURL() })
+        .setTimestamp()
 
     await interaction.reply({ embeds: [embed], ephemeral: false })
 }
