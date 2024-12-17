@@ -9,13 +9,3 @@ interface QuizType {
     rightUsers?: string[]
     wrongUsers?: string[]
 }
-
-interface Modules {
-    name: string
-    status: StatusEnum
-}
-
-interface Status {
-    bot: StatusEnum
-    modules: Modules[]
-}

@@ -12,6 +12,7 @@ import * as rename from "./config/rename"
 import * as cat from "./fun/cat"
 import * as dog from "./fun/dog"
 import * as blague from "./fun/blague"
+import * as apod from "./fun/apod"
 
 import * as quiz from "./fun/quiz/quiz"
 import * as addquestion from "./fun/quiz/addquestion"
@@ -73,6 +74,7 @@ export const commands = {
     blague,
     chill,
     chaban,
+    apod,
 
     // Calendar commands
     createcalendar,

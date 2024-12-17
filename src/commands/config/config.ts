@@ -3,7 +3,6 @@ import { prisma } from "@/utils/database"
 import { errorEmbed, successEmbed } from "@/utils/embeds"
 import { backSpace } from "@/utils/textUtils"
 import { hasPermission } from "@/utils/permissionTester"
-import { logger } from "@/index"
 
 export const data: SlashCommandOptionsOnlyBuilder = new SlashCommandBuilder()
     .setName("config")
@@ -106,16 +105,12 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
                     key
                 }
             })
-            logger.debug(`Key: ${key}, Channel: ${channel}`)
             if (key === "trainingCategory") {
-                logger.debug(`Checking if channel ${channel} is a category`)
                 const channelData = await interaction.guild?.channels.fetch(channel)
                 if (channelData?.type !== ChannelType.GuildCategory) {
-                    logger.debug(`Channel ${channel} is not a category`)
                     await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Le salon fourni n'est pas une catégorie."))] })
                     return
                 }
-                logger.debug(`Channel ${channel} is a category`)
             }
             if (existingConfig) {
                 await prisma.config.update({
