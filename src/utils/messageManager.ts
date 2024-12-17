@@ -1,17 +1,12 @@
+/* eslint-disable no-useless-escape */
 const quoiRegexs = [
     // Quoi
-    /quoi$/,
-    /quoi\?$/,
-    /quoi\ ?$/,
-    /quoi\ ?\?$/,
-    /quoi\ ?\?$/,
+    /qu+o+i+[\ ?]*\?*$/,
+    /qu+o+i+[\ +]*\?*$/,
 
     // Koa
-    /koa$/,
-    /koa\?$/,
-    /koa\ ?$/,
-    /koa\ ?\?$/,
-    /koa\ ?\?$/
+    /ko+a+[\ ?]*\?*$/,
+    /ko+a+[\ +]*\?*$/
 ]
 
 export const possibleResponses = [
