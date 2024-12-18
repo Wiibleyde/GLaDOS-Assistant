@@ -1,4 +1,5 @@
 import { errorEmbed } from "@/utils/embeds";
+import { backSpace } from "@/utils/textUtils";
 import { useQueue } from "discord-player";
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
@@ -16,10 +17,10 @@ export async function execute(interaction: CommandInteraction) {
     const methods = ['', '🔁', '🔂']
     const songs = queue.tracks.size
     const nextSongs = songs > 5 ? `et ${songs - 5} autres chansons` : `Dans la file d'attente: ${songs} chansons`
-    const tracks = queue.tracks.map((track, i) => `**${i + 1}.** [${track.title}](${track.url}) | ${track.author}`).slice(0, 5).join('\n')
+    const tracks = queue.tracks.map((track, i) => `**${i + 1}.** [${track.title}](${track.url}) | ${track.author}`).slice(0, 5).join(backSpace)
     const embed = new EmbedBuilder()
         .setTitle("File d'attente")
-        .setDescription(`${methods[queue.repeatMode]} ${nextSongs}\n\n${tracks}`)
+        .setDescription(`${methods[queue.repeatMode]} ${nextSongs}${backSpace}${backSpace}${tracks}`)
         .setColor('Blue')
         .setFooter({ text: `Eve – Toujours prête à vous aider.`, iconURL: interaction.client.user?.displayAvatarURL() })
         .setTimestamp()
