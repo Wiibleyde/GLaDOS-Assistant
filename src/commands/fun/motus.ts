@@ -21,6 +21,8 @@ export async function execute(interaction: CommandInteraction) {
     const message = await channel.send({ embeds: [embedResult.embed], components: embedResult.components, files: embedResult.attachments });
 
     games.set(message.id, game);
+
+    await interaction.reply("Partie de Motus lancée !");
 }
 
 export async function handleMotusTry(interaction: ButtonInteraction) {
