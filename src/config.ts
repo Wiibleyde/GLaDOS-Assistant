@@ -35,6 +35,7 @@ if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !EVE_HOME_GUILD || !OWNER_ID || !LOG
  * @property {string} REPORT_CHANNEL - The ID of the channel where reports are sent.
  * @property {string} MP_CHANNEL - The ID of the channel where MPs are sent.
  * @property {string} BLAGUE_API_TOKEN - The token used to authenticate with the Blague API.
+ * @property {string} NASA_API_KEY - The API key used to authenticate with the NASA API.
  */
 export const config = {
     DISCORD_TOKEN,
