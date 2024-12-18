@@ -11,7 +11,17 @@ export async function execute(interaction: UserContextMenuCommandInteraction): P
 
     const author = interaction.targetUser
 
-    const userBanner = author?.bannerURL({ size: 1024, extension: "png" })
+    let userBanner = author?.bannerURL({ size: 1024, extension: "png" })
+
+    if (!userBanner) {
+        try {
+            const user = await interaction.client.users.fetch(author.id, { force: true });
+            userBanner = user.bannerURL({ size: 1024, extension: "png" });
+        } catch {
+            await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("Impossible de récupérer les informations de l'utilisateur."))] });
+            return;
+        }
+    }
 
     if (!userBanner) {
         await interaction.editReply({ embeds: [errorEmbed(interaction, new Error("L'utilisateur n'a pas de bannière."))] })

@@ -35,7 +35,7 @@ export async function deployCommands(): Promise<void> {
             }
         )
 
-        logger.info(`${commandsData.length} commandes chargées avec succès`)
+        logger.info(`${commandsData.length + contextCommandsData.length} commandes chargées avec succès.`)
     } catch (error) {
         logger.error(error as string)
     }

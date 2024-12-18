@@ -1,7 +1,7 @@
 import * as quote from "./message/quote"
 
 import * as profilePicture from "./user/profilePicture"
-// import * as banner from "./user/banner"
+import * as banner from "./user/banner"
 
 const contextMessageMenus = {
     "Créer un citation": quote
@@ -9,7 +9,7 @@ const contextMessageMenus = {
 
 const contextUserMenus = {
     "Récupèrer la photo de profil": profilePicture,
-    // "Récupèrer la bannière": banner
+    "Récupèrer la bannière": banner
 }
 
 

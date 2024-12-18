@@ -19,6 +19,8 @@ import * as addquestion from "./fun/quiz/addquestion"
 import * as quizstats from "./fun/quiz/quizstats"
 import * as leaderboard from "./fun/quiz/leaderboard"
 
+import * as motus from "./fun/motus"
+
 import * as createradio from "./hope/createradio"
 import * as addradio from "./hope/addradio"
 import * as removeradio from "./hope/removeradio"
@@ -56,6 +58,8 @@ import { resumeAndPauseButton } from "./music/pause"
 import { skipButton } from "./music/skip"
 import { loopButton } from "./music/loop"
 
+import { handleMotusTry, handleMotusTryModal } from "./fun/motus"
+
 export const commands = {
     ping,
     info,
@@ -75,6 +79,7 @@ export const commands = {
     chill,
     chaban,
     apod,
+    motus,
 
     // Calendar commands
     createcalendar,
@@ -110,6 +115,7 @@ export const modals = {
     addBirthdayModal,
     reportQuestionModal,
     changeRadioModal,
+    handleMotusTryModal,
 }
 
 export const buttons = {
@@ -120,4 +126,5 @@ export const buttons = {
     resumeAndPauseButton,
     skipButton,
     loopButton,
+    handleMotusTry,
 }
