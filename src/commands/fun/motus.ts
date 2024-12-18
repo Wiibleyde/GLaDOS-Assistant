@@ -1,5 +1,5 @@
 import { client } from "@/index";
-import { errorEmbed } from "@/utils/embeds";
+import { errorEmbed, successEmbed } from "@/utils/embeds";
 import { games, GameState, getRandomWord, MotusGame, TryReturn } from "@/utils/motus";
 import { ActionRowBuilder, ButtonInteraction, CommandInteraction, ModalActionRowComponentBuilder, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder, TextInputStyle } from "discord.js";
 
@@ -22,7 +22,7 @@ export async function execute(interaction: CommandInteraction) {
 
     games.set(message.id, game);
 
-    await interaction.reply("Partie de Motus lancée !");
+    await interaction.reply({ embeds: [successEmbed(interaction, "Partie de Motus lancée.")], ephemeral: true });
 }
 
 export async function handleMotusTry(interaction: ButtonInteraction) {
