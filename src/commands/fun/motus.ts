@@ -1,6 +1,6 @@
 import { client } from "@/index";
 import { errorEmbed, successEmbed } from "@/utils/embeds";
-import { games, GameState, getRandomWord, MotusGame, TryReturn } from "@/utils/motus";
+import { games, GameState, getRandomWord, MotusGame, TryReturn } from "@/utils/games/motus";
 import { ActionRowBuilder, ButtonInteraction, CommandInteraction, ModalActionRowComponentBuilder, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder, TextInputStyle } from "discord.js";
 
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
