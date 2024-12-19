@@ -48,5 +48,5 @@ export async function handleMotusTryModal(interaction: ModalSubmitInteraction) {
         games.delete(message.id);
     }
 
-    await interaction.reply({ content: "Essai enregistré.", ephemeral: true });
+    await interaction.deferUpdate();
 }
