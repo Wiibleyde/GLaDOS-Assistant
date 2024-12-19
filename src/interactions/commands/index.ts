@@ -22,18 +22,10 @@ import * as leaderboard from "./fun/quiz/leaderboard"
 import * as motus from "./fun/motus"
 
 import * as createradio from "./hope/createradio"
-import * as addradio from "./hope/addradio"
-import * as removeradio from "./hope/removeradio"
 
 import * as createcalendar from "./calendar/createcalendar"
 
 import * as chaban from "./utils/chaban"
-
-import { addBirthdayModal } from "./general/birthday"
-
-import { handleQuizButton, reportQuestionButton, reportQuestionModal } from "./fun/quiz/quiz"
-
-import { changeRadio, changeRadioModal } from "./hope/changeRadio"
 
 import * as logs from "./dev/logs"
 import * as debug from "./dev/debug"
@@ -52,13 +44,6 @@ import * as queue from "./music/queue"
 import * as nowplaying from "./music/nowplaying"
 import * as remove from "./music/remove"
 import * as stop from "./music/stop"
-
-import { backButton } from "./music/back"
-import { resumeAndPauseButton } from "./music/pause"
-import { skipButton } from "./music/skip"
-import { loopButton } from "./music/loop"
-
-import { handleMotusTry, handleMotusTryModal } from "./fun/motus"
 
 export const commands = {
     ping,
@@ -86,8 +71,6 @@ export const commands = {
 
     // Hope commands
     createradio,
-    addradio,
-    removeradio,
 
     // Music commands
     back,
@@ -109,22 +92,4 @@ export const devCommands = {
     logs,
     debug,
     maintenance,
-}
-
-export const modals = {
-    addBirthdayModal,
-    reportQuestionModal,
-    changeRadioModal,
-    handleMotusTryModal,
-}
-
-export const buttons = {
-    handleQuizButton,
-    reportQuestionButton,
-    changeRadio,
-    backButton,
-    resumeAndPauseButton,
-    skipButton,
-    loopButton,
-    handleMotusTry,
 }

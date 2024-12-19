@@ -19,7 +19,7 @@
     "@discord-player/extractor": "^4.3.1",
     "@discordjs/opus": "github:discordjs/opus",
     "@google/generative-ai": "^0.21.0",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^6.1.0",
     "blagues-api": "^2.1.1",
     "cron": "^3.3.1",
     "discord-player": "^6.7.1",
@@ -28,7 +28,6 @@
     "dotenv": "^16.0.3",
     "jimp": "^0.22.12",
     "node-ical": "^0.20.1",
-    "prisma": "^5.22.0",
     "rotating-file-stream": "^3.2.3"
   },
   "devDependencies": {
@@ -43,6 +42,7 @@
     "eslint-plugin-promise": "^7.1.0",
     "globals": "^15.12.0",
     "prettier": "^3.3.3",
+    "prisma": "^6.1.0",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",

@@ -2,7 +2,7 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandOpti
 import { prisma } from "@/utils/database";
 import { backSpace } from "@/utils/textUtils";
 
-import packageJson from "../../../package.json";
+import packageJson from "../../../../package.json";
 
 const infoImage = "./assets/img/info.png";
 

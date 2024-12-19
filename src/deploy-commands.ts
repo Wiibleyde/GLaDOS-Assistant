@@ -1,9 +1,9 @@
 import { REST, Routes } from "discord.js"
 import { config } from "@/config"
-import { commands, devCommands } from "@/commands"
+import { commands, devCommands } from "@/interactions/commands"
 import { logger } from "@/index"
 import { client } from "."
-import { contextMessageMenus, contextUserMenus } from "./contextMenus"
+import { contextMessageMenus, contextUserMenus } from "./interactions/contextMenus"
 
 const commandsData = Object.values(commands).map((command) => command.data)
 const devCommandsData = Object.values(devCommands).map((command) => command.data)

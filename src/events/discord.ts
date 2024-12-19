@@ -1,15 +1,18 @@
 import { Events, MessageType } from "discord.js"
 import { client, logger } from ".."
-import { maintenance } from "@/commands/dev/maintenance"
+import { maintenance } from "@/interactions/commands/dev/maintenance"
 import { hasPermission } from "@/utils/permissionTester"
 import { errorEmbed } from "@/utils/embeds"
-import { buttons, commands, devCommands, modals } from "@/commands"
+import { commands, devCommands } from "@/interactions/commands"
 import { handleMessageSend, isNewMessageInMpThread, recieveMessage } from "@/utils/mpManager"
 import { config } from "@/config"
-import { isMessageQuizQuestion } from "@/commands/fun/quiz/quiz"
+import { isMessageQuizQuestion } from "@/interactions/commands/fun/quiz/quiz"
 import { generateWithGoogle } from "@/utils/intelligence"
 import { detectFeur, generateResponse } from "@/utils/messageManager"
-import { contextMessageMenus, contextUserMenus } from "@/contextMenus"
+import { contextMessageMenus, contextUserMenus } from "@/interactions/contextMenus"
+import { modals } from "@/interactions/modals"
+import { buttons } from "@/interactions/buttons"
+import { selectMenus } from "@/interactions/selectMenus"
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isContextMenuCommand()) {
@@ -48,6 +51,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
             buttons[customId as keyof typeof buttons](interaction)
         }
         logger.info(`Bouton cliqué par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> (${interaction.customId})`)
+    } else if (interaction.isStringSelectMenu()) {
+        const customId = interaction.customId.split("--")[0]
+        logger.info(`Menu déroulant par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}> (${interaction.customId})`)
+        if (selectMenus[customId as keyof typeof selectMenus]) {
+            selectMenus[customId as keyof typeof selectMenus](interaction)
+        }
     } else {
         logger.error(`Interaction inconnue par <@${interaction.user.id}> (${interaction.user.username}) dans <#${interaction.channelId}>`)
     }

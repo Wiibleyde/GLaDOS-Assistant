@@ -1,5 +1,5 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { commands } from "@/commands/index";
+import { commands } from "@/interactions/commands/index";
 import { backSpace } from "@/utils/textUtils";
 
 interface Command {
