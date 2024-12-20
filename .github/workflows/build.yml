@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -48,6 +50,7 @@ jobs:
         if: github.event.pull_request.merged == true
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: "v${{ env.VERSION }}"
           name: "Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')"
           files: |
             dist/**
