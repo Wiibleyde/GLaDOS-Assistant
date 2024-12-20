@@ -1,6 +1,6 @@
 import { errorEmbed, successEmbed } from "@/utils/embeds";
 import { useQueue } from "discord-player";
-import { ButtonInteraction, CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 
 export const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName("pause")
@@ -18,19 +18,4 @@ export async function execute(interaction: CommandInteraction) {
     if (!success) return await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Impossible de mettre en pause la musique."))], ephemeral: true })
 
     await interaction.reply({ embeds: [successEmbed(interaction, "Musique mise en pause")], ephemeral: true })
-}
-
-export async function resumeAndPauseButton(interaction: ButtonInteraction) {
-    const queue = useQueue(interaction.guildId as string)
-
-    if(!queue?.isPlaying()) return await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Aucune musique n'est en cours de lecture."))], ephemeral: true })
-
-    const resumed = queue.node.resume()
-
-    if(!resumed) {
-        queue.node.pause()
-        return await interaction.reply({ embeds: [successEmbed(interaction, "Musique mise en pause")] })
-    }
-
-    await interaction.reply({ embeds: [successEmbed(interaction, "Musique reprise")], ephemeral: true })
 }

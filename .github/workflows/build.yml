@@ -1,0 +1,37 @@
+name: Build and Release
+
+on:
+    pull_request:
+      branches: [ "main" ]
+      types: ["closed"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Get version from package.json
+        id: get_version
+        run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Publish release
+        if: github.event.pull_request.merged == true
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')"
+          files: |
+            dist/**

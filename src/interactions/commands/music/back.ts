@@ -10,11 +10,7 @@ export async function execute(interaction: CommandInteraction) {
     back(interaction)
 }
 
-export function backButton(interaction: ButtonInteraction) {
-    back(interaction)
-}
-
-async function back(interaction: CommandInteraction|ButtonInteraction) {
+export async function back(interaction: CommandInteraction|ButtonInteraction) {
     const queue = useQueue(interaction.guildId as string)
 
     if (!queue?.isPlaying()) return await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Aucune musique n'est en cours de lecture."))], ephemeral: true })
