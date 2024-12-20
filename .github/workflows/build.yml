@@ -22,12 +22,6 @@ jobs:
         with:
           node-version: '20.18.1'
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
       - name: Get version from package.json
         id: get_version
         run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
