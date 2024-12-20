@@ -30,6 +30,9 @@ jobs:
         id: get_version
         run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
 
+      - name: Fetch all tags
+        run: git fetch --tags
+
       - name: Create tag
         if: github.event.pull_request.merged == true
         env:
