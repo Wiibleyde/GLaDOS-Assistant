@@ -43,6 +43,9 @@ jobs:
           git tag v${{ env.VERSION }}
           git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} v${{ env.VERSION }}
 
+      - name: Zip repository
+        run: zip -r repo.zip .
+
       - name: Publish release
         if: github.event.pull_request.merged == true
         uses: softprops/action-gh-release@v1
@@ -50,4 +53,4 @@ jobs:
           tag_name: "v${{ env.VERSION }}"
           name: "Release v${{ env.VERSION }}"
           files: |
-            dist/**
+            repo.zip
