@@ -51,6 +51,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "v${{ env.VERSION }}"
-          name: "Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')"
+          name: "Release v${{ env.VERSION }} - ${{ steps.get_version.outputs.date }}"
           files: |
             dist/**
+        env:
+          DATE: $(date +'%Y-%m-%d')
