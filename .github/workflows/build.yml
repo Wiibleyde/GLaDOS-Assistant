@@ -28,6 +28,14 @@ jobs:
         id: get_version
         run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
 
+      - name: Create tag
+        if: github.event.pull_request.merged == true
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
+
       - name: Publish release
         if: github.event.pull_request.merged == true
         uses: softprops/action-gh-release@v1
