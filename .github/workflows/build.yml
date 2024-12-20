@@ -35,13 +35,14 @@ jobs:
 
       - name: Create tag
         if: github.event.pull_request.merged == true
+        id: create_tag
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git tag v${{ env.VERSION }}
-          git push origin v${{ env.VERSION }}
+          git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} v${{ env.VERSION }}
 
       - name: Publish release
         if: github.event.pull_request.merged == true
