@@ -10,12 +10,7 @@ export async function execute(interaction: CommandInteraction) {
     skip(interaction)
 }
 
-export function skipButton(interaction: ButtonInteraction) {
-    skip(interaction)
-}
-
-
-async function skip(interaction:CommandInteraction|ButtonInteraction) {
+export async function skip(interaction:CommandInteraction|ButtonInteraction) {
     const queue = useQueue(interaction.guildId as string)
 
     if (!queue?.isPlaying()) return await interaction.reply({ embeds: [errorEmbed(interaction, new Error("Aucune musique n'est en cours de lecture."))], ephemeral: true })
