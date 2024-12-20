@@ -32,9 +32,6 @@ jobs:
         id: get_version
         run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
 
-      - name: Fetch all tags
-        run: git fetch --tags
-
       - name: Create tag
         if: github.event.pull_request.merged == true
         id: create_tag
@@ -51,8 +48,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "v${{ env.VERSION }}"
-          name: "Release v${{ env.VERSION }} - ${{ steps.get_version.outputs.date }}"
+          name: "Release v${{ env.VERSION }}"
           files: |
             dist/**
-        env:
-          DATE: $(date +'%Y-%m-%d')
