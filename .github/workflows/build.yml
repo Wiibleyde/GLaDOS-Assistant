@@ -1,0 +1,50 @@
+name: Build and Release
+
+on:
+    pull_request:
+      branches: [ "main" ]
+      types: ["closed"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.18.1'
+
+      - name: Get version from package.json
+        id: get_version
+        run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Create tag
+        if: github.event.pull_request.merged == true
+        id: create_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git tag v${{ env.VERSION }}
+          git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} v${{ env.VERSION }}
+
+      - name: Zip repository
+        run: zip -r repo.zip .
+
+      - name: Publish release
+        if: github.event.pull_request.merged == true
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ env.VERSION }}"
+          name: "Release v${{ env.VERSION }}"
+          files: |
+            repo.zip
