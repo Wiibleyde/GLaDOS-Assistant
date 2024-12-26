@@ -54,6 +54,7 @@ export class MotusGame {
      * @returns Whether the attempt is a winning attempt.
      */
     public tryAttempt(attempt: string, userId: string): TryReturn {
+        attempt = attempt.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()
         if (this.state !== GameState.PLAYING) return TryReturn.INVALID;
         if (attempt.length !== this.wordLength) return TryReturn.INVALID;
         if (this.tries.length === MotusGame.maxAttempts) return TryReturn.INVALID;
